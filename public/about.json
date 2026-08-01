@@ -1,0 +1,771 @@
+{
+  "id": "6a01a0e0352eebe38012486a",
+  "title": {
+    "en": "About Us",
+    "hi": "हमारे बारे में"
+  },
+  "slug": "about",
+  "content": [
+    {
+      "id": "about-nestcraft-section",
+      "type": "section",
+      "adminTitle": "About NestCraft",
+      "layout": "hero",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "About NestCraft",
+            "hi": "नेस्टक्राफ्ट के बारे में"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Furniture that brings warmth, purpose, and modern character home.",
+            "hi": "फर्नीचर जो घर में गर्माहट, उद्देश्य और आधुनिक चरित्र लाता है।"
+          }
+        },
+        "description": {
+          "type": "textarea",
+          "value": {
+            "en": "Since 2012, NestCraft has been creating design-led furniture that blends sculptural form with everyday function—helping people build homes that feel calm, personal, and beautifully lived in.",
+            "hi": "2012 से, नेस्टक्राफ्ट डिजाइन-आधारित फर्नीचर बना रहा है जो मूर्तिकला रूप को रोजमर्रा के कार्य के साथ जोड़ता है—लोगों को ऐसे घर बनाने में मदद करता है जो शांत, व्यक्तिगत और खूबसूरती से रहने योग्य महसूस होते हैं।"
+          }
+        },
+        "primaryButton": {
+          "type": "text",
+          "value": {
+            "en": "Explore Collection",
+            "hi": "संग्रह देखें"
+          }
+        },
+        "secondaryButton": {
+          "type": "text",
+          "value": {
+            "en": "Contact Us",
+            "hi": "संपर्क करें"
+          }
+        },
+        "backgroundImage": {
+          "type": "image",
+          "value": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800"
+        }
+      },
+      "content": [
+        {
+          "id": "img-1",
+          "type": "item",
+          "props": {
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80&w=1200"
+            },
+            "alt": {
+              "type": "text",
+              "value": {
+                "en": "Sofa interior",
+                "hi": "सोफा इंटीरियर"
+              }
+            }
+          }
+        },
+        {
+          "id": "img-2",
+          "type": "item",
+          "props": {
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1200"
+            },
+            "alt": {
+              "type": "text",
+              "value": {
+                "en": "Chair and decor",
+                "hi": "कुर्सी और सजावट"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "stats-section",
+      "type": "section",
+      "adminTitle": "Stats Section",
+      "layout": "grid",
+      "props": {
+        "sectionPadding": {
+          "type": "text",
+          "value": "py-16 md:py-24"
+        }
+      },
+      "content": [
+        {
+          "id": "stat-1",
+          "type": "item",
+          "props": {
+            "value": {
+              "type": "text",
+              "value": "12+"
+            },
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "YEARS OF CRAFTSMANSHIP",
+                "hi": "शिल्प कौशल के वर्ष"
+              }
+            }
+          }
+        },
+        {
+          "id": "stat-2",
+          "type": "item",
+          "props": {
+            "value": {
+              "type": "text",
+              "value": "8k+"
+            },
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "HOMES FURNISHED",
+                "hi": "सज्जित घर"
+              }
+            }
+          }
+        },
+        {
+          "id": "stat-3",
+          "type": "item",
+          "props": {
+            "value": {
+              "type": "text",
+              "value": "150+"
+            },
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "DESIGN-LED PIECES",
+                "hi": "डिजाइन-आधारित पीस"
+              }
+            }
+          }
+        },
+        {
+          "id": "stat-4",
+          "type": "item",
+          "props": {
+            "value": {
+              "type": "text",
+              "value": "24/7"
+            },
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "CUSTOMER SUPPORT",
+                "hi": "ग्राहक सहायता"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "our-story-section",
+      "type": "section",
+      "adminTitle": "Our Story",
+      "layout": "split",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Our Story",
+            "hi": "हमारी कहानी"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Built around thoughtful living, not just furniture.",
+            "hi": "विचारशील जीवन के इर्द-गिर्द निर्मित, न कि केवल फर्नीचर।"
+          }
+        },
+        "paragraphs": {
+          "type": "list",
+          "value": [
+            {
+              "en": "NestCraft started with a simple belief: the furniture you live with every day should be both beautiful and deeply usable. We saw too many homes forced to choose between comfort, quality, and design. Our goal was to remove that compromise.",
+              "hi": "नेस्टक्राफ्ट की शुरुआत एक साधारण विश्वास के साथ हुई: जिस फर्नीचर के साथ आप हर दिन रहते हैं वह सुंदर और गहराई से उपयोगी दोनों होना चाहिए। हमने बहुत से घरों को आराम, गुणवत्ता और डिजाइन के बीच चयन करने के लिए मजबूर देखा। हमारा लक्ष्य उस समझौते को हटाना था।"
+            },
+            {
+              "en": "Today, we create collections for living rooms, bedrooms, dining spaces, work corners, and beyond—pieces designed to settle into real homes with ease while still making a strong visual statement.",
+              "hi": "आज, हम लिविंग रूम, बेडरूम, डाइनिंग स्पेस, वर्क कॉर्नर और उससे आगे के लिए संग्रह बनाते हैं—ऐसे टुकड़े जिन्हें वास्तविक घरों में आसानी से बसने के लिए डिज़ाइन किया गया है जबकि अभी भी एक मजबूत दृश्य बयान देते हैं।"
+            }
+          ]
+        },
+        "image": {
+          "type": "image",
+          "value": "https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&q=80&w=1400"
+        }
+      },
+      "content": [
+        {
+          "id": "story-1",
+          "type": "item",
+          "props": {
+            "text": {
+              "type": "text",
+              "value": {
+                "en": "Sustainably sourced premium materials",
+                "hi": "स्थायी रूप से प्राप्त प्रीमियम सामग्री"
+              }
+            }
+          }
+        },
+        {
+          "id": "story-2",
+          "type": "item",
+          "props": {
+            "text": {
+              "type": "text",
+              "value": {
+                "en": "Artisanal craftsmanship in every detail",
+                "hi": "हर विवरण में शिल्प कौशल"
+              }
+            }
+          }
+        },
+        {
+          "id": "story-3",
+          "type": "item",
+          "props": {
+            "text": {
+              "type": "text",
+              "value": {
+                "en": "Timeless forms with everyday comfort",
+                "hi": "रोजमर्रा के आराम के साथ कालातीत रूप"
+              }
+            }
+          }
+        },
+        {
+          "id": "story-4",
+          "type": "item",
+          "props": {
+            "text": {
+              "type": "text",
+              "value": {
+                "en": "Quality-focused production and support",
+                "hi": "गुणवत्ता-केंद्रित उत्पादन और समर्थन"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "difference-section",
+      "type": "section",
+      "adminTitle": "Difference Section",
+      "layout": "grid",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "What Defines Us",
+            "hi": "हमें क्या परिभाषित करता है"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "The NestCraft difference",
+            "hi": "नेस्टक्राफ्ट का अंतर"
+          }
+        },
+        "subheading": {
+          "type": "text",
+          "value": {
+            "en": "We design with intention, build with care, and support every order with the same attention we give to the furniture itself.",
+            "hi": "हम इरादे के साथ डिजाइन करते हैं, देखभाल के साथ निर्माण करते हैं, और हर ऑर्डर का उसी ध्यान के साथ समर्थन करते हैं जो हम स्वयं फर्नीचर को देते हैं।"
+          }
+        }
+      },
+      "content": [
+        {
+          "id": "val-1",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "Leaf"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Sustainable Materials",
+                "hi": "स्थायी सामग्री"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "We source premium woods, fabrics, and finishes with a long-term view on quality and responsibility.",
+                "hi": "हम गुणवत्ता और जिम्मेदारी पर दीर्घकालिक दृष्टिकोण के साथ प्रीमियम लकड़ी, कपड़े और फिनिश प्राप्त करते हैं।"
+              }
+            }
+          }
+        },
+        {
+          "id": "val-2",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "BadgeCheck"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Made to Last",
+                "hi": "लंबे समय तक चलने के लिए निर्मित"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Every detail is engineered for daily living, from frame strength to stitching precision.",
+                "hi": "फ्रेम की मजबूती से लेकर सिलाई की सटीकता तक, हर विवरण रोजमर्रा के जीवन के लिए इंजीनियर किया गया है।"
+              }
+            }
+          }
+        },
+        {
+          "id": "val-3",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "HeartHandshake"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Human-Centered Design",
+                "hi": "मानव-केंद्रित डिजाइन"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Our furniture is built around comfort, proportion, and the way real people live at home.",
+                "hi": "हमारा फर्नीचर आराम, अनुपात और जिस तरह से वास्तविक लोग घर पर रहते हैं, उसके इर्द-गिर्द बनाया गया है।"
+              }
+            }
+          }
+        },
+        {
+          "id": "val-4",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "Sparkles"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Timeless Aesthetic",
+                "hi": "कालातीत सौंदर्य"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "We create versatile pieces that feel modern today and still beautiful years from now.",
+                "hi": "हम बहुमुखी टुकड़े बनाते हैं जो आज आधुनिक महसूस होते हैं और अब से सालों बाद भी सुंदर लगते हैं।"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "our-process-section",
+      "type": "section",
+      "adminTitle": "Our Process",
+      "layout": "grid",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Our Process",
+            "hi": "हमारी प्रक्रिया"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "How we turn ideas into lasting pieces",
+            "hi": "हम विचारों को स्थायी टुकड़ों में कैसे बदलते हैं"
+          }
+        }
+      },
+      "content": [
+        {
+          "id": "proc-1",
+          "type": "item",
+          "props": {
+            "step": {
+              "type": "text",
+              "value": "01"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Design First",
+                "hi": "डिजाइन पहले"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Each collection begins with a clear design language focused on comfort, silhouette, and utility.",
+                "hi": "प्रत्येक संग्रह आराम, सिल्हूट और उपयोगिता पर केंद्रित एक स्पष्ट डिजाइन भाषा के साथ शुरू होता है।"
+              }
+            }
+          }
+        },
+        {
+          "id": "proc-2",
+          "type": "item",
+          "props": {
+            "step": {
+              "type": "text",
+              "value": "02"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Material Selection",
+                "hi": "सामग्री चयन"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "We carefully choose woods, metals, foams, fabrics, and finishes for both durability and feel.",
+                "hi": "हम स्थायित्व और अनुभव दोनों के लिए सावधानीपूर्वक लकड़ी, धातु, फोम, कपड़े और फिनिश चुनते हैं।"
+              }
+            }
+          }
+        },
+        {
+          "id": "proc-3",
+          "type": "item",
+          "props": {
+            "step": {
+              "type": "text",
+              "value": "03"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Craft & Build",
+                "hi": "शिल्प और निर्माण"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Our makers shape, stitch, assemble, and finish every piece with close attention to detail.",
+                "hi": "हमारे निर्माता हर टुकड़े को विवरण पर बारीकी से ध्यान देते हुए आकार देते हैं, सिलते हैं, इकट्ठा करते हैं और फिनिश करते हैं।"
+              }
+            }
+          }
+        },
+        {
+          "id": "proc-4",
+          "type": "item",
+          "props": {
+            "step": {
+              "type": "text",
+              "value": "04"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Deliver & Support",
+                "hi": "वितरण और समर्थन"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "From doorstep delivery to after-sales care, we make ownership smooth and reliable.",
+                "hi": "डोरस्टेप डिलीवरी से लेकर बिक्री के बाद की देखभाल तक, हम स्वामित्व को सुगम और विश्वसनीय बनाते हैं।"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "design-philosophy-section",
+      "type": "section",
+      "adminTitle": "Design Philosophy",
+      "layout": "split",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Design Philosophy",
+            "hi": "डिजाइन दर्शन"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Materials, comfort, and form—balanced with purpose.",
+            "hi": "सामग्री, आराम और रूप—उद्देश्य के साथ संतुलित।"
+          }
+        },
+        "paragraphs": {
+          "type": "list",
+          "value": [
+            {
+              "en": "From soft upholstery and structured foam to warm woods and refined finishes, every element is chosen to enhance how a piece looks, feels, and lasts in the home.",
+              "hi": "नरम असबाब और संरचित फोम से लेकर गर्म लकड़ी और परिष्कृत फिनिश तक, हर तत्व को यह बढ़ाने के लिए चुना जाता है कि कोई टुकड़ा घर में कैसा दिखता है, कैसा महसूस होता है और कब तक चलता है।"
+            },
+            {
+              "en": "We don’t chase noise. We focus on proportion, texture, calm palettes, and strong silhouettes that make everyday spaces feel more complete.",
+              "hi": "हम शोर का पीछा नहीं करते। हम अनुपात, बनावट, शांत पैलेट और मजबूत सिल्हूट पर ध्यान केंद्रित करते हैं जो रोजमर्रा के स्थानों को अधिक पूर्ण महसूस कराते हैं।"
+            }
+          ]
+        },
+        "tags": {
+          "type": "list",
+          "value": [
+            {
+              "en": "Solid wood details",
+              "hi": "ठोस लकड़ी का विवरण"
+            },
+            {
+              "en": "Comfort-first cushioning",
+              "hi": "आराम-पहले कुशनिंग"
+            },
+            {
+              "en": "Soft neutral palettes",
+              "hi": "नरम तटस्थ पैलेट"
+            },
+            {
+              "en": "Modern timeless silhouettes",
+              "hi": "आधुनिक कालातीत सिल्हूट"
+            }
+          ]
+        }
+      },
+      "content": [
+        {
+          "id": "img-1",
+          "type": "item",
+          "props": {
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=1200"
+            },
+            "alt": {
+              "type": "text",
+              "value": {
+                "en": "Interior setup",
+                "hi": "इंटीरियर सेटअप"
+              }
+            }
+          }
+        },
+        {
+          "id": "img-2",
+          "type": "item",
+          "props": {
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&q=80&w=1200"
+            },
+            "alt": {
+              "type": "text",
+              "value": {
+                "en": "Furniture detail",
+                "hi": "फर्नीचर विवरण"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "why-choose-us-section",
+      "type": "section",
+      "adminTitle": "Why Choose Us",
+      "layout": "grid",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Why Choose Us",
+            "hi": "हमें क्यों चुनें"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Confidence in every order",
+            "hi": "हर ऑर्डर में विश्वास"
+          }
+        },
+        "ctaBadge": {
+          "type": "text",
+          "value": {
+            "en": "Visit NestCraft",
+            "hi": "नेस्टक्राफ्ट पर आएं"
+          }
+        },
+        "ctaHeading": {
+          "type": "text",
+          "value": {
+            "en": "Discover furniture designed to make everyday living feel better.",
+            "hi": "बेहतर रोजमर्रा के जीवन के लिए डिज़ाइन किए गए फर्नीचर की खोज करें।"
+          }
+        },
+        "ctaDescription": {
+          "type": "textarea",
+          "value": {
+            "en": "Explore our collections, discover timeless pieces, and create a home that feels personal from the first glance to the last detail.",
+            "hi": "हमारे संग्रहों का अन्वेषण करें, कालातीत टुकड़ों की खोज करें, और एक ऐसा घर बनाएं जो पहली नज़र से आखिरी विवरण तक व्यक्तिगत महसूस हो।"
+          }
+        },
+        "primaryButton": {
+          "type": "text",
+          "value": {
+            "en": "Shop Now",
+            "hi": "अभी खरीदें"
+          }
+        },
+        "secondaryButton": {
+          "type": "text",
+          "value": {
+            "en": "Speak to Us",
+            "hi": "हमसे बात करें"
+          }
+        }
+      },
+      "content": [
+        {
+          "id": "assur-1",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "Truck"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Fast Delivery",
+                "hi": "तेज़ डिलीवरी"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Doorstep shipping with careful packaging and reliable updates at every stage.",
+                "hi": "सावधानीपूर्वक पैकेजिंग और हर चरण में विश्वसनीय अपडेट के साथ डोरस्टेप शिपिंग।"
+              }
+            }
+          }
+        },
+        {
+          "id": "assur-2",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "ShieldCheck"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Secure Checkout",
+                "hi": "सुरक्षित चेकआउट"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Safe transactions and trusted systems to protect your purchase and data.",
+                "hi": "आपकी खरीदारी और डेटा की सुरक्षा के लिए सुरक्षित लेनदेन और विश्वसनीय सिस्टम।"
+              }
+            }
+          }
+        },
+        {
+          "id": "assur-3",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "RefreshCcw"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Easy Returns",
+                "hi": "आसान रिटर्न"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Changed your mind? Our return support is designed to be simple and stress-free.",
+                "hi": "अपना मन बदल लिया? हमारा रिटर्न सपोर्ट सरल और तनावमुक्त होने के लिए डिज़ाइन किया गया है।"
+              }
+            }
+          }
+        },
+        {
+          "id": "assur-4",
+          "type": "item",
+          "props": {
+            "icon": {
+              "type": "text",
+              "value": "Ruler"
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Made for Real Spaces",
+                "hi": "वास्तविक स्थानों के लिए निर्मित"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Pieces designed with practical sizing, everyday comfort, and lasting usability.",
+                "hi": "व्यावहारिक आकार, रोजमर्रा के आराम और स्थायी उपयोगिता के साथ डिज़ाइन किए गए टुकड़े।"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "isPublished": true,
+  "metaTitle": {
+    "en": "About NestCraft Living",
+    "hi": "नेस्टक्राफ्ट लिविंग के बारे में"
+  },
+  "metaDescription": {
+    "en": "Learn about NestCraft Living, our design philosophy, craftsmanship, and modern furniture collections crafted for everyday comfort.",
+    "hi": "नेस्टक्राफ्ट लिविंग, हमारे डिजाइन दर्शन, शिल्प कौशल और रोजमर्रा के आराम के लिए तैयार किए गए आधुनिक फर्नीचर संग्रहों के बारे में जानें।"
+  }
+}

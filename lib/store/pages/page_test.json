@@ -1,0 +1,146 @@
+{
+  "title": { "en": "Home", "hi": "होम" },
+  "slug": "home",
+  "isPublished": true,
+  "isHomepage": true,
+  "metaTitle": { "en": "Home", "hi": "होम" },
+  "metaDescription": { "en": "Home", "hi": "होम" },
+  "content": [
+    {
+      "id": "premium-hero",
+      "type": "hero-slider",
+      "layout": "fullwidth",
+      "adminTitle": "Premium Hero Slider",
+      "content": [
+        {
+          "id": "slide-1",
+          "type": "hero-slide",
+          "props": {
+            "label": { "en": "Modern Living", "hi": "आधुनिक जीवन" },
+            "title": { "en": "Furniture That", "hi": "फर्नीचर जो" },
+            "highlight": { "en": "Defines", "hi": "परिभाषित करता है" },
+            "titleEnd": { "en": "Your Space.", "hi": "आपकी जगह।" },
+            "description": {
+              "en": "Discover sculptural sofas, refined textures, and timeless furniture pieces crafted to bring warmth, comfort, and luxury into the modern home.",
+              "hi": "आधुनिक घर के लिए आराम, सुंदरता और लक्ज़री देने वाले बेहतरीन फर्नीचर खोजें।"
+            },
+            "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800",
+            "product": { "en": "The Archi Sofa", "hi": "आर्ची सोफा" },
+            "price": { "en": "Starting at ₹1,200", "hi": "₹1,200 से शुरू" }
+          }
+        },
+        {
+          "id": "slide-2",
+          "type": "hero-slide",
+          "props": {
+            "label": { "en": "Bedroom Luxury", "hi": "बेडरूम लक्ज़री" },
+            "title": { "en": "Designed For", "hi": "के लिए डिज़ाइन" },
+            "highlight": { "en": "Quiet", "hi": "शांत" },
+            "titleEnd": { "en": "Comfort.", "hi": "आराम।" },
+            "description": {
+              "en": "Elevate your bedroom with calming palettes and elegant beds.",
+              "hi": "अपने बेडरूम को शांत रंगों और शानदार बेड से बेहतर बनाएं।"
+            },
+            "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800",
+            "product": { "en": "The Haven Bed", "hi": "हेवन बेड" },
+            "price": { "en": "Starting at ₹1,450", "hi": "₹1,450 से शुरू" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "usp-section",
+      "type": "usp-list",
+      "layout": "grid",
+      "adminTitle": "USP Section",
+      "content": [
+        {
+          "id": "usp-1",
+          "type": "usp-item",
+          "props": {
+            "title": { "en": "Fast Delivery", "hi": "तेज़ डिलीवरी" },
+            "description": { "en": "Doorstep shipping worldwide", "hi": "घर तक डिलीवरी" },
+            "icon": "truck"
+          }
+        },
+        {
+          "id": "usp-2",
+          "type": "usp-item",
+          "props": {
+            "title": { "en": "Secure Checkout", "hi": "सुरक्षित भुगतान" },
+            "description": { "en": "Protected payments & data", "hi": "सुरक्षित पेमेंट और डेटा" },
+            "icon": "shield-check"
+          }
+        },
+        {
+          "id": "usp-3",
+          "type": "usp-item",
+          "props": {
+            "title": { "en": "Easy Returns", "hi": "आसान रिटर्न" },
+            "description": { "en": "14-day hassle-free policy", "hi": "14 दिन की आसान वापसी" },
+            "icon": "refresh-ccw"
+          }
+        },
+        {
+          "id": "usp-4",
+          "type": "usp-item",
+          "props": {
+            "title": { "en": "Premium Craft", "hi": "प्रीमियम क्राफ्ट" },
+            "description": { "en": "Materials built for years", "hi": "सालों के लिए प्रीमियम मटेरियल" },
+            "icon": "sparkles"
+          }
+        }
+      ]
+    },
+    {
+      "id": "services-cards",
+      "type": "cards",
+      "layout": "grid",
+      "adminTitle": "Service Cards",
+      "content": [
+        {
+          "id": "card-1",
+          "type": "card-item",
+          "props": {
+            "title": { "en": "Interior Design", "hi": "इंटीरियर डिज़ाइन" },
+            "description": {
+              "en": "Expert consultation for your perfect living space.",
+              "hi": "आपके घर के लिए विशेषज्ञ सलाह"
+            },
+            "icon": "PenTool"
+          }
+        }
+      ]
+    },
+    {
+      "id": "collections-section",
+      "type": "collections",
+      "adminTitle": "Collections Section",
+      "props": {
+        "heading": { "en": "Our Collections", "hi": "हमारे कलेक्शन" },
+        "viewAllLink": "/shop",
+        "viewAllText": { "en": "View All", "hi": "सभी देखें" }
+      },
+      "content": [
+        {
+          "id": "collection-1",
+          "type": "collection-item",
+          "props": {
+            "title": { "en": "Living Room", "hi": "लिविंग रूम" },
+            "image": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80",
+            "link": "/shop"
+          }
+        },
+        {
+          "id": "collection-2",
+          "type": "collection-item",
+          "props": {
+            "title": { "en": "Bedroom", "hi": "बेडरूम" },
+            "image": "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80",
+            "link": "/shop"
+          }
+        }
+      ]
+    }
+  ]
+}

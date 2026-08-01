@@ -1,0 +1,482 @@
+{
+  "id": "69fae945e82ee8718998d18f",
+  "title": {
+    "en": "Home",
+    "hi": "होम"
+  },
+  "slug": "home",
+  "content": [
+    {
+      "id": "premium-hero",
+      "type": "section",
+      "props": {
+        "autoplay": {
+          "type": "boolean",
+          "value": true
+        },
+        "speed": {
+          "type": "number",
+          "value": 5000
+        }
+      },
+      "content": [
+        {
+          "id": "slide-1",
+          "type": "hero-slide",
+          "props": {
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "Modern Living",
+                "hi": "आधुनिक जीवन"
+              }
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Furniture That",
+                "hi": "फर्नीचर जो"
+              }
+            },
+            "highlight": {
+              "type": "text",
+              "value": {
+                "en": "Defines",
+                "hi": "परिभाषित करता है"
+              }
+            },
+            "titleEnd": {
+              "type": "text",
+              "value": {
+                "en": "Your Space.",
+                "hi": "आपकी जगह।"
+              }
+            },
+            "description": {
+              "type": "textarea",
+              "value": {
+                "en": "Discover sculptural sofas, refined textures, and timeless furniture pieces crafted to bring warmth and luxury.",
+                "hi": "गर्मी और विलासिता लाने के लिए तैयार किए गए सोफे, परिष्कृत बनावट और कालातीत फर्नीचर के टुकड़ों की खोज करें।"
+              }
+            },
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800"
+            },
+            "product": {
+              "type": "text",
+              "value": {
+                "en": "The Archi Sofa",
+                "hi": "आर्ची सोफा"
+              }
+            },
+            "price": {
+              "type": "text",
+              "value": {
+                "en": "Starting at ₹45,000",
+                "hi": "₹45,000 से शुरू"
+              }
+            },
+            "buttonLabel": {
+              "type": "text",
+              "value": {
+                "en": "Shop Now",
+                "hi": "अभी खरीदें"
+              }
+            },
+            "buttonLink": {
+              "type": "link",
+              "value": "/shop"
+            }
+          }
+        },
+        {
+          "id": "slide-2",
+          "type": "hero-slide",
+          "props": {
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "Bedroom Luxury",
+                "hi": "बेडरूम विलासिता"
+              }
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Designed For",
+                "hi": "इसके लिए डिज़ाइन किया गया"
+              }
+            },
+            "highlight": {
+              "type": "text",
+              "value": {
+                "en": "Quiet",
+                "hi": "शांत"
+              }
+            },
+            "titleEnd": {
+              "type": "text",
+              "value": {
+                "en": "Comfort.",
+                "hi": "आराम।"
+              }
+            },
+            "description": {
+              "type": "textarea",
+              "value": {
+                "en": "Elevate your bedroom with calming palettes, elegant beds, and thoughtfully designed furniture that blends sophistication with ease.",
+                "hi": "शांत पैलेट, सुरुचिपूर्ण बेड और सोच-समझकर तैयार किए गए फर्नीचर के साथ अपने बेडरूम को बेहतर बनाएं।"
+              }
+            },
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800"
+            },
+            "product": {
+              "type": "text",
+              "value": {
+                "en": "The Haven Bed",
+                "hi": "हेवन बेड"
+              }
+            },
+            "price": {
+              "type": "text",
+              "value": {
+                "en": "Starting at ₹55,000",
+                "hi": "₹55,000 से शुरू"
+              }
+            }
+          }
+        }
+      ],
+      "adminTitle": "Premium Hero Slider",
+      "layout": "fullwidth"
+    },
+    {
+      "id": "usp-section",
+      "type": "section",
+      "props": {},
+      "content": [
+        {
+          "id": "usp-1",
+          "type": "usp-item",
+          "props": {
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Fast Delivery",
+                "hi": "तेज़ डिलीवरी"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Doorstep shipping across India",
+                "hi": "पूरे भारत में घर तक डिलीवरी"
+              }
+            },
+            "icon": {
+              "type": "icon",
+              "value": "Truck"
+            }
+          }
+        },
+        {
+          "id": "usp-2",
+          "type": "usp-item",
+          "props": {
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Secure Checkout",
+                "hi": "सुरक्षित भुगतान"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Protected payments & data",
+                "hi": "सुरक्षित पेमेंट और डेटा"
+              }
+            },
+            "icon": {
+              "type": "icon",
+              "value": "ShieldCheck"
+            }
+          }
+        }
+      ],
+      "adminTitle": "USP Section",
+      "layout": "grid"
+    },
+    {
+      "id": "shop-by-room-section",
+      "type": "section",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Shop by Room",
+            "hi": "कमरे के अनुसार खरीदारी"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Find Your Perfect Space",
+            "hi": "अपना आदर्श स्थान खोजें"
+          }
+        },
+        "buttonLabel": {
+          "type": "text",
+          "value": {
+            "en": "Browse Rooms",
+            "hi": "कमरे ब्राउज़ करें"
+          }
+        },
+        "buttonLink": {
+          "type": "link",
+          "value": "/shop"
+        }
+      },
+      "content": [
+        {
+          "id": "living-room",
+          "type": "category-item",
+          "props": {
+            "name": {
+              "type": "text",
+              "value": {
+                "en": "Living Room",
+                "hi": "लिविंग रूम"
+              }
+            },
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80"
+            },
+            "link": {
+              "type": "link",
+              "value": "/shop/living-room"
+            }
+          }
+        }
+      ],
+      "adminTitle": "Shop By Room Section",
+      "layout": null
+    },
+    {
+      "id": "product-slider-section",
+      "type": "section",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Best Sellers",
+            "hi": "बेस्ट सेलर्स"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "New Essentials",
+            "hi": "न्यू एसेंशियल्स"
+          }
+        },
+        "viewAllLabel": {
+          "type": "text",
+          "value": {
+            "en": "View All Products",
+            "hi": "सभी उत्पाद देखें"
+          }
+        },
+        "viewAllLink": {
+          "type": "link",
+          "value": "/shop"
+        }
+      },
+      "content": [
+        {
+          "id": "p-1",
+          "type": "product-item",
+          "props": {
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Solid Oak Dining Table",
+                "hi": "सॉलिड ओक डाइनिंग टेबल"
+              }
+            },
+            "price": {
+              "type": "text",
+              "value": {
+                "en": "₹55,000",
+                "hi": "₹55,000"
+              }
+            },
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1577157581154-a31421063ca4?auto=format&fit=crop&q=80"
+            }
+          }
+        }
+      ],
+      "adminTitle": "New Essentials Slider",
+      "layout": null
+    },
+    {
+      "id": "craft-section",
+      "type": "section",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Craft & Quality",
+            "hi": "शिल्प और गुणवत्ता"
+          }
+        },
+        "title": {
+          "type": "text",
+          "value": {
+            "en": "Built for Everyday Living",
+            "hi": "रोज़मर्रा की ज़िंदगी के लिए निर्मित"
+          }
+        },
+        "mainHeading": {
+          "type": "text",
+          "value": {
+            "en": "Premium wood, soft textiles, timeless forms.",
+            "hi": "प्रीमियम लकड़ी, नरम कपड़े, कालातीत रूप।"
+          }
+        },
+        "description": {
+          "type": "textarea",
+          "value": {
+            "en": "Every piece is engineered for longevity and comfort...",
+            "hi": "हर टुकड़ा लंबी उम्र और आराम के लिए बनाया गया है..."
+          }
+        }
+      },
+      "content": [
+        {
+          "id": "craft-media",
+          "type": "media-block",
+          "props": {
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&q=80&w=1600"
+            }
+          }
+        },
+        {
+          "id": "craft-list",
+          "type": "list-block",
+          "props": {
+            "items": {
+              "type": "list",
+              "value": [
+                {
+                  "en": "Solid oak",
+                  "hi": "सॉलिड ओक"
+                },
+                {
+                  "en": "Stain-resistant",
+                  "hi": "दाग-प्रतिरोधी"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "adminTitle": "Craft & Quality Section",
+      "layout": "split"
+    },
+    {
+      "id": "faq-section",
+      "type": "section",
+      "props": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Frequently Asked Questions",
+            "hi": "सामान्यतः पूछे जाने वाले प्रश्न"
+          }
+        }
+      },
+      "content": [
+        {
+          "id": "faq-1",
+          "type": "faq-item",
+          "props": {
+            "question": {
+              "type": "text",
+              "value": {
+                "en": "Where is your furniture store located?",
+                "hi": "आपका फर्नीचर स्टोर कहाँ स्थित है?"
+              }
+            },
+            "answer": {
+              "type": "textarea",
+              "value": {
+                "en": "Our premium furniture showroom is located in Raja Park, Jaipur.",
+                "hi": "हमारा प्रीमियम फर्नीचर शोरूम राजा पार्क, जयपुर में स्थित है।"
+              }
+            }
+          }
+        }
+      ],
+      "adminTitle": "Homepage FAQs"
+    },
+    {
+      "id": "newsletter-section",
+      "type": "section",
+      "props": {
+        "badge": {
+          "type": "text",
+          "value": {
+            "en": "Members Only",
+            "hi": "केवल सदस्यों के लिए"
+          }
+        },
+        "title": {
+          "type": "text",
+          "value": {
+            "en": "Get early access to new drops.",
+            "hi": "नए कलेक्शन तक जल्दी पहुंचें।"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Weekly inspiration, exclusive offers, and interior tips.",
+            "hi": "साप्ताहिक प्रेरणा, विशेष ऑफ़र और इंटीरियर टिप्स।"
+          }
+        },
+        "buttonLabel": {
+          "type": "text",
+          "value": {
+            "en": "Subscribe",
+            "hi": "सब्सक्राइब करें"
+          }
+        }
+      },
+      "content": [],
+      "adminTitle": "Newsletter Section",
+      "columns": [
+        []
+      ]
+    }
+  ],
+  "isPublished": true,
+  "metaTitle": {
+    "en": "Nestcraft Living - Modern Furniture",
+    "hi": "नेस्टक्राफ्ट लिविंग - आधुनिक फर्नीचर"
+  },
+  "metaDescription": {
+    "en": "Discover premium sculptural sofas, refined textures, and timeless furniture pieces crafted for the modern home.",
+    "hi": "आधुनिक घर के लिए तैयार किए गए प्रीमियम सोफे, बेहतरीन बनावट और कालातीत फर्नीचर खोजें।"
+  },
+  "createdAt": "2026-05-06T07:09:57.087000",
+  "updatedAt": "2026-05-11T13:46:10.523000"
+}

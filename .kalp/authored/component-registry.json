@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0.0",
+  "components": [
+    {
+      "key": "site.chrome",
+      "purpose": "Global navigation, search, account and cart entry",
+      "level": "pattern",
+      "sourcePath": "components/SiteChrome.tsx",
+      "states": ["desktop", "mobile", "menu-open", "authenticated", "anonymous"],
+      "mappingDecision": "preserve-custom"
+    },
+    {
+      "key": "home.hero",
+      "purpose": "Primary brand and collection introduction",
+      "level": "section",
+      "sourcePath": "components/homepage/hero/Hero.tsx",
+      "states": ["desktop", "tablet", "mobile"],
+      "mappingDecision": "preserve-custom"
+    },
+    {
+      "key": "home.product-slider",
+      "purpose": "Featured product discovery",
+      "level": "section",
+      "sourcePath": "components/homepage/productSlider/ProductSlider.tsx",
+      "states": ["loading", "populated", "empty"],
+      "mappingDecision": "wrap"
+    },
+    {
+      "key": "catalog.product-grid",
+      "purpose": "Responsive catalog results",
+      "level": "section",
+      "sourcePath": "components/pages/CategoryPage.tsx",
+      "states": ["loading", "populated", "empty", "filtered", "mobile"],
+      "mappingDecision": "wrap"
+    },
+    {
+      "key": "product.purchase-panel",
+      "purpose": "Variant selection, quantity and cart entry",
+      "level": "section",
+      "sourcePath": "components/pages/ProductDetailPage.tsx",
+      "states": ["available", "unavailable", "validation-error", "mobile"],
+      "mappingDecision": "wrap"
+    },
+    {
+      "key": "cart.sidebar",
+      "purpose": "Compact cart review and checkout entry",
+      "level": "pattern",
+      "sourcePath": "components/ecommerce/CartSidebar.tsx",
+      "states": ["closed", "open", "empty", "populated", "updating"],
+      "mappingDecision": "wrap"
+    },
+    {
+      "key": "cart.page",
+      "purpose": "Full cart review and mutation surface",
+      "level": "section",
+      "sourcePath": "components/pages/CartPage.tsx",
+      "states": ["empty", "populated", "updating", "error", "mobile"],
+      "mappingDecision": "wrap"
+    },
+    {
+      "key": "checkout.page",
+      "purpose": "Customer, delivery and order-summary workflow",
+      "level": "section",
+      "sourcePath": "components/pages/CheckoutPage.tsx",
+      "states": ["empty", "populated", "validation-error", "submitting", "mobile"],
+      "mappingDecision": "wrap"
+    },
+    {
+      "key": "auth.login",
+      "purpose": "Customer login boundary",
+      "level": "section",
+      "sourcePath": "components/auth/LoginFormSection.tsx",
+      "states": ["idle", "submitting", "error", "authenticated"],
+      "mappingDecision": "preserve-custom"
+    },
+    {
+      "key": "admin.catalog-form",
+      "purpose": "Role-restricted catalog editing",
+      "level": "pattern",
+      "sourcePath": "components/products/SimpleProductForm.tsx",
+      "states": ["create", "edit", "validation-error", "submitting"],
+      "mappingDecision": "migrate"
+    }
+  ]
+}

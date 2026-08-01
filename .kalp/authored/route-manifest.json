@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0.0",
+  "routes": [
+    {
+      "key": "home",
+      "path": "/",
+      "purpose": "Brand, content and store discovery",
+      "access": "public",
+      "dataAuthorities": [
+        "Configured CMS API",
+        "Local tenant branding projection"
+      ],
+      "sections": [
+        "home.hero",
+        "home.usp",
+        "home.services",
+        "home.collections",
+        "home.product-slider",
+        "home.testimonials",
+        "home.blog",
+        "home.faq",
+        "home.newsletter"
+      ]
+    },
+    {
+      "key": "shop",
+      "path": "/shop",
+      "purpose": "Browse the product catalog",
+      "access": "public",
+      "dataAuthorities": [
+        "Business Core canonical commerce (runtime adapter pending)",
+        "Legacy local compatibility projection"
+      ],
+      "sections": [
+        "catalog.filters",
+        "catalog.product-grid",
+        "catalog.pagination"
+      ]
+    },
+    {
+      "key": "product-detail",
+      "path": "/product/[id]",
+      "purpose": "Review a product and select a purchasable variant",
+      "access": "public",
+      "dataAuthorities": [
+        "Business Core canonical commerce (runtime adapter pending)"
+      ],
+      "sections": [
+        "product.gallery",
+        "product.purchase-panel",
+        "product.details"
+      ]
+    },
+    {
+      "key": "cart",
+      "path": "/cart",
+      "purpose": "Review and update the current cart",
+      "access": "public",
+      "dataAuthorities": [
+        "Business Core canonical commerce (runtime adapter pending)",
+        "Legacy NestCraft cart compatibility surface"
+      ],
+      "sections": [
+        "cart.items",
+        "cart.summary"
+      ]
+    },
+    {
+      "key": "checkout",
+      "path": "/checkout",
+      "purpose": "Collect checkout input and begin authoritative order creation",
+      "access": "public",
+      "dataAuthorities": [
+        "Business Core canonical commerce (runtime implementation pending)"
+      ],
+      "sections": [
+        "checkout.customer-form",
+        "checkout.delivery-form",
+        "checkout.summary"
+      ]
+    },
+    {
+      "key": "account",
+      "path": "/account",
+      "purpose": "View and manage the authenticated customer account",
+      "access": "authenticated",
+      "dataAuthorities": [
+        "Configured authentication service"
+      ],
+      "sections": [
+        "account.profile"
+      ]
+    },
+    {
+      "key": "orders",
+      "path": "/orders",
+      "purpose": "View orders belonging to the authenticated customer",
+      "access": "authenticated",
+      "dataAuthorities": [
+        "Business Core canonical commerce (runtime adapter pending)"
+      ],
+      "sections": [
+        "orders.list"
+      ]
+    },
+    {
+      "key": "catalog-admin",
+      "path": "/admin/products",
+      "purpose": "Administer catalog compatibility surfaces",
+      "access": "role_restricted",
+      "dataAuthorities": [
+        "Business Core canonical commerce (provider pending)",
+        "Guarded local MongoDB compatibility writes"
+      ],
+      "sections": [
+        "admin.catalog-list",
+        "admin.catalog-editor"
+      ]
+    }
+  ]
+}

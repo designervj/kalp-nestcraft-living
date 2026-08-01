@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "integrations": [
+    {
+      "key": "tenant-mongodb",
+      "capability": "Tenant branding, CMS compatibility and legacy local persistence",
+      "provider": "MongoDB",
+      "mode": "live_authority",
+      "boundary": "server",
+      "environmentVariables": ["MONGODB_URI", "DB_NAME"]
+    },
+    {
+      "key": "nestcraft-session",
+      "capability": "Existing NestCraft session verification",
+      "provider": "NestCraft JWT compatibility boundary",
+      "mode": "live_authority",
+      "boundary": "server",
+      "environmentVariables": ["JWT_SECRET"]
+    },
+    {
+      "key": "business-core-commerce",
+      "capability": "Canonical catalog, pricing, inventory, cart, checkout and orders",
+      "provider": "Kalp Business Core",
+      "mode": "planned",
+      "boundary": "server",
+      "environmentVariables": []
+    },
+    {
+      "key": "legacy-public-api-base",
+      "capability": "Existing CMS and commerce compatibility requests",
+      "provider": "Configured API origin",
+      "mode": "adapter",
+      "boundary": "browser",
+      "environmentVariables": ["NEXT_PUBLIC_API_BASE_URL", "NEXT_PUBLIC_TENANT_ID"]
+    },
+    {
+      "key": "deterministic-build-revision",
+      "capability": "Stable build identification",
+      "provider": "Deployment tooling",
+      "mode": "adapter",
+      "boundary": "ci",
+      "environmentVariables": ["NEXT_BUILD_ID"]
+    }
+  ]
+}

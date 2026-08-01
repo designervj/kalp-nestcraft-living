@@ -1,0 +1,158 @@
+{
+  "alignmentStatus": "CONTRACT_CONVERGENCE_READY",
+  "callerMap": [
+    ["lib/store/products/productsThunk.ts", "fetchProducts", "GET", "/api/commerce/products", "ADAPTER_REQUIRED"],
+    ["lib/store/products/productsThunk.ts", "fetchProductsByCategory", "GET", "/api/commerce/products?category=", "ADAPTER_REQUIRED"],
+    ["lib/store/products/productsThunk.ts", "fetchProductById", "GET", "/api/commerce/products/", "ADAPTER_REQUIRED"],
+    ["lib/getPageData.ts", "getSingleProduct", "GET", "/api/commerce/products/", "ADAPTER_REQUIRED"],
+    ["app/[locale]/wishlist/_components/WishlistPageClient.tsx", "product lookup", "GET", "/api/commerce/products/", "ADAPTER_REQUIRED"],
+    ["lib/store/products/productsThunk.ts", "saveProduct create", "POST", "/api/commerce/products", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/products/productsThunk.ts", "saveProduct update", "PUT", "/api/commerce/products/", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/products/productsThunk.ts", "deleteProduct", "DELETE", "/api/commerce/products/", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/products/productsThunk.ts", "bulkImportProducts", "POST", "/api/commerce/products/bulk", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/categories/categoriesThunk.ts", "fetchCategories", "GET", "/api/commerce/categories", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/categories/categoriesThunk.ts", "createCategory", "POST", "/api/commerce/categories", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/categories/categoriesThunk.ts", "updateCategory", "PUT", "/api/commerce/categories/", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/categories/categoriesThunk.ts", "deleteCategory", "DELETE", "/api/commerce/categories/", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/categories/categoriesThunk.ts", "bulkImportCategories", "POST", "/api/commerce/categories/bulk", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/attributes/attributesThunk.ts", "fetchAttributes", "GET", "/api/commerce/attribute-sets", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/attributes/attributesThunk.ts", "createAttributeSet", "POST", "/api/commerce/attributes", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/attributes/attributesThunk.ts", "updateAttributeSet", "PUT", "/api/commerce/attributes/", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/features/adminCategoriesSlice.ts", "fetchCategories direct browser", "GET", "/commerce/categories", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"],
+    ["lib/store/features/adminVariantsSlice.ts", "fetchVariants direct browser", "GET", "/commerce/variants", "ADAPTER_AND_ENDPOINT_EXTENSION_REQUIRED"],
+    ["lib/store/features/adminAttributesSlice.ts", "fetchAttributes direct browser", "GET", "/commerce/attributes", "OUTSIDE_CATALOG_LOOKUP_CONTRACT"]
+  ],
+  "contractId": "urn:kalp:business-core:catalog-integration:1.0.0",
+  "identityRuntimeStatus": "UNIMPLEMENTED_BLOCKED_BY_WO_COMMERCE_IDENTITY_01",
+  "issuer": "https://biz.kalptree.xyz",
+  "audience": "urn:kalp:business-core-api",
+  "targetNamespace": "/v2/integrations/catalog",
+  "providerOpenApiSha256": "8af564f738e1eefd11e995da10ff81923a7eb402cdb4bbb915b8260a67c35d34",
+  "providerRuntimeActive": false,
+  "nestcraftRuntimeAdapterActive": false,
+  "productLookup": {
+    "data": {
+      "available": true,
+      "compareAtPriceMinor": 249900,
+      "currency": "INR",
+      "id": "product-contract-1",
+      "maxPurchaseQuantity": 12,
+      "name": "Contract Product",
+      "published": true,
+      "sellable": true,
+      "sku": "CONTRACT-PRODUCT-1",
+      "slug": "contract-product",
+      "status": "active",
+      "unitPriceMinor": 199900,
+      "variantRequired": true
+    },
+    "meta": {
+      "audit_id": "audit-product-lookup",
+      "correlation_id": "req-product-lookup",
+      "timestamp": "2026-07-24T00:00:00Z"
+    }
+  },
+  "productList": {
+    "data": [],
+    "meta": {
+      "audit_id": "audit-product-list",
+      "correlation_id": "req-product-list",
+      "timestamp": "2026-07-24T00:00:00Z"
+    },
+    "page": {
+      "cursor": "cursor-current",
+      "next_cursor": "cursor-next",
+      "limit": 50
+    }
+  },
+  "variantLookup": {
+    "data": {
+      "available": true,
+      "availableStock": 8,
+      "compareAtPriceMinor": 259900,
+      "currency": "INR",
+      "id": "variant-contract-1",
+      "maxPurchaseQuantity": 6,
+      "productId": "product-contract-1",
+      "published": true,
+      "sellable": true,
+      "sku": "CONTRACT-VARIANT-1",
+      "status": "active",
+      "title": "Contract Variant",
+      "unitPriceMinor": 209900
+    },
+    "meta": {
+      "audit_id": "audit-variant-lookup",
+      "correlation_id": "req-variant-lookup",
+      "timestamp": "2026-07-24T00:00:00Z"
+    }
+  },
+  "validationResponse": {
+    "data": {
+      "product": {
+        "available": true,
+        "compareAtPriceMinor": 249900,
+        "currency": "INR",
+        "id": "product-contract-1",
+        "maxPurchaseQuantity": 12,
+        "name": "Contract Product",
+        "published": true,
+        "sellable": true,
+        "sku": "CONTRACT-PRODUCT-1",
+        "slug": "contract-product",
+        "status": "active",
+        "unitPriceMinor": 199900,
+        "variantRequired": true
+      },
+      "quantity": {
+        "effectiveMaximum": 6,
+        "existingQuantity": 2,
+        "requestedIncrement": 3,
+        "resultingQuantity": 5
+      },
+      "variant": {
+        "available": true,
+        "availableStock": 8,
+        "compareAtPriceMinor": 259900,
+        "currency": "INR",
+        "id": "variant-contract-1",
+        "maxPurchaseQuantity": 6,
+        "productId": "product-contract-1",
+        "published": true,
+        "sellable": true,
+        "sku": "CONTRACT-VARIANT-1",
+        "status": "active",
+        "title": "Contract Variant",
+        "unitPriceMinor": 209900
+      }
+    },
+    "meta": {
+      "audit_id": "audit-validation",
+      "correlation_id": "req-validation",
+      "timestamp": "2026-07-24T00:00:00Z"
+    }
+  },
+  "errorExamples": [
+    [401, {"code": "AUTHENTICATION_REQUIRED", "message": "Authentication is required.", "correlation_id": "req-authentication", "details": {}}],
+    [401, {"code": "SERVICE_TOKEN_INVALID", "message": "The service token is invalid.", "correlation_id": "req-token", "details": {}}],
+    [403, {"code": "PERMISSION_DENIED", "message": "Permission is denied.", "correlation_id": "req-permission", "details": {}}],
+    [403, {"code": "TENANT_SCOPE_FORBIDDEN", "message": "Tenant scope is forbidden.", "correlation_id": "req-tenant", "details": {}}]
+  ],
+  "errors": [
+    [401, "AUTHENTICATION_REQUIRED"],
+    [401, "SERVICE_TOKEN_INVALID"],
+    [403, "PERMISSION_DENIED"],
+    [403, "TENANT_SCOPE_FORBIDDEN"],
+    [404, "PRODUCT_NOT_FOUND"],
+    [404, "VARIANT_NOT_FOUND"],
+    [422, "PRODUCT_VARIANT_MISMATCH"],
+    [422, "PRODUCT_NOT_AVAILABLE"],
+    [422, "VARIANT_NOT_AVAILABLE"],
+    [422, "QUANTITY_INVALID"],
+    [422, "QUANTITY_LIMIT_EXCEEDED"],
+    [409, "INSUFFICIENT_STOCK"],
+    [429, "RATE_LIMITED"],
+    [503, "SERVICE_UNAVAILABLE"],
+    [504, "SERVICE_UNAVAILABLE"]
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "CHECKOUT_INTEGRITY",
+  "producer": {
+    "name": "vitest",
+    "version": "4.1.10"
+  },
+  "target": {
+    "repository": "nestcraft-live",
+    "commit": "0e598e07ca35ec83b581787cf0e74334ccf79e88",
+    "checksum": "sha256:dacdd673ab8857b35f9f5e3e0cf745739b2ccad02efc32273589f67b0fdd1dfe"
+  },
+  "execution": {
+    "command": "node node_modules/vitest/vitest.mjs run tests/commerce/cart-integrity-characterization.test.ts tests/commerce/proxied-commerce-characterization.test.ts --reporter=verbose",
+    "toolVersion": "4.1.10",
+    "environment": "Node 22 isolated local test run with application network access disabled",
+    "exitCode": 0,
+    "outputChecksum": "sha256:ee63f64179dddb1b909868be8f75d808af75b9464bfd1ab4d17a9414f7e76319"
+  },
+  "assertions": [
+    {
+      "id": "checkout-authoritative-money",
+      "outcome": "FAIL",
+      "detail": "The current proxy forwards client-calculated prices, discounts, tax, shipping and totals without authoritative revalidation.",
+      "repositoryPaths": [
+        "app/api/[[...slug]]/route.ts",
+        "tests/commerce/proxied-commerce-characterization.test.ts"
+      ]
+    },
+    {
+      "id": "checkout-server-calculation",
+      "outcome": "FAIL",
+      "detail": "The checkout UI calculates financial totals that are submitted to the proxied order boundary.",
+      "repositoryPaths": [
+        "components/pages/CheckoutPage.tsx",
+        "tests/commerce/proxied-commerce-characterization.test.ts"
+      ]
+    },
+    {
+      "id": "checkout-idempotency",
+      "outcome": "FAIL",
+      "detail": "Identical order requests are forwarded without a locally established or provider-backed idempotency contract.",
+      "repositoryPaths": [
+        "app/api/[[...slug]]/route.ts",
+        "tests/commerce/proxied-commerce-characterization.test.ts"
+      ]
+    }
+  ],
+  "summary": {
+    "outcome": "FAIL",
+    "total": 3,
+    "passed": 0,
+    "failed": 3
+  }
+}

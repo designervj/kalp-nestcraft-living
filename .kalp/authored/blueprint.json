@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "owner-approved",
+  "business": {
+    "name": "NestCraft",
+    "audiences": [
+      "Furniture and interior-design shoppers",
+      "Authenticated customers",
+      "Tenant commerce administrators"
+    ],
+    "objectives": [
+      "Present a responsive furniture and interior-design storefront",
+      "Support product discovery, cart and checkout journeys",
+      "Operate as the storefront and server-side adapter for Business Core commerce"
+    ]
+  },
+  "capabilities": [
+    "catalog",
+    "cart",
+    "checkout",
+    "orders",
+    "customer-account",
+    "content-management",
+    "catalog-administration"
+  ],
+  "openQuestions": [
+    "Business Core workload identity remains deferred and is not runtime-ready.",
+    "Catalog minor-unit data rehearsal and migration remain externally gated.",
+    "Legacy local MongoDB commerce writes require a reviewed migration and archival plan.",
+    "Publication authority and ProjectCompatibilityManifest consumption are not operationally proven."
+  ],
+  "projectCompatibilityManifestRef": null
+}

@@ -1,0 +1,289 @@
+{
+  "id": "page_ecommerce",
+  "title": {
+    "en": "Premium Furniture | NestCraft",
+    "hi": "प्रीमियम फर्नीचर | नेस्टक्राफ्ट"
+  },
+  "slug": "ecommerce",
+  "isPublished": true,
+  "metaTitle": {
+    "en": "Shop Luxury Furniture Online - NestCraft",
+    "hi": "लक्जरी फर्नीचर ऑनलाइन खरीदें - नेस्टक्राफ्ट"
+  },
+  "metaDescription": {
+    "en": "Explore our exclusive collection of meticulously handcrafted furniture. Elevate your living spaces with NestCraft.",
+    "hi": "हमारे विशेष हस्तनिर्मित फर्नीचर संग्रह का अन्वेषण करें। नेस्टक्राफ्ट के साथ अपने रहने के स्थानों को उन्नत करें।"
+  },
+  "content": [
+    {
+      "id": "sec_ecommerce_hero",
+      "type": "hero-section",
+      "layout": "default",
+      "props": {
+        "badge": { "type": "text", "value": { "en": "New Collection 2026", "hi": "नया संग्रह 2026" } },
+        "title": { "type": "text", "value": { "en": "Crafted for Modern Living", "hi": "आधुनिक जीवन के लिए तैयार" } },
+        "description": { "type": "textarea", "value": { "en": "Discover furniture that blends timeless design with exceptional craftsmanship. Upgrade your home today.", "hi": "उस फर्नीचर की खोज करें जो असाधारण शिल्प कौशल के साथ कालातीत डिजाइन को मिश्रित करता है। आज ही अपने घर को अपग्रेड करें।" } },
+        "primaryCTA": { "type": "text", "value": { "en": "Shop Now", "hi": "अभी खरीदें" } },
+        "primaryLink": { "type": "link", "value": "/shop" },
+        "image": { "type": "image", "value": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1800" }
+      },
+      "content": []
+    },
+    {
+      "id": "sec_ecommerce_categories",
+      "type": "category-grid",
+      "layout": "grid-7",
+      "props": {
+        "badge": { "type": "text", "value": { "en": "Categories", "hi": "श्रेणियाँ" } },
+        "title": { "type": "text", "value": { "en": "Shop by Room & Style", "hi": "कमरे और शैली के अनुसार खरीदारी करें" } }
+      },
+      "content": [
+        {
+          "id": "cat_sofas",
+          "type": "category-item",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Sofas", "hi": "सोफा" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80&w=600" },
+            "link": { "type": "link", "value": "/category/sofas" }
+          }
+        },
+        {
+          "id": "cat_beds",
+          "type": "category-item",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Beds", "hi": "बिस्तर" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=600" },
+            "link": { "type": "link", "value": "/category/beds" }
+          }
+        },
+        {
+          "id": "cat_dining",
+          "type": "category-item",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Dining", "hi": "भोजन कक्ष" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&q=80&w=600" },
+            "link": { "type": "link", "value": "/category/dining" }
+          }
+        },
+        {
+          "id": "cat_storage",
+          "type": "category-item",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Storage", "hi": "भंडारण" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1595514535315-2a29094cefb0?auto=format&fit=crop&q=80&w=600" },
+            "link": { "type": "link", "value": "/category/storage" }
+          }
+        },
+        {
+          "id": "cat_study",
+          "type": "category-item",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Study & Office", "hi": "अध्ययन और कार्यालय" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&q=80&w=600" },
+            "link": { "type": "link", "value": "/category/study" }
+          }
+        },
+        {
+          "id": "cat_outdoor",
+          "type": "category-item",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Outdoor", "hi": "आउटडोर" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?auto=format&fit=crop&q=80&w=600" },
+            "link": { "type": "link", "value": "/category/outdoor" }
+          }
+        },
+        {
+          "id": "cat_decor",
+          "type": "category-item",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Decor", "hi": "सजावट" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600" },
+            "link": { "type": "link", "value": "/category/decor" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec_ecommerce_featured",
+      "type": "featured-collections",
+      "layout": "default",
+      "props": {
+        "badge": { "type": "text", "value": { "en": "Curated Sets", "hi": "विशेष सेट" } },
+        "title": { "type": "text", "value": { "en": "Featured Collections", "hi": "विशेष संग्रह" } }
+      },
+      "content": [
+        {
+          "id": "coll_minimalist",
+          "type": "collection-card",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Nordic Minimalist", "hi": "नॉर्डिक मिनिमलिस्ट" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&q=80&w=800" },
+            "link": { "type": "link", "value": "/collections/nordic" }
+          }
+        },
+        {
+          "id": "coll_luxury",
+          "type": "collection-card",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Luxury Velvet", "hi": "लक्ज़री मखमली" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&q=80&w=800" },
+            "link": { "type": "link", "value": "/collections/luxury-velvet" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec_ecommerce_products",
+      "type": "product-grid",
+      "layout": "sidebar-right",
+      "props": {
+        "badge": { "type": "text", "value": { "en": "Top Picks", "hi": "शीर्ष चयन" } },
+        "title": { "type": "text", "value": { "en": "Trending Now", "hi": "अभी ट्रेंडिंग" } }
+      },
+      "content": [
+        {
+          "id": "sidebar_filters",
+          "type": "filters-sidebar",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Filter By", "hi": "इसके द्वारा फ़िल्टर करें" } },
+            "options": {
+              "type": "list",
+              "value": [
+                { "en": "Price: Low to High", "hi": "मूल्य: कम से अधिक" },
+                { "en": "Price: High to Low", "hi": "मूल्य: अधिक से कम" },
+                { "en": "New Arrivals", "hi": "नये आगमन" }
+              ]
+            }
+          }
+        },
+        {
+          "id": "prod_1",
+          "type": "product-card",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Oakwood Dining Table", "hi": "ओकवुड डाइनिंग टेबल" } },
+            "price": { "type": "number", "value": 1299 },
+            "ratings": { "type": "number", "value": 4.8 },
+            "tags": { "type": "list", "value": [{ "en": "Best Seller", "hi": "बेस्ट सेलर" }] },
+            "category": { "type": "text", "value": { "en": "Dining", "hi": "भोजन कक्ष" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1577140917170-285929fb55b7?auto=format&fit=crop&q=80&w=600" },
+            "ctaButton": { "type": "text", "value": { "en": "Add to Cart", "hi": "कार्ट में डालें" } },
+            "link": { "type": "link", "value": "/product/oakwood-table" }
+          }
+        },
+        {
+          "id": "prod_2",
+          "type": "product-card",
+          "props": {
+            "title": { "type": "text", "value": { "en": "Velvet Lounge Sofa", "hi": "मखमली लाउंज सोफा" } },
+            "price": { "type": "number", "value": 2499 },
+            "ratings": { "type": "number", "value": 4.9 },
+            "tags": { "type": "list", "value": [{ "en": "New", "hi": "नया" }] },
+            "category": { "type": "text", "value": { "en": "Sofas", "hi": "सोफा" } },
+            "image": { "type": "image", "value": "https://images.unsplash.com/photo-1550254478-ead40cc54513?auto=format&fit=crop&q=80&w=600" },
+            "ctaButton": { "type": "text", "value": { "en": "Add to Cart", "hi": "कार्ट में डालें" } },
+            "link": { "type": "link", "value": "/product/velvet-lounge-sofa" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec_ecommerce_pricing",
+      "type": "pricing-section",
+      "layout": "default",
+      "props": {
+        "badge": { "type": "text", "value": { "en": "Membership", "hi": "सदस्यता" } },
+        "title": { "type": "text", "value": { "en": "NestCraft Elite", "hi": "नेस्टक्राफ्ट एलीट" } },
+        "description": { "type": "textarea", "value": { "en": "Join our elite program for exclusive discounts, free delivery, and priority support.", "hi": "विशेष छूट, मुफ्त डिलीवरी और प्राथमिकता समर्थन के लिए हमारे कुलीन कार्यक्रम में शामिल हों।" } }
+      },
+      "content": [
+        {
+          "id": "price_tier_1",
+          "type": "pricing-card",
+          "props": {
+            "tier": { "type": "text", "value": { "en": "Annual", "hi": "वार्षिक" } },
+            "price": { "type": "number", "value": 199 },
+            "benefits": { "type": "list", "value": [
+              { "en": "Free Standard Delivery", "hi": "मुफ्त मानक डिलीवरी" },
+              { "en": "10% off all orders", "hi": "सभी ऑर्डर पर 10% की छूट" },
+              { "en": "Early access to sales", "hi": "बिक्री के लिए प्रारंभिक पहुँच" }
+            ]},
+            "ctaButton": { "type": "text", "value": { "en": "Join Now", "hi": "अभी शामिल हों" } },
+            "link": { "type": "link", "value": "/elite/join" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec_ecommerce_cta",
+      "type": "cta-banner",
+      "layout": "full-width",
+      "props": {
+        "title": { "type": "text", "value": { "en": "Design Your Dream Home", "hi": "अपने सपनों के घर को डिज़ाइन करें" } },
+        "description": { "type": "textarea", "value": { "en": "Book a free consultation with our interior experts.", "hi": "हमारे इंटीरियर विशेषज्ञों के साथ निःशुल्क परामर्श बुक करें।" } },
+        "primaryCTA": { "type": "text", "value": { "en": "Book Consultation", "hi": "परामर्श बुक करें" } },
+        "primaryLink": { "type": "link", "value": "/consultation" },
+        "image": { "type": "image", "value": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1800" }
+      },
+      "content": []
+    },
+    {
+      "id": "sec_ecommerce_reviews",
+      "type": "testimonials",
+      "layout": "default",
+      "props": {
+        "badge": { "type": "text", "value": { "en": "Reviews", "hi": "समीक्षाएँ" } },
+        "title": { "type": "text", "value": { "en": "Loved by Thousands", "hi": "हजारों द्वारा पसंद किया गया" } }
+      },
+      "content": [
+        {
+          "id": "review_1",
+          "type": "testimonial-item",
+          "props": {
+            "name": { "type": "text", "value": { "en": "Sarah Jenkins", "hi": "सारा जेनकिंस" } },
+            "role": { "type": "text", "value": { "en": "Interior Designer", "hi": "इंटीरियर डिज़ाइनर" } },
+            "quote": { "type": "textarea", "value": { "en": "The quality of NestCraft furniture is absolutely stunning. My clients are always thrilled.", "hi": "नेस्टक्राफ्ट फर्नीचर की गुणवत्ता बिल्कुल आश्चर्यजनक है। मेरे ग्राहक हमेशा रोमांचित होते हैं।" } },
+            "rating": { "type": "number", "value": 5 }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec_ecommerce_faq",
+      "type": "faq-section",
+      "layout": "accordion",
+      "props": {
+        "badge": { "type": "text", "value": { "en": "FAQ", "hi": "सामान्य प्रश्न" } },
+        "title": { "type": "text", "value": { "en": "Common Questions", "hi": "सामान्य प्रश्न" } }
+      },
+      "content": [
+        {
+          "id": "faq_1",
+          "type": "faq-item",
+          "props": {
+            "question": { "type": "text", "value": { "en": "Do you offer international shipping?", "hi": "क्या आप अंतरराष्ट्रीय शिपिंग की पेशकश करते हैं?" } },
+            "answer": { "type": "textarea", "value": { "en": "Currently, we only ship within select regions. Please check our shipping policy for details.", "hi": "वर्तमान में, हम केवल चुनिंदा क्षेत्रों में ही शिप करते हैं। कृपया विवरण के लिए हमारी शिपिंग नीति देखें।" } }
+          }
+        },
+        {
+          "id": "faq_2",
+          "type": "faq-item",
+          "props": {
+            "question": { "type": "text", "value": { "en": "What is your return policy?", "hi": "आपकी वापसी नीति क्या है?" } },
+            "answer": { "type": "textarea", "value": { "en": "We offer a 30-day hassle-free return policy on all standard furniture pieces.", "hi": "हम सभी मानक फर्नीचर टुकड़ों पर 30 दिन की परेशानी मुक्त वापसी नीति प्रदान करते हैं।" } }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec_ecommerce_newsletter",
+      "type": "newsletter-section",
+      "layout": "default",
+      "props": {
+        "title": { "type": "text", "value": { "en": "Join Our Newsletter", "hi": "हमारे न्यूज़लेटर से जुड़ें" } },
+        "description": { "type": "textarea", "value": { "en": "Get 10% off your first order and stay updated on our latest collections.", "hi": "अपने पहले ऑर्डर पर 10% की छूट पाएं और हमारे नवीनतम संग्रहों पर अपडेट रहें।" } },
+        "buttonLabel": { "type": "text", "value": { "en": "Subscribe", "hi": "सदस्यता लें" } }
+      },
+      "content": []
+    }
+  ]
+}

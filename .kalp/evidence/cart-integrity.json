@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "CART_INTEGRITY",
+  "producer": {
+    "name": "vitest",
+    "version": "4.1.10"
+  },
+  "target": {
+    "repository": "nestcraft-live",
+    "commit": "0e598e07ca35ec83b581787cf0e74334ccf79e88",
+    "checksum": "sha256:dacdd673ab8857b35f9f5e3e0cf745739b2ccad02efc32273589f67b0fdd1dfe"
+  },
+  "execution": {
+    "command": "node node_modules/vitest/vitest.mjs run tests/commerce/cart-integrity-characterization.test.ts tests/commerce/proxied-commerce-characterization.test.ts --reporter=verbose",
+    "toolVersion": "4.1.10",
+    "environment": "Node 22 isolated local test run with application network access disabled",
+    "exitCode": 0,
+    "outputChecksum": "sha256:ee63f64179dddb1b909868be8f75d808af75b9464bfd1ab4d17a9414f7e76319"
+  },
+  "assertions": [
+    {
+      "id": "cart-server-authoritative-financial-fields",
+      "outcome": "FAIL",
+      "detail": "The legacy local cart accepts and persists client-submitted price, discount, subtotal and total fields.",
+      "repositoryPaths": [
+        "app/api/ecommerce/cart/route.ts",
+        "tests/commerce/cart-integrity-characterization.test.ts"
+      ]
+    },
+    {
+      "id": "cart-quantity-bounds",
+      "outcome": "FAIL",
+      "detail": "The legacy local cart accepts negative, fractional, excessive and non-numeric quantities.",
+      "repositoryPaths": [
+        "app/api/ecommerce/cart/route.ts",
+        "tests/commerce/cart-integrity-characterization.test.ts"
+      ]
+    },
+    {
+      "id": "cart-authenticated-owner",
+      "outcome": "PASS",
+      "detail": "The authenticated compatibility path derives cart ownership from the verified userId claim.",
+      "repositoryPaths": [
+        "app/api/ecommerce/cart/route.ts",
+        "tests/commerce/cart-integrity-characterization.test.ts"
+      ]
+    },
+    {
+      "id": "cart-guest-capability",
+      "outcome": "FAIL",
+      "detail": "The guest compatibility path uses possession of a client cookie directly as its cart ownership selector.",
+      "repositoryPaths": [
+        "app/api/ecommerce/cart/route.ts",
+        "tests/commerce/cart-integrity-characterization.test.ts"
+      ]
+    },
+    {
+      "id": "cart-authoritative-total",
+      "outcome": "FAIL",
+      "detail": "The storefront subtotal is calculated from client-held cart prices, including invalid quantities.",
+      "repositoryPaths": [
+        "lib/store/cart/cartSlice.ts",
+        "tests/commerce/cart-integrity-characterization.test.ts"
+      ]
+    }
+  ],
+  "summary": {
+    "outcome": "FAIL",
+    "total": 5,
+    "passed": 1,
+    "failed": 4
+  }
+}

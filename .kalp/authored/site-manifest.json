@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "site": {
+    "id": "nestcraft-live",
+    "name": "NestCraft",
+    "vertical": "ecommerce",
+    "integrationMode": "standalone"
+  },
+  "source": {
+    "repository": "nestcraft-live",
+    "framework": "nextjs",
+    "packageManager": "npm"
+  },
+  "commands": {
+    "install": "npm ci",
+    "lint": null,
+    "typecheck": "npm run typecheck",
+    "test": "npm test",
+    "build": "npm run build",
+    "start": "npm start"
+  }
+}

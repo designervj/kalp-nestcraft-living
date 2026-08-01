@@ -1,0 +1,18 @@
+node_modules
+.next
+out
+dist
+.env
+.DS_Store
+*.log
+*.tsbuildinfo
+
+reference
+
+public/uploads
+
+e-commerce_updated 3.md
+
+e-commerce_updated 4.md
+
+placeholder.json
