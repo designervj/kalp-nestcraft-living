@@ -1,6 +1,6 @@
 # NestCraft adaptation record
 
-- Repository: `work/sites/nestcraft-live`
+- Repository: `work/sites/kalp-nestcraft-living`
 - GitHub: `https://github.com/hideepakrai/nestcraft-live`
 - Analyzed commit: `63a0556dd76fa09d7bfb296e7d9d335cbc572d1e`
 - Analyzer: `1.0.3`; ruleset: `ecommerce@1.1.0`
