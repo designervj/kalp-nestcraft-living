@@ -7,19 +7,25 @@
       "purpose": "Brand, content and store discovery",
       "access": "public",
       "dataAuthorities": [
-        "Configured CMS API",
-        "Local tenant branding projection"
+        "Tenant site_pages published document",
+        "business_blueprints_v2 public experience projection",
+        "Business Core commerce through the same-origin server adapter"
       ],
       "sections": [
         "home.hero",
         "home.usp",
         "home.services",
         "home.collections",
+        "home.shop-by-room",
+        "home.featured-banner",
         "home.product-slider",
+        "home.craft",
         "home.testimonials",
         "home.blog",
         "home.faq",
-        "home.newsletter"
+        "home.newsletter",
+        "home.instagram",
+        "home.cta"
       ]
     },
     {

@@ -1,0 +1,226 @@
+{
+  "schemaVersion": "1.0.0",
+  "contract": "sitebridge.studio-adaptation.v1",
+  "siteId": "kalp-nestcraft-living",
+  "status": "PREPARED_NOT_CONNECTED",
+  "rendererAuthority": "STOREFRONT_REPOSITORY",
+  "editorAuthority": "KALP_STUDIO",
+  "scoreAuthority": "KALP_ADAPT",
+  "kcpStatus": "UNCONFIGURED",
+  "pageAuthority": {
+    "collection": "site_pages",
+    "canonicalSelector": {
+      "slug": "home",
+      "isPublished": true
+    },
+    "requiredIdentityRule": "Resolve the canonical published page explicitly; never prefer a generic document_key draft over it.",
+    "knownConflict": {
+      "code": "DUPLICATE_HOME_IDENTITY",
+      "status": "OPEN",
+      "description": "A generic six-section Studio draft and the published fourteen-section NestCraft page both identify as home."
+    }
+  },
+  "preview": {
+    "mode": "STOREFRONT_RENDERER_BRIDGE",
+    "route": "/",
+    "viewportSupport": ["desktop", "tablet", "mobile"],
+    "selectionAttribute": "data-annotate-id",
+    "bridgeStatus": "REQUIRED_NOT_IMPLEMENTED",
+    "fallbackPolicy": "BLOCK_GENERIC_TEMPLATE_PREVIEW",
+    "requirements": [
+      "Render the NestCraft application rather than recreating its markup in Kalp Admin.",
+      "Select sections using stable renderer markers and a constrained cross-window message contract.",
+      "Preview immutable draft revisions without changing the public page pointer.",
+      "Label live, draft, unavailable and stale states explicitly."
+    ]
+  },
+  "pages": [
+    {
+      "pageKey": "home",
+      "route": "/",
+      "expectedSectionCount": 14,
+      "sections": [
+        {
+          "id": "sec-hero",
+          "label": "Premium Hero Slider",
+          "componentKey": "nestcraft.hero.carousel",
+          "sourcePath": "components/homepage/hero/Hero.tsx",
+          "rendererSelector": "[data-annotate-id='home-hero-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props.autoplaySpeed", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-usp",
+          "label": "USP Section",
+          "componentKey": "nestcraft.trust.strip",
+          "sourcePath": "components/homepage/usp/USP.tsx",
+          "rendererSelector": "[data-annotate-id='home-usp-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-services",
+          "label": "Services",
+          "componentKey": "nestcraft.feature.grid",
+          "sourcePath": "components/homepage/service/Service.tsx",
+          "rendererSelector": "[data-annotate-id='home-services-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-collections",
+          "label": "Collections",
+          "componentKey": "nestcraft.collection.grid",
+          "sourcePath": "components/homepage/collections/Collections.tsx",
+          "rendererSelector": "[data-annotate-id='home-collections-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-shop-by-room",
+          "label": "Shop By Room Section",
+          "componentKey": "nestcraft.category.grid",
+          "sourcePath": "components/homepage/shopByRoom/ShopByRoom.tsx",
+          "rendererSelector": "[data-annotate-id='home-shop-by-room-section']",
+          "mappingDecision": "wrap",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props.badge", "props.heading", "props.buttonLabel", "props.categorySlugs", "props.limit"],
+          "dataAuthority": "BUSINESS_CORE_CATALOG"
+        },
+        {
+          "id": "sec-featured-banner",
+          "label": "Featured Banner",
+          "componentKey": "nestcraft.cta.featured-banner",
+          "sourcePath": "components/homepage/featuredBanner/FeaturedBanner.tsx",
+          "rendererSelector": "[data-annotate-id='home-featured-banner']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-product-slider",
+          "label": "New Essentials Slider",
+          "componentKey": "nestcraft.product.carousel",
+          "sourcePath": "components/homepage/productSlider/ProductSlider.tsx",
+          "rendererSelector": "[data-annotate-id='home-product-slider-section']",
+          "mappingDecision": "wrap",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props.badge", "props.heading", "props.viewAllLabel", "props.viewAllLink", "props.productSlugs", "props.limit"],
+          "dataAuthority": "BUSINESS_CORE_COMMERCE"
+        },
+        {
+          "id": "sec-craft",
+          "label": "Craft & Quality Section",
+          "componentKey": "nestcraft.story.feature",
+          "sourcePath": "components/homepage/craft/Craft.tsx",
+          "rendererSelector": "[data-annotate-id='home-craft-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-testimonials",
+          "label": "Customer Testimonials",
+          "componentKey": "nestcraft.testimonial.carousel",
+          "sourcePath": "components/homepage/testimonials/Testimonials.tsx",
+          "rendererSelector": "[data-annotate-id='home-testimonials-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-blog",
+          "label": "Latest Blog Posts",
+          "componentKey": "nestcraft.content.card-grid",
+          "sourcePath": "components/homepage/blog/Blog.tsx",
+          "rendererSelector": "[data-annotate-id='home-blog-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-faq",
+          "label": "Homepage FAQs",
+          "componentKey": "nestcraft.faq.accordion",
+          "sourcePath": "components/homepage/faq/FAQ.tsx",
+          "rendererSelector": "[data-annotate-id='home-faq-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS"
+        },
+        {
+          "id": "sec-newsletter",
+          "label": "Newsletter Section",
+          "componentKey": "nestcraft.newsletter.form",
+          "sourcePath": "components/homepage/newsletter/Newsletter.tsx",
+          "rendererSelector": "[data-annotate-id='home-newsletter-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props"],
+          "dataAuthority": "CMS_AND_FORMS"
+        },
+        {
+          "id": "sec-instagram",
+          "label": "Instagram Gallery",
+          "componentKey": "nestcraft.social.gallery",
+          "sourcePath": "components/homepage/instagram/InstagramGallery.tsx",
+          "rendererSelector": "[data-annotate-id='home-instagram-gallery-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props", "content"],
+          "dataAuthority": "CMS_AND_EXTERNAL_WIDGET"
+        },
+        {
+          "id": "sec-cta",
+          "label": "CTA",
+          "componentKey": "nestcraft.cta.banner",
+          "sourcePath": "components/pages/HomePageServer.tsx",
+          "rendererSelector": "[data-annotate-id='home-cta-section']",
+          "mappingDecision": "preserve-custom",
+          "contentAuthority": "site_pages",
+          "editablePaths": ["props"],
+          "dataAuthority": "CMS"
+        }
+      ]
+    }
+  ],
+  "authorityRules": [
+    "Studio may edit CMS copy, media, order, visibility and approved presentation controls through governed revisions.",
+    "Studio must store only stable product and category references for commerce-backed sections.",
+    "Studio must never author product price, inventory, cart totals, checkout totals or order state.",
+    "Kalp Admin and an LLM must not calculate or alter Kalp Adapt scores.",
+    "A generic Studio renderer must not be presented as visual parity evidence."
+  ],
+  "forbiddenEditableFields": [
+    "price",
+    "unitPriceMinor",
+    "inventory",
+    "stock",
+    "cartTotal",
+    "checkoutTotal",
+    "orderStatus"
+  ],
+  "handoff": {
+    "owner": "kalp-studio-workstream",
+    "requiredOutcome": "STUDIO_STOREFRONT_PARITY_READY",
+    "externalChangesRequired": [
+      "Resolve duplicate page identity in Business Core Studio projection.",
+      "Implement the constrained storefront renderer preview bridge.",
+      "Map Studio inspector controls to the declared editable paths.",
+      "Verify 390px, 768px and 1440px visual parity before enabling writes."
+    ]
+  }
+}

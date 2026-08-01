@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0.0",
   "site": {
-    "id": "nestcraft-live",
-    "name": "NestCraft",
+    "id": "kalp-nestcraft-living",
+    "name": "Kalp NestCraft Living",
     "vertical": "ecommerce",
     "integrationMode": "standalone"
   },
   "source": {
-    "repository": "nestcraft-live",
+    "repository": "kalp-nestcraft-living",
     "framework": "nextjs",
     "packageManager": "npm"
   },
