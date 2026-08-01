@@ -1,19 +1,25 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { usePathname } from "next/navigation";
-import { fetchAllForm } from "@/lib/store/forms/formsThunk";
-import { RootState } from "@/lib/store/store";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import {
+  createFormAttemptKey,
+  submitPublicForm,
+} from "@/lib/forms/public-forms-client";
 
 
-const TENANT_DB_NAME = process.env.NEXT_PUBLIC_TENANT_DB_NAME;
+const TENANT_SLUG = process.env.NEXT_PUBLIC_TENANT_SLUG;
+const NEWSLETTER_FORM_ID = process.env.NEXT_PUBLIC_NEWSLETTER_FORM_ID;
 const Newsletter = ({ section: propSection }: { section?: any }) => {
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState("");
+  const [attemptKey, setAttemptKey] = useState(() =>
+    createFormAttemptKey("newsletter"),
+  );
   const currentPages = useAppSelector((state) => state.pages.currentPages);
   const isEditable = useAppSelector((state) => state.pages.isEditable);
   const pathname = usePathname();
@@ -58,33 +64,31 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
   const handle = (fieldPath: string) => (value: string) =>
     saveField(dispatch, currentPages, section?.id, fieldPath, value);
 
-  const { allForms, isFetchedForms } = useAppSelector((state: RootState) => state.forms);
-
-  const subscriptionForm = useMemo(() => {
-    if(allForms && allForms.length>0){
-      const form = allForms?.find((f) => f.name === "Subscribtion Forms");
-      return form;
-    }
-    return null
-  }, [allForms]);
+  const newsletterForm = p.form && typeof p.form === "object" ? p.form : null;
+  const newsletterFields = Array.isArray(newsletterForm?.fields) && newsletterForm.fields.length
+    ? newsletterForm.fields
+    : [{ id: "newsletter-email", name: "email", type: "email", label: "Email address", placeholder: "Email address", required: true }];
+  const newsletterFormId = newsletterForm?.id || NEWSLETTER_FORM_ID;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try{
-      const res = await fetch("/api/form-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(TENANT_DB_NAME ? { "x-tenant-db": TENANT_DB_NAME } : {})
+      await submitPublicForm({
+        tenantSlug: TENANT_SLUG,
+        formId: newsletterFormId,
+        submission: {
+          data: formData,
+          metadata: { source: "nestcraft-home-newsletter", language: lang },
+          consent: {},
+          honeypot: "",
+          idempotencyKey: attemptKey,
         },
-        body: JSON.stringify(formData),
       });
-      if(res.status === 200){
-        setMsg(msgSuccess);
-        setFormData({});
-      }
-    }catch(error){
-      console.log(error);
+      setMsg(msgSuccess || "Thank you. Your subscription was received.");
+      setFormData({});
+      setAttemptKey(createFormAttemptKey("newsletter"));
+    }catch(error: any){
+      setMsg(error?.message || "The subscription could not be submitted.");
     }
   };
 
@@ -156,7 +160,7 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
                 className="flex flex-col gap-4"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-                  {subscriptionForm?.fields?.map((field: any) => (
+                  {newsletterFields.map((field: any) => (
                     <div key={field.id} className="flex-1">
                       <label className="mb-1.5 block text-[13px] font-semibold text-white/75 ml-1">
                         {field.placeholder}
@@ -166,11 +170,11 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
                         type={field.type === "text" && field.name?.toLowerCase().includes("email") ? "email" : field.type}
                         placeholder={field.placeholder || field.label}
                         required={field.required}
-                        value={formData[field?.placeholder??""] || ""}
+                        value={formData[field?.name || field?.id] || ""}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            [field?.placeholder??""]: e.target.value,
+                            [field?.name || field?.id]: e.target.value,
                           })
                         }
                       />

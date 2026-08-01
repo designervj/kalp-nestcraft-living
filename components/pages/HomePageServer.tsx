@@ -19,8 +19,6 @@ import Link from "next/link";
 // Client-only initializers
 import GetAllPages from "./GetAllPages";
 import GetAllMenus from "../cms/menus/GetAllMenus";
-import GetAllForms from "../forms/GetAllForms";
-import { FormComp } from "../forms/FormComp";
 
 interface HomePageServerProps {
   data: {
@@ -52,7 +50,6 @@ const HomePageServer = ({ data, lang }: HomePageServerProps) => {
       {/* Client-side logic components */}
       <GetAllPages />
       <GetAllMenus />
-      <GetAllForms />
 
       {/* Content is rendered from the server-read site_pages document. */}
       <Hero section={getSection(content, "Premium Hero Slider")} />
@@ -69,7 +66,6 @@ const HomePageServer = ({ data, lang }: HomePageServerProps) => {
       <Newsletter section={getSection(content, "Newsletter Section")} />
       <InstagramGallery section={getSection(content, "Instagram Gallery")} />
       <LogoStrip section={getSection(content, "Client Logos")} />
-      <FormComp />
 
       {ctaBlock && (
         <section

@@ -9,7 +9,7 @@ import { subMitFormData } from "@/lib/store/forms/formsThunk";
 
 export const FormComp = () => {
   const { allForms } = useAppSelector((state) => state.forms);
-  const formId = "6a33915780b4f6a585e55d37";
+  const formId = process.env.NEXT_PUBLIC_CONTACT_FORM_ID || "";
   const [fields, setFields] = useState<FormField[]>([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [previewValues, setPreviewValues] = useState<Record<string, any>>({});
@@ -35,6 +35,7 @@ export const FormComp = () => {
       const payload = {
         formId: formId,
         data: previewValues,
+        idempotencyKey: `nestcraft-contact-${crypto.randomUUID()}`,
       };
       const res = await dispatch(subMitFormData(payload)).unwrap();
       if (res.id) {

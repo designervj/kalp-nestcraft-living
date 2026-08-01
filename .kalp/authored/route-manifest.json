@@ -9,7 +9,8 @@
       "dataAuthorities": [
         "Tenant site_pages published document",
         "business_blueprints_v2 public experience projection",
-        "Business Core commerce through the same-origin server adapter"
+        "Business Core commerce through the same-origin server adapter",
+        "Business Core tenant-qualified public Forms adapter (owner form selection and runtime verification pending)"
       ],
       "sections": [
         "home.hero",
@@ -26,6 +27,20 @@
         "home.newsletter",
         "home.instagram",
         "home.cta"
+      ]
+    },
+    {
+      "key": "contact",
+      "path": "/contact",
+      "purpose": "Present contact information and accept a governed public enquiry",
+      "access": "public",
+      "dataAuthorities": [
+        "Tenant site_pages published contact content",
+        "Business Core tenant-qualified public Forms adapter (owner form selection and runtime verification pending)"
+      ],
+      "sections": [
+        "contact.info",
+        "contact.form"
       ]
     },
     {

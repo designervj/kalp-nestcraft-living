@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import {
@@ -24,6 +24,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { getGateway } from "@/lib/paymentgateway/resgistry";
+import {
+  createCheckoutOrder,
+  createCheckoutPaymentIntent,
+  createCheckoutQuote,
+  toCheckoutAddress,
+} from "@/lib/commerce/checkout-client";
 
 const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
 
@@ -52,6 +58,9 @@ const CheckoutPage = () => {
   const [shippingData, setShippingData] = useState<any>(null);
   const [billingData, setBillingData] = useState<any>(null);
   const [orderError, setOrderError] = useState<string | null>(null);
+  const checkoutQuote = useRef<any | null>(null);
+  const orderIdempotencyKey = useRef<string | null>(null);
+  const paymentIdempotencyKey = useRef<string | null>(null);
   const { user, isAuthenticated } = useAppSelector((state: RootState) => state.auth);
   const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<
     string | null
@@ -201,64 +210,6 @@ const CheckoutPage = () => {
     return "/assets/Image/Sofa.jpg";
   };
 
-  const buildOrderPayload = (isCOD: boolean) => ({
-    items: cart.map((item) => ({
-      productId: item.id,
-      name: item.name,
-      slug: item.slug || item.name.toLowerCase().replace(/ /g, "-"),
-      sku:
-        item.selectedVariant?.sku ||
-        item.sku ||
-        `SKU-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-      quantity: item.quantity,
-      price: Number(
-        item.selectedVariant?.price || item.price || item.pricing?.price || 0,
-      ),
-      compareAtPrice: Number(
-        item.pricing?.compareAtPrice ||
-          item.selectedVariant?.price ||
-          item.price ||
-          0,
-      ),
-      variantId: item.selectedVariant?.id || null,
-      variantTitle: item.selectedVariant?.title || null,
-      selectedOptions: item.selectedOptions || {},
-      image: getItemImage(item),
-    })),
-    pricing: {
-      subtotal: cartTotal,
-      tax: totalTax || 0,
-      shipping: shippingCost || 0,
-      discount: discountAmount,
-      total: orderTotal,
-    },
-    shippingAddress: shippingData,
-    billingAddress: billingData,
-    payment: {
-      method: isCOD ? "cod" : selectedGateway,
-      ...(isCOD
-        ? {}
-        : {
-            transactionId: null,
-            paymentGatewayResponse: {
-              status: "pending",
-              amount: Math.round(orderTotal * 100), // paise
-              currency: "INR",
-            },
-            paidAt: null,
-          }),
-    },
-    shipping: {
-      method: "standard",
-    },
-    statusHistory: [
-      {
-        status: "pending",
-        timestamp: null,
-      },
-    ],
-  });
-
   const handlePlaceOrder = async () => {
     setOrderError(null);
     setIsProcessing(true);
@@ -267,34 +218,34 @@ const CheckoutPage = () => {
     const isCOD = paymentMethod === "cod" || !selectedGateway;
 
     try {
-      const payload = buildOrderPayload(isCOD);
-
-      // 1. Create the order (needed for both COD and online)
-      const res = await fetch("/api/commerce/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-tenant-db": tenantId || "",
-        },
-        body: JSON.stringify(payload),
+      const shippingAddress = toCheckoutAddress(shippingData || {}, regions);
+      const billingAddress = toCheckoutAddress(
+        billingData || shippingData || {},
+        regions,
+      );
+      const quote = checkoutQuote.current ||
+        await createCheckoutQuote({
+          tenantId,
+          email: shippingData?.email || user?.email || "",
+          shippingAddress,
+          billingAddress,
+          couponCode: appliedCoupon || undefined,
+        });
+      checkoutQuote.current = quote;
+      orderIdempotencyKey.current ||= `nestcraft-order-${crypto.randomUUID()}`;
+      const order = await createCheckoutOrder({
+        tenantId,
+        quoteId: quote.id,
+        quoteChecksum: quote.checksum,
+        paymentMethod: isCOD ? "cod" : selectedGateway,
+        idempotencyKey: orderIdempotencyKey.current,
       });
-
-      let data: any;
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
-
-      if (!res.ok) {
-        throw new Error(
-          data?.detail || "Failed to create order. Please try again."
-        );
-      }
 
       // 2. COD: we're done — no gateway, no verification.
       if (isCOD) {
         setIsCompleted(true);
+        checkoutQuote.current = null;
+        orderIdempotencyKey.current = null;
         await dispatch(clearCartAsync()).catch(() => {});
         return;
       }
@@ -311,10 +262,17 @@ const CheckoutPage = () => {
 
       const gateway = getGateway(selectedGateway);
 
+      paymentIdempotencyKey.current ||= `nestcraft-payment-${crypto.randomUUID()}`;
+      const paymentIntent = await createCheckoutPaymentIntent({
+        tenantId,
+        orderId: order.id,
+        provider: selectedGateway,
+        idempotencyKey: paymentIdempotencyKey.current,
+      });
       const paymentpayload = {
-        amount: Math.round(orderTotal * 100),
-        currency: "INR",
-        orderId: data.gateway_order_id,
+        amount: paymentIntent.amountMinor,
+        currency: paymentIntent.currency,
+        orderId: paymentIntent.gatewayOrderId,
         customerEmail: shippingData?.email,
         customerName:
           `${shippingData?.firstName ?? ""} ${shippingData?.lastName ?? ""}`.trim(),
@@ -322,39 +280,15 @@ const CheckoutPage = () => {
 
       const result = await gateway.initiatePayment(
         paymentpayload,
-        String(gatewayConfig.apiKey),
+        String(paymentIntent.publicKey),
         `${shippingData?.addressLine1 ?? ""} ${shippingData?.addressLine2 ?? ""}`.trim(),
       );
-
-      // 4. Verify the payment on the server
-      const verifyPayment = await fetch(
-        `/api/commerce/orders/${data?.gateway_order_data?.receipt}/payment?provider=${selectedGateway}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-tenant-db": tenantId || "",
-          },
-          body: JSON.stringify({
-            ...result,
-            gateway_order_id: data.gateway_order_id,
-          }),
-        },
-      );
-
-      if (!verifyPayment.ok) {
-        throw new Error(
-          "Payment could not be verified. If you were charged, please contact support.",
-        );
-      }
-
-      const verifyData = await verifyPayment.json();
-
-      if (verifyData?.success === false) {
-        throw new Error(verifyData?.message || "Payment verification failed.");
-      }
+      if (!result.transactionId) throw new Error("Payment was not completed.");
 
       setIsCompleted(true);
+      checkoutQuote.current = null;
+      orderIdempotencyKey.current = null;
+      paymentIdempotencyKey.current = null;
       await dispatch(clearCartAsync()).catch(() => {});
     } catch (err: any) {
       console.error("Order placement failed:", err);
@@ -444,6 +378,9 @@ const CheckoutPage = () => {
       }
       setStep(2);
     } else if (step === 2) {
+      checkoutQuote.current = null;
+      orderIdempotencyKey.current = null;
+      paymentIdempotencyKey.current = null;
       setStep(3);
     } else {
       await handlePlaceOrder();

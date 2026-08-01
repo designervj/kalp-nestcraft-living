@@ -3,8 +3,7 @@
 import React, { useEffect } from "react";
 
 import GetAllPages from "./GetAllPages";
-import { RootState } from "@/lib/store/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { resetPageComments } from "@/lib/store/comments/commentSlice";
 import Hero from "../homepage/hero/Hero";
 import USP from "../homepage/usp/USP";
@@ -22,10 +21,8 @@ import FAQ from "../homepage/faq/FAQ";
 import InstagramGallery from "../homepage/instagram/InstagramGallery";
 import LogoStrip from "../homepage/logoStrip/LogoStrip";
 import GetAllMenus from "../cms/menus/GetAllMenus";
-import GetAllForms from "../forms/GetAllForms";
 
 const HomePage = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,7 +35,6 @@ const HomePage = () => {
 
       <GetAllPages />
       <GetAllMenus />
-      <GetAllForms />
       <UpdateCurrentPage />
 
       <Hero />

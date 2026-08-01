@@ -3,13 +3,10 @@ import React from "react";
 import GetAllPages from "./GetAllPages";
 import GetAllMenus from "../cms/menus/GetAllMenus";
 import GetAllProducts from "@/lib/GetAllDetails/GetAllProducts";
-import GetAllForms from "../forms/GetAllForms";
-import GetAuthTokenFastApi from "../wesiteDetail/GetAuthTokenFastApi";
 import UpdateCurrentPage from "./UpdateCurrentPage";
 import GetAllAttributes from "@/lib/GetAllDetails/GetAllAttributes";
 import GetAllCategories from "@/lib/GetAllDetails/GetAllCategories";
 import GetCart from "@/lib/GetAllDetails/GetCart";
-import GetUser from "@/lib/GetAllDetails/GetUser";
 
 const FetchAllData = () => {
   return (
@@ -23,8 +20,6 @@ const FetchAllData = () => {
       {/* Commerce entities remain live and are never copied into CMS pages. */}
       <GetAllProducts />
 
-      {/* get all forms */}
-      <GetAllForms />
 
       {/* get auth token from fast api */}
       {/* <GetAuthTokenFastApi /> */}

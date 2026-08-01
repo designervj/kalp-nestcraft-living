@@ -138,7 +138,7 @@ describe("proxied commerce characterization", () => {
     }
   });
 
-  it("characterizes checkout totals as browser-calculated inputs to the proxied order API", () => {
+  it("uses the authoritative quote and idempotent checkout client from the storefront", () => {
     const source = fs.readFileSync(
       "components/pages/CheckoutPage.tsx",
       "utf8",
@@ -148,10 +148,11 @@ describe("proxied commerce characterization", () => {
     expect(source).toContain("const totalTax =");
     expect(source).toContain("const shippingCost =");
     expect(source).toContain("const orderTotal = Math.max(");
-    expect(source).toContain("pricing: {");
-    expect(source).toContain('fetch("/api/commerce/orders"');
-    expect(source).not.toContain("serverAuthoritativePrice");
-    expect(source).not.toContain("idempotency-key");
+    expect(source).toContain("createCheckoutQuote({");
+    expect(source).toContain("createCheckoutOrder({");
+    expect(source).toContain("createCheckoutPaymentIntent({");
+    expect(source).not.toContain('fetch("/api/commerce/orders"');
+    expect(source).not.toContain("buildOrderPayload");
     expect(getNetworkAttemptCount()).toBe(0);
   });
 });

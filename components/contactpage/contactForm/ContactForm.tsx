@@ -14,6 +14,13 @@ import {
 import { defaultContactFormData } from "./contactFormData";
 import { useAppSelector } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
+import {
+  createFormAttemptKey,
+  submitPublicForm,
+} from "@/lib/forms/public-forms-client";
+
+const TENANT_SLUG = process.env.NEXT_PUBLIC_TENANT_SLUG;
+const CONTACT_FORM_ID = process.env.NEXT_PUBLIC_CONTACT_FORM_ID;
 
 const iconMap: Record<string, any> = {
   Mail,
@@ -131,6 +138,9 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [attemptKey, setAttemptKey] = useState(() =>
+    createFormAttemptKey("contact"),
+  );
 
   // Initialize form state
   useEffect(() => {
@@ -166,46 +176,25 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
     setIsSubmitting(true);
 
     try {
-      const isDynamic = !!formConfig;
-      const endpoint = isDynamic ? "/api/form-data" : "/api/contact";
-      const payload = isDynamic
-        ? { formId: formConfig.id, data: formData }
-        : formData;
-
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-
-      const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
-      if (tenantId) {
-        headers["x-tenant-db"] = tenantId;
-      }
-
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
+      await submitPublicForm({
+        tenantSlug: TENANT_SLUG,
+        formId: formConfig?.id || CONTACT_FORM_ID,
+        submission: {
+          data: formData,
+          metadata: { source: "nestcraft-contact-page", language: lang },
+          consent: {},
+          honeypot: "",
+          idempotencyKey: attemptKey,
+        },
       });
-
-      const responseData = await response.json();
-
-      if (
-        response.ok &&
-        (responseData.success || responseData.id || response.status === 201)
-      ) {
-        setIsSubmitted(true);
-        // Reset form values
-        const resetData: Record<string, any> = {};
-        fieldsToRender.forEach((f: any) => {
-          const key = f.name || f.id;
-          resetData[key] = f.type === "checkbox" ? false : "";
-        });
-        setFormData(resetData);
-      } else {
-        alert(
-          responseData.message || "Something went wrong. Please try again.",
-        );
-      }
+      setIsSubmitted(true);
+      setAttemptKey(createFormAttemptKey("contact"));
+      const resetData: Record<string, any> = {};
+      fieldsToRender.forEach((f: any) => {
+        const key = f.name || f.id;
+        resetData[key] = f.type === "checkbox" ? false : "";
+      });
+      setFormData(resetData);
     } catch (error) {
       console.error("Submission error:", error);
       alert("Failed to send message. Please check your connection.");

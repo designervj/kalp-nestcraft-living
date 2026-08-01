@@ -1,6 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import SiteChrome from "./SiteChrome";
+import StudioPreviewBridge from "./StudioPreviewBridge";
 
 export default function LayoutWrapper({
   children,
@@ -22,5 +23,5 @@ export default function LayoutWrapper({
   }
 
   // Otherwise, wrap children in the standard NestCraft header and footer
-  return <SiteChrome brandConfig={brandConfig}>{children}</SiteChrome>;
+  return <SiteChrome brandConfig={brandConfig}><StudioPreviewBridge />{children}</SiteChrome>;
 }

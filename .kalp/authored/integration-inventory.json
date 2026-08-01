@@ -26,6 +26,18 @@
       "environmentVariables": []
     },
     {
+      "key": "business-core-public-forms",
+      "capability": "Tenant-qualified public newsletter and contact submissions without exposing management discovery",
+      "provider": "Kalp Business Core",
+      "mode": "adapter",
+      "boundary": "browser",
+      "environmentVariables": [
+        "NEXT_PUBLIC_TENANT_SLUG",
+        "NEXT_PUBLIC_NEWSLETTER_FORM_ID",
+        "NEXT_PUBLIC_CONTACT_FORM_ID"
+      ]
+    },
+    {
       "key": "legacy-public-api-base",
       "capability": "Existing CMS and commerce compatibility requests",
       "provider": "Configured API origin",
