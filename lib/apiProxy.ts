@@ -40,6 +40,10 @@ export async function proxyRequest(
     "tenant-slug",
     "tenant_slug",
     "auth-token",
+    // Required by Business Core checkout order/payment endpoints. The
+    // storefront creates this key once per operation; the proxy must preserve
+    // it so retries cannot duplicate orders or payment intents.
+    "idempotency-key",
   ];
 
   headersToForward.forEach((headerName) => {

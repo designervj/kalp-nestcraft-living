@@ -138,6 +138,34 @@ describe("proxied commerce characterization", () => {
     }
   });
 
+  it("preserves the storefront idempotency key for authoritative checkout", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ accepted: true }));
+    const consoleLog = vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.stubGlobal("fetch", fetchMock);
+
+    try {
+      const { proxyRequest } = await import("@/lib/apiProxy");
+      await proxyRequest(
+        new NextRequest("http://localhost/api/commerce/checkout/orders", {
+          method: "POST",
+          body: JSON.stringify({ quoteId: "quote-1", quoteChecksum: "checksum-1", paymentMethod: "cod" }),
+          headers: {
+            "content-type": "application/json",
+            "Idempotency-Key": "nestcraft-order-stable-key",
+          },
+        }),
+        "commerce/checkout/orders",
+      );
+
+      const requestOptions = fetchMock.mock.calls[0][1] as RequestInit;
+      const headers = requestOptions.headers as Headers;
+      expect(headers.get("idempotency-key")).toBe("nestcraft-order-stable-key");
+      expect(getNetworkAttemptCount()).toBe(0);
+    } finally {
+      consoleLog.mockRestore();
+    }
+  });
+
   it("uses the authoritative quote and idempotent checkout client from the storefront", () => {
     const source = fs.readFileSync(
       "components/pages/CheckoutPage.tsx",
