@@ -17,11 +17,26 @@ function serialize(obj: any): any {
 
 export const getPageData = cache(async (slug: string) => {
   try {
-    const db = await connectTenantDB();
-    const page = await db.collection("site_pages").findOne({
-      slug,
-      isPublished: { $ne: false },
+    const url = process.env.FASTAPI_URL || "http://127.0.0.1:8000";
+    const tenantId=process.env.DB_NAME
+    // const token = process.env.API_AUTH_TOKEN || process.env.NEXT_PUBLIC_API_AUTH_TOKEN || "";
+    const res = await fetch(`${url}/api/cms/pages?slug=${encodeURIComponent(slug)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-tenant-db": tenantId || "",
+      },
+      credentials: "include" as const,
     });
+
+    if (!res.ok) {
+      console.error(`Failed to fetch page data for slug: ${slug}, status: ${res.status}`);
+      return null;
+    }
+
+    const json = await res.json();
+    const data = json.data !== undefined ? json.data : json;
+    const page = Array.isArray(data) ? data.find((p: any) => p.slug === slug) : data;
 
     return serialize(page);
   } catch (error) {
