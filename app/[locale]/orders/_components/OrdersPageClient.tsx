@@ -65,7 +65,8 @@ export default function OrdersPageClient() {
     }).format(price);
 
   const getOrderStatus = (order: Order): string => {
-    if ((order as any).status) return (order as any).status;
+    if (order.fulfillmentStatus && order.fulfillmentStatus !== "unfulfilled") return order.fulfillmentStatus;
+    if (order.status) return order.status;
     if (order.statusHistory && order.statusHistory.length > 0) {
       return order.statusHistory[order.statusHistory.length - 1].status;
     }
@@ -96,6 +97,16 @@ export default function OrdersPageClient() {
         bg: "bg-emerald-50 text-emerald-700 border-emerald-200",
         text: "text-emerald-700",
         border: "border-emerald-200",
+      },
+      fulfilled: {
+        bg: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        text: "text-emerald-700",
+        border: "border-emerald-200",
+      },
+      placed: {
+        bg: "bg-blue-50 text-blue-700 border-blue-200",
+        text: "text-blue-700",
+        border: "border-blue-200",
       },
       cancelled: {
         bg: "bg-rose-50 text-rose-700 border-rose-200",

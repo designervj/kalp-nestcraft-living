@@ -77,7 +77,8 @@ export default function OrderDetailsPageClient({
 
   const getOrderStatus = (): string => {
     if (!selectedOrder) return "";
-    if ((selectedOrder as any).status) return (selectedOrder as any).status;
+    if (selectedOrder.fulfillmentStatus && selectedOrder.fulfillmentStatus !== "unfulfilled") return selectedOrder.fulfillmentStatus;
+    if (selectedOrder.status) return selectedOrder.status;
     if (selectedOrder.statusHistory && selectedOrder.statusHistory.length > 0) {
       return selectedOrder.statusHistory[selectedOrder.statusHistory.length - 1].status;
     }
@@ -90,6 +91,8 @@ export default function OrderDetailsPageClient({
       processing: { bg: "bg-blue-50 text-blue-700 border-blue-200" },
       shipped: { bg: "bg-indigo-50 text-indigo-700 border-indigo-200" },
       delivered: { bg: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+      fulfilled: { bg: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+      placed: { bg: "bg-blue-50 text-blue-700 border-blue-200" },
       cancelled: { bg: "bg-rose-50 text-rose-700 border-rose-200" },
       unfulfilled: { bg: "bg-slate-50 text-slate-700 border-slate-200" },
     };
@@ -263,6 +266,16 @@ export default function OrderDetailsPageClient({
               </div>
             </div>
           </div>
+
+          {selectedOrder.invoiceNumber ? (
+            <div className="bg-surface border border-border rounded-3xl p-6 sm:p-8" data-kalp-commerce-evidence="invoice">
+              <p className="text-[10px] font-black text-muted uppercase tracking-wider">Invoice</p>
+              <p className="mt-1 font-bold text-foreground">{selectedOrder.invoiceNumber}</p>
+              <p className="mt-1 text-sm font-semibold text-muted">
+                {selectedOrder.invoiceIssuedAt ? `Issued ${formatDate(selectedOrder.invoiceIssuedAt)}` : "Issued with this Order"}
+              </p>
+            </div>
+          ) : null}
 
           {/* Customer and Shipping details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
