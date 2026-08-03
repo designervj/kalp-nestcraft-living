@@ -27,7 +27,6 @@ export const fetchFastApiPagesThunk = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-tenant-db": "kp_nestcraft",
         },
       });
       if (!response.ok) {

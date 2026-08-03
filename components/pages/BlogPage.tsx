@@ -4,9 +4,10 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Search, Tag, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
+import { pageContentItems, pageHero } from '@/lib/cms/page-content';
 
-const BlogPage = () => {
-  const posts = [
+const BlogPage = ({ initialData }: { initialData?: any }) => {
+  const repositoryAuthoredFallbackPosts = [
     {
       id: 1,
       title: 'The Rise of Soft Minimalism',
@@ -62,6 +63,19 @@ const BlogPage = () => {
       excerpt: 'Lighting can make or break a room. We discuss the different types of lighting and how to use them to create the perfect atmosphere.'
     }
   ];
+  const governedItems = pageContentItems(initialData);
+  const posts = governedItems.length > 0
+    ? governedItems.map((item, index) => ({
+        id: item.id || item._id || index + 1,
+        title: item.title,
+        tag: item.tag || item.category || 'Journal',
+        date: item.date || item.publishedAt || '',
+        author: item.author || 'NestCraft',
+        img: item.image || item.img || item.imageUrl || repositoryAuthoredFallbackPosts[index % repositoryAuthoredFallbackPosts.length]!.img,
+        excerpt: item.description,
+      }))
+    : repositoryAuthoredFallbackPosts;
+  const hero = pageHero(initialData);
 
   return (
     <div className="pb-20">
@@ -73,7 +87,7 @@ const BlogPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-secondary uppercase tracking-[4px] text-sm font-black mb-4"
           >
-            The Journal
+            {hero.eyebrow || 'The Journal'}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -81,7 +95,7 @@ const BlogPage = () => {
             transition={{ delay: 0.1 }}
             className="text-[48px] lg:text-[64px] font-bold leading-tight tracking-tight mb-6"
           >
-            Inspiration for <br className="hidden md:block" /> Modern Living.
+            {hero.heading || <>Inspiration for <br className="hidden md:block" /> Modern Living.</>}
           </motion.h1>
 
           <motion.div

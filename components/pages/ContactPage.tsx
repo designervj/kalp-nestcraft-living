@@ -6,7 +6,6 @@ import { Mail, Phone, MapPin, Send, Instagram, Facebook, Twitter, CheckCircle2, 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import { AnnotatorPlugin } from '../annotationPlugin/AnnotatorPlugin';
-import GetAllPages from './GetAllPages';
 import { ContactForm } from '../contactpage/contactForm/ContactForm';
 import ContactHero from '../contactpage/contactHero/ContactHero';
 import { FAQ } from '../contactpage/faq/FAQ';
@@ -14,8 +13,9 @@ import { usePathname } from 'next/navigation';
 import { Page } from '@/lib/store/pages/pageType';
 import { setCurrentPages } from '@/lib/store/pages/pagesSlice';
 import EditableText from '../shared/EditableText';
+import PageDataInitializer from './PageDataInitializer';
 
-const ContactPage = () => {
+const ContactPage = ({ initialData }: { initialData?: Page | null }) => {
   const { user: nestCraftUser } = useSelector((state: RootState) => state.auth);
   const { allPages, currentPages } = useSelector((state: RootState) => state.pages);
   const pathname = usePathname();
@@ -24,13 +24,13 @@ const ContactPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (allPages && allPages.length > 0 && slug) {
+    if (!initialData && allPages && allPages.length > 0 && slug) {
       const currentPage = allPages.find((item: Page) => item.slug === slug);
       if (currentPage) {
         dispatch(setCurrentPages(currentPage));
       }
     }
-  }, [allPages, slug, dispatch]);
+  }, [allPages, slug, dispatch, initialData]);
 
   const lang = useMemo(() => {
     const segments = pathname.split("/").filter(Boolean);
@@ -66,8 +66,7 @@ const ContactPage = () => {
       {/* commentsS Plugin */}
       {nestCraftUser?.role === "admin" && <AnnotatorPlugin />}
 
-      {/* get all page from the database */}
-      <GetAllPages />
+      <PageDataInitializer initialData={initialData || null} />
       <div className="pb-20 bg-background">
         {/* Editorial Hero Section */}
         <ContactHero />

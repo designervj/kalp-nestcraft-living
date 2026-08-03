@@ -12,6 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default function Page() {
-  return <Component />;
+export default async function Page() {
+  const data = await getPageData("contact");
+  return <Component initialData={data} />;
 }

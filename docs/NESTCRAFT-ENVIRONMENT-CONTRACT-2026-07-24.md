@@ -38,6 +38,7 @@ unused in the current contract.
 | `NEXT_BUILD_ID` | `TOOLING` | `SERVER_ONLY` | `NON_SECRET` | Deployment/release pipeline |
 | `NEXT_PUBLIC_API_BASE_URL` | `RUNTIME_REQUIRED` | `BROWSER_EXPOSED` | `NON_SECRET` | Business Core/API deployment owner |
 | `NEXT_PUBLIC_TENANT_ID` | `RUNTIME_REQUIRED` | `BROWSER_EXPOSED` | `NON_SECRET` | Tenant registry/Business Core owner and deployment configuration |
+| `NEXT_PUBLIC_TENANT_SLUG` | `RUNTIME_REQUIRED` | `BROWSER_EXPOSED` | `NON_SECRET` | Business Core tenant registry and deployment configuration |
 | `NEXT_PUBLIC_TENANT_DB_NAME` | `OPTIONAL` | `BROWSER_EXPOSED` | `NON_SECRET` | Newsletter integration owner; authority unresolved |
 | `NEXT_PUBLIC_ENVIRONMENT` | `OPTIONAL` | `BROWSER_EXPOSED` | `NON_SECRET` | Authentication/SSO deployment owner |
 | `NODE_ENV` | `TOOLING` | `BROWSER_EXPOSED` | `NON_SECRET` | Next.js/npm |
@@ -213,6 +214,23 @@ into client code; it is not an operator-defined public variable.
   header with validated `DB_NAME`. It has no authorization authority.
 - Safe setup: provide only the approved public tenant identifier. Never encode
   secrets, credentials, or a confidential database identifier.
+
+### `NEXT_PUBLIC_TENANT_SLUG`
+
+- Classification: `RUNTIME_REQUIRED`
+- Visibility: `BROWSER_EXPOSED`
+- Sensitivity: `NON_SECRET`
+- Consumer: `lib/public-site.ts`
+- Missing-value behavior: the single-tenant NestCraft deployment uses the
+  repository-authored public slug `nestcraft`; it never derives a database
+  name from this value.
+- Current default/fallback: `nestcraft`.
+- Configuration authority: Business Core tenant registry and deployment
+  configuration.
+- Risk/ambiguity: this is public routing context only. Business Core remains
+  responsible for resolving the tenant to its governed data stores.
+- Safe setup: provide the approved public tenant slug. Never use it as a
+  credential, database selector, or authorization claim.
 
 ### `NEXT_PUBLIC_TENANT_DB_NAME`
 

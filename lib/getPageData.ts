@@ -1,15 +1,16 @@
 import { cache } from "react";
-import { connectTenantDB } from "./db";
-import { ObjectId } from "mongodb";
 import { normalizeCommerceProduct } from "./commerce/product-normalization";
+import {
+  blueprintFromPublicSite,
+  brandingFromPublicSite,
+  fetchPublicSitePage,
+  normalizePublicPage,
+} from "./public-site";
 
 function serialize(obj: any): any {
   if (obj === null || obj === undefined) return null;
   return JSON.parse(
     JSON.stringify(obj, (_, value) => {
-      if (value instanceof ObjectId) {
-        return value.toString();
-      }
       return value;
     }),
   );
@@ -17,28 +18,7 @@ function serialize(obj: any): any {
 
 export const getPageData = cache(async (slug: string) => {
   try {
-    const url = process.env.FASTAPI_URL || "http://127.0.0.1:8000";
-    const tenantId=process.env.DB_NAME
-    // const token = process.env.API_AUTH_TOKEN || process.env.NEXT_PUBLIC_API_AUTH_TOKEN || "";
-    const res = await fetch(`${url}/api/cms/pages?slug=${encodeURIComponent(slug)}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-tenant-db": tenantId || "",
-      },
-      credentials: "include" as const,
-    });
-
-    if (!res.ok) {
-      console.error(`Failed to fetch page data for slug: ${slug}, status: ${res.status}`);
-      return null;
-    }
-
-    const json = await res.json();
-    const data = json.data !== undefined ? json.data : json;
-    const page = Array.isArray(data) ? data.find((p: any) => p.slug === slug) : data;
-
-    return serialize(page);
+    return serialize(normalizePublicPage(await fetchPublicSitePage(slug)));
   } catch (error) {
     console.error(`Error in getPageData for slug: ${slug}`, error);
     return null;
@@ -47,14 +27,11 @@ export const getPageData = cache(async (slug: string) => {
 
 export const getSingleProduct = cache(async (id: string) => {
   const SITE_URL = process.env.SITE_URL || "http://127.0.0.1:3000";
-  const tenantId = process.env.NEXT_PUBLIC_TENANT_ID || "kp_nestcraft";
-
   try {
     const requestOptions = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-tenant-db": tenantId,
       },
       credentials: "include" as const,
     };
@@ -93,46 +70,19 @@ export const getSingleProduct = cache(async (id: string) => {
 });
 
 export const getTenantRegistry = cache(async () => {
-  const db = await connectTenantDB();
-  const tenantRegistry = db.collection("tenant_registry");
-
-  const tenant = await tenantRegistry.findOne({ type: "branding" });
-
-  return serialize(tenant);
+  try {
+    return serialize(brandingFromPublicSite(await fetchPublicSitePage("home")));
+  } catch (error) {
+    console.error("Error reading public branding contract:", error);
+    return null;
+  }
 });
 
 export const getBusinessBlueprint = cache(async () => {
   try {
-    const db = await connectTenantDB();
-    const blueprint = await db.collection("business_blueprints_v2").findOne({});
-
-    if (!blueprint) return null;
-
-    const serialized = serialize(blueprint);
-    const publicExperience = serialized.experience?.public || {};
-    const commerce = serialized.verticals?.commerce?.configuration || {};
-
-    // The website consumes a small compatibility view derived exclusively from
-    // Blueprint V2. The legacy business_blueprints collection is never read.
-    return {
-      ...serialized,
-      id: serialized._id,
-      tenant_slug: serialized.tenant?.slug,
-      document_key: "blueprint-v2",
-      payload: {
-        ...serialized,
-        tenant_id: serialized.tenant?.id,
-        tenant_slug: serialized.tenant?.slug,
-        version: serialized.metadata?.blueprintVersion,
-        public_theme: publicExperience.theme,
-        brandAssets: publicExperience.theme,
-        public_navigation: publicExperience.navigationProfile,
-        permalinkDetails: serialized.seo?.permalinks,
-        commerce,
-      },
-    };
+    return serialize(blueprintFromPublicSite(await fetchPublicSitePage("home")));
   } catch (error) {
-    console.error("Error reading Business Blueprint V2:", error);
+    console.error("Error reading public Business Blueprint projection:", error);
     return null;
   }
 });

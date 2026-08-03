@@ -47,7 +47,6 @@ export default async function Page({
   const query = await searchParams;
   const preview = await getStudioPreview(query.studioPreviewGrant);
   const liveData = preview ? null : await getPageData("home");
-  console.log("liviv--", liveData)
   const data = preview ? { ...preview.page, content: preview.page.sections || [] } : liveData;
 
   return (

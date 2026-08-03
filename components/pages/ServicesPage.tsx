@@ -3,9 +3,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { PenTool, Hammer, Package, Layout, Ruler, Lightbulb } from 'lucide-react';
+import { pageContentItems, pageHero } from '@/lib/cms/page-content';
 
-const ServicesPage = () => {
-  const services = [
+const ServicesPage = ({ initialData }: { initialData?: any }) => {
+  const repositoryAuthoredFallbackServices = [
     {
       icon: PenTool,
       title: 'Interior Design',
@@ -43,6 +44,17 @@ const ServicesPage = () => {
       details: 'We help you choose the right combination of ambient, task, and accent lighting to complement your furniture and create the perfect atmosphere in every room.'
     }
   ];
+  const governedItems = pageContentItems(initialData);
+  const icons = [PenTool, Hammer, Package, Layout, Ruler, Lightbulb];
+  const services = governedItems.length > 0
+    ? governedItems.map((item, index) => ({
+        icon: icons[index % icons.length]!,
+        title: item.title,
+        sub: item.subtitle || item.description,
+        details: item.details || item.description,
+      }))
+    : repositoryAuthoredFallbackServices;
+  const hero = pageHero(initialData);
 
   return (
     <div className="pb-20">
@@ -54,7 +66,7 @@ const ServicesPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-secondary uppercase tracking-[4px] text-sm font-black mb-4"
           >
-            What we offer
+            {hero.eyebrow || 'What we offer'}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -62,7 +74,7 @@ const ServicesPage = () => {
             transition={{ delay: 0.1 }}
             className="text-[48px] lg:text-[64px] font-bold leading-tight tracking-tight mb-6"
           >
-            Bespoke Services for a <br className="hidden md:block" /> Beautiful Home.
+            {hero.heading || <>Bespoke Services for a <br className="hidden md:block" /> Beautiful Home.</>}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -70,7 +82,7 @@ const ServicesPage = () => {
             transition={{ delay: 0.2 }}
             className="text-lg text-muted font-semibold max-w-[700px] mx-auto"
           >
-            From initial concept to final installation, we provide a comprehensive range of services to help you create a space that is uniquely yours.
+            {hero.body || 'From initial concept to final installation, we provide a comprehensive range of services to help you create a space that is uniquely yours.'}
           </motion.p>
         </div>
       </section>
