@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "owner": "KALP_ADAPT",
+  "site": "nestcraft",
+  "features": {
+    "canonical_primary_locale": {
+      "status": "OBSERVED_CANDIDATE",
+      "authority": "Kalp Business Core localization policy + Nestcraft middleware"
+    },
+    "role_aware_admin_bar": {
+      "status": "OBSERVED_CANDIDATE",
+      "authority": "Business Core authenticated operator role"
+    },
+    "page_comments": {
+      "status": "OBSERVED_CANDIDATE",
+      "authority": "Business Core tenant-scoped Page review service"
+    },
+    "inline_content_editing": {
+      "status": "OBSERVED_CANDIDATE",
+      "authority": "Business Core tenant-scoped Page field draft"
+    },
+    "checkout_account_login": {
+      "status": "OBSERVED_CANDIDATE",
+      "authority": "Business Core Customer session and Commerce checkout"
+    }
+  }
+}

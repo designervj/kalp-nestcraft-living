@@ -77,7 +77,7 @@ export default function EditableText({
     setEditing(true);
   }, [isEditable, value]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const trimmed = editValue.trim();
     if (!trimmed || trimmed === value) {
       setEditValue(value);
@@ -87,7 +87,11 @@ export default function EditableText({
     if (onSaveProp) {
       onSaveProp(trimmed);
     } else if (pages && sectionId && fieldPath) {
-      saveField(dispatch, pages, sectionId, fieldPath, trimmed);
+      const saved = await saveField(dispatch, pages, sectionId, fieldPath, trimmed);
+      if (!saved) {
+        setEditing(true);
+        return;
+      }
     }
     setEditing(false);
   };
@@ -95,7 +99,7 @@ export default function EditableText({
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSave();
+      void handleSave();
     }
     if (e.key === 'Escape') {
       setEditValue(value);
@@ -113,7 +117,7 @@ export default function EditableText({
           e.target.style.height = 'auto';
           e.target.style.height = `${e.target.scrollHeight}px`;
         }}
-        onBlur={handleSave}
+        onBlur={() => void handleSave()}
         onKeyDown={handleKeyDown}
         className="editable-input"
         style={{

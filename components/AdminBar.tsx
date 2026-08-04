@@ -15,6 +15,15 @@ import { RootState } from "@/lib/store/store";
 import { useAnnotatorStore } from "@/components/annotationPlugin/store";
 import { AnnotatorPlugin } from "@/components/annotationPlugin/AnnotatorPlugin";
 
+const OPERATOR_ROLES = new Set([
+  "admin",
+  "staff",
+  "business_admin",
+  "tenant_admin",
+  "platform_admin",
+  "super_admin",
+]);
+
 export default function AdminBar() {
   const dispatch = useAppDispatch();
 
@@ -22,8 +31,9 @@ export default function AdminBar() {
   // ✅ Real edit mode state from Redux (same as EditModeToggle uses)
   const { isEditable } = useAppSelector((state: RootState) => state.pages);
 
-  // Only render for non-customer authenticated users
-  const isAdmin = isAuthenticated && user !== null && user?.role !== "customer";
+  const operatorRole = String(user?.role || "").trim().toLowerCase();
+  const isAdmin =
+    isAuthenticated && user !== null && OPERATOR_ROLES.has(operatorRole);
 
   // ✅ Real comment mode state from AnnotatorStore
   const { isCommentModeActive, toggleCommentMode, annotations } = useAnnotatorStore();
@@ -130,7 +140,7 @@ export default function AdminBar() {
           style={{ backgroundColor: "#98c45f", color: "#063A1D" }}
           className="w-full text-center py-2 text-[12px] font-semibold border-t border-white/10"
         >
-          ✨ Inline editing is active. Hover over any text block on the page and click to update.
+          ✨ Inline editing is active. Changes are saved as reviewable drafts and do not alter Published content.
         </div>
       )}
 

@@ -21,6 +21,7 @@ import {
   Wallet,
   Plus,
   Check,
+  LogIn,
 } from "lucide-react";
 import Link from "next/link";
 import { getGateway } from "@/lib/paymentgateway/resgistry";
@@ -30,6 +31,7 @@ import {
   createCheckoutQuote,
   toCheckoutAddress,
 } from "@/lib/commerce/checkout-client";
+import { loginThunk } from "@/lib/store/auth/authThunks";
 
 const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
 
@@ -69,6 +71,11 @@ const CheckoutPage = () => {
     string | null
   >(null);
   const dispatch = useAppDispatch();
+  const [showAccountLogin, setShowAccountLogin] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isSigningIn, setIsSigningIn] = useState(false);
   // Coupon / Promotion State
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
@@ -155,6 +162,28 @@ const CheckoutPage = () => {
     0,
     cartTotal - discountAmount + (totalTax || 0) + (shippingCost || 0),
   );
+
+  const handleCheckoutLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoginError(null);
+    setIsSigningIn(true);
+
+    try {
+      await dispatch(
+        loginThunk({ email: loginEmail.trim(), password: loginPassword }),
+      ).unwrap();
+      setLoginPassword("");
+      setShowAccountLogin(false);
+    } catch (error) {
+      setLoginError(
+        typeof error === "string"
+          ? error
+          : "We could not sign you in. Check your details and try again.",
+      );
+    } finally {
+      setIsSigningIn(false);
+    }
+  };
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -729,6 +758,103 @@ const CheckoutPage = () => {
       <div className="grid lg:grid-cols-[1fr_400px] gap-16 items-start">
         {/* Checkout Form */}
         <div className="space-y-12">
+          <section
+            aria-label="Checkout account"
+            className="rounded-2xl border border-border bg-surface/50 p-5"
+          >
+            {isAuthenticated ? (
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
+                    Account connected
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-foreground">
+                    {user?.email || user?.name || "Signed-in customer"}
+                  </p>
+                </div>
+                <p className="text-sm text-muted">
+                  This Order will be available in your account.
+                </p>
+              </div>
+            ) : (
+              <div>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-bold text-foreground">
+                      Already have an account?
+                    </p>
+                    <p className="mt-1 text-sm text-muted">
+                      Sign in here without leaving Checkout or losing this Cart.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoginError(null);
+                      setShowAccountLogin((current) => !current);
+                    }}
+                    className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-secondary px-5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-white"
+                    aria-expanded={showAccountLogin}
+                  >
+                    <LogIn size={17} />
+                    {showAccountLogin ? "Continue as guest" : "Sign in"}
+                  </button>
+                </div>
+
+                <AnimatePresence initial={false}>
+                  {showAccountLogin && (
+                    <motion.form
+                      key="checkout-login"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      onSubmit={handleCheckoutLogin}
+                      className="mt-5 grid gap-4 overflow-hidden border-t border-border pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+                    >
+                      <label className="grid gap-2 text-xs font-bold uppercase tracking-wider text-muted">
+                        Email
+                        <input
+                          type="email"
+                          autoComplete="email"
+                          required
+                          value={loginEmail}
+                          onChange={(event) => setLoginEmail(event.target.value)}
+                          className="h-11 rounded-xl border border-border bg-background px-4 text-sm font-medium normal-case tracking-normal text-foreground outline-none focus:border-secondary"
+                        />
+                      </label>
+                      <label className="grid gap-2 text-xs font-bold uppercase tracking-wider text-muted">
+                        Password
+                        <input
+                          type="password"
+                          autoComplete="current-password"
+                          required
+                          value={loginPassword}
+                          onChange={(event) => setLoginPassword(event.target.value)}
+                          className="h-11 rounded-xl border border-border bg-background px-4 text-sm font-medium normal-case tracking-normal text-foreground outline-none focus:border-secondary"
+                        />
+                      </label>
+                      <button
+                        type="submit"
+                        disabled={isSigningIn}
+                        className="h-11 rounded-full bg-secondary px-6 text-sm font-bold text-white transition-opacity disabled:cursor-wait disabled:opacity-60"
+                      >
+                        {isSigningIn ? "Signing in…" : "Sign in"}
+                      </button>
+                      {loginError && (
+                        <p role="alert" className="text-sm font-semibold text-red-600 sm:col-span-3">
+                          {loginError}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted sm:col-span-3">
+                        Guest Checkout remains available; close this panel to continue without an account.
+                      </p>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </section>
+
           {/* Steps Indicator */}
           <div className="flex items-center gap-6">
             {[
