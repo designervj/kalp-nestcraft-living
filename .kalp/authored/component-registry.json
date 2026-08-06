@@ -2,6 +2,14 @@
   "schemaVersion": "1.0.0",
   "components": [
     {
+      "key": "adapt.operator-controls",
+      "purpose": "Role-restricted operator bar, page comments and inline editing",
+      "level": "pattern",
+      "sourcePath": "components/AdminBar.tsx",
+      "states": ["hidden", "operator", "comment-mode", "edit-mode"],
+      "mappingDecision": "preserve-custom"
+    },
+    {
       "key": "site.chrome",
       "purpose": "Global navigation, search, account and cart entry",
       "level": "pattern",

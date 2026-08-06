@@ -13,6 +13,7 @@
         "Business Core tenant-qualified public Forms adapter (owner form selection and runtime verification pending)"
       ],
       "sections": [
+        "adapt.operator-controls",
         "home.hero",
         "home.usp",
         "home.services",

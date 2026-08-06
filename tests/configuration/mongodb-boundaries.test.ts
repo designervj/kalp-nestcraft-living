@@ -91,7 +91,7 @@ describe("MongoDB configuration boundaries", () => {
       expect(response.status).toBe(500);
       expect(await response.json()).toEqual({
         success: false,
-        error: "Failed to fetch pages",
+        error: "Server configuration is unavailable",
       });
       expect(mongoCalls.constructor).not.toHaveBeenCalled();
       expect(mongoCalls.instanceConnect).not.toHaveBeenCalled();

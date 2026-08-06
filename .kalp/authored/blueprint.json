@@ -21,7 +21,10 @@
     "orders",
     "customer-account",
     "content-management",
-    "catalog-administration"
+    "catalog-administration",
+    "operator-admin-bar",
+    "page-comments",
+    "inline-content-editing"
   ],
   "openQuestions": [
     "Business Core workload identity remains deferred and is not runtime-ready.",

@@ -2,6 +2,14 @@
   "schemaVersion": "1.0.0",
   "integrations": [
     {
+      "key": "adapt-page-collaboration",
+      "capability": "Role-restricted page comments and inline CMS editing",
+      "provider": "Kalp Business Core publishing services",
+      "mode": "adapter",
+      "boundary": "browser",
+      "environmentVariables": ["NEXT_PUBLIC_API_BASE_URL", "NEXT_PUBLIC_TENANT_ID"]
+    },
+    {
       "key": "tenant-mongodb",
       "capability": "Tenant branding, CMS compatibility and legacy local persistence",
       "provider": "MongoDB",

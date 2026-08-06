@@ -94,6 +94,10 @@ describe("server-configured tenant database authority", () => {
   it("ignores x-tenant-db and preserves the comments success contract", async () => {
     process.env.DB_NAME = APPROVED_DATABASE;
     process.env.NEXT_PUBLIC_TENANT_ID = UNTRUSTED_DATABASE;
+    const fetchMock = vi.fn().mockResolvedValue(
+      Response.json({ success: true, pages: [] }, { status: 200 }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
 
     const { GET } = await import("@/app/api/comments/route");
     const response = await GET(
@@ -104,11 +108,11 @@ describe("server-configured tenant database authority", () => {
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ success: true, pages: [] });
-    expect(databaseMocks.database).toHaveBeenCalledTimes(1);
-    expect(databaseMocks.database).toHaveBeenCalledWith(APPROVED_DATABASE);
-    expect(databaseMocks.database).not.toHaveBeenCalledWith(
-      UNTRUSTED_DATABASE,
-    );
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const requestOptions = fetchMock.mock.calls[0][1] as RequestInit;
+    const headers = requestOptions.headers as Headers;
+    expect(headers.get("x-tenant-db")).toBe(APPROVED_DATABASE);
+    expect(headers.get("x-tenant-db")).not.toBe(UNTRUSTED_DATABASE);
     expect(getNetworkAttemptCount()).toBe(0);
   });
 
@@ -129,7 +133,7 @@ describe("server-configured tenant database authority", () => {
       expect(response.status).toBe(500);
       expect(body).toEqual({
         success: false,
-        error: "Failed to fetch pages",
+        error: "Server configuration is unavailable",
       });
       expect(JSON.stringify(body)).not.toContain(UNTRUSTED_DATABASE);
       expect(JSON.stringify(body)).not.toContain("DB_NAME");

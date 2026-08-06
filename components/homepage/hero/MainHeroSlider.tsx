@@ -7,6 +7,14 @@ import { AnimatePresence, motion } from "motion/react";
 import { RootState } from "@/lib/store/store";
 import { useSelector } from "react-redux";
 
+export const getLocalizedHeroValue = (field: any, lang: string): string => {
+  if (!field) return "";
+  const value = field.value !== undefined ? field.value : field;
+  if (value && typeof value === "object") {
+    return value[lang] || value.en || "";
+  }
+  return typeof value === "string" ? value : "";
+};
 export const extractTitleParts = (text: string) => {
   if (!text) return { title: "", highlight: "", titleEnd: "" };
   const defaultHighlights = ["Defines", "Quiet", "Beautifully"];
@@ -31,7 +39,6 @@ export const extractTitleParts = (text: string) => {
 };
 
 const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
-  const [isInlineEditEnabled, setIsInlineEditEnabled] = useState(true)
   const [activeIndex, setActiveIndex] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
   const [editableSlides, setEditableSlides] = useState<any[]>([]);
@@ -45,7 +52,9 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
     return "en";
   }, [pathname]);
 
-  const { currentPages } = useSelector((state: RootState) => state.pages);
+  const { currentPages, isEditable: isInlineEditEnabled } = useSelector(
+    (state: RootState) => state.pages,
+  );
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages) return;
@@ -55,23 +64,16 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
   const normalizeSlides = (items: any[] = []) =>
     items.map((slide: any) => {
       const p = slide.props || slide;
-      const getV = (field: any) => {
-        if (!field) return "";
-        const val = field.value !== undefined ? field.value : field;
-        if (val && typeof val === "object") return val[lang] || val.en || "";
-        return val || "";
-      };
-
       return {
-        id: slide.id || slide._id || getV(p.title),
-        label: getV(p.label),
-        title: getV(p.title),
-        highlight: getV(p.highlight),
-        titleEnd: getV(p.titleEnd),
-        description: getV(p.description),
-        image: p.image?.value || p.image || "",
-        product: getV(p.product),
-        price: getV(p.price),
+        id: slide.id || slide._id || getLocalizedHeroValue(p.title, lang),
+        label: getLocalizedHeroValue(p.label, lang),
+        title: getLocalizedHeroValue(p.title, lang),
+        highlight: getLocalizedHeroValue(p.highlight, lang),
+        titleEnd: getLocalizedHeroValue(p.titleEnd, lang),
+        description: getLocalizedHeroValue(p.description, lang),
+        image: getLocalizedHeroValue(p.image, lang),
+        product: getLocalizedHeroValue(p.product, lang),
+        price: getLocalizedHeroValue(p.price, lang),
       };
     });
 
@@ -159,7 +161,7 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
     const isEditing = editingField === field;
 
     return (
-      <div className="group relative inline-flex w-full items-start gap-2">
+      <span className="group relative inline-flex w-full items-start gap-2">
         {isEditing ? (
           <div className="flex w-full items-start gap-2 rounded-lg border border-secondary/50 bg-black/45 p-2 backdrop-blur-md">
             {multiline ? (
@@ -206,7 +208,7 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
             </button>
           </>
         )}
-      </div>
+      </span>
     );
   };
 
@@ -257,13 +259,13 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
             </div>
 
             <h1 className="w-full max-w-[90%] font-serif text-[44px] font-normal leading-[1.2] text-white sm:text-[56px] lg:text-[72px] xl:text-[84px]">
-              {activeSlide.title && <span>{activeSlide.title} </span>}
-              {activeSlide.highlight && <span className="italic">{activeSlide.highlight} </span>}
-              {activeSlide.titleEnd && <span>{activeSlide.titleEnd}</span>}
+              {activeSlide.title && <EditableField field="title" value={`${activeSlide.title} `} />}
+              {activeSlide.highlight && <EditableField field="highlight" value={`${activeSlide.highlight} `} className="italic" highlight />}
+              {activeSlide.titleEnd && <EditableField field="titleEnd" value={activeSlide.titleEnd} />}
             </h1>
 
             <div className="mt-8 mx-auto w-full max-w-3xl text-[16px] sm:text-[18px] lg:text-[20px] font-normal leading-relaxed text-white/90 font-serif">
-              {activeSlide.description}
+              <EditableField field="description" value={activeSlide.description} multiline />
             </div>
           </motion.div>
         </AnimatePresence>

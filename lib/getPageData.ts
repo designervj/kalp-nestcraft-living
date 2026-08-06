@@ -60,9 +60,41 @@ export const getSingleProduct = cache(async (id: string) => {
     }
 
     const json = await res.json();
-    const data = json.data !== undefined ? json.data : json;
+    const data = json?.data !== undefined ? json.data : json;
 
-    return normalizeCommerceProduct(serialize(data));
+    if (data) return normalizeCommerceProduct(serialize(data));
+
+    // Business Core currently resolves canonical IDs at the detail endpoint,
+    // while public cards and search results use slugs. Resolve those read-only
+    // identifiers against the authoritative catalog when detail returns null.
+    const catalogResponse = await fetch(
+      `${SITE_URL}/api/commerce/products`,
+      requestOptions,
+    );
+    if (!catalogResponse.ok) return null;
+
+    const catalogJson = await catalogResponse.json();
+    const catalog = catalogJson.data !== undefined ? catalogJson.data : catalogJson;
+    if (!Array.isArray(catalog)) return null;
+
+    const exactMatch = catalog.find(
+      (product: any) =>
+        product?.id === id || product?._id === id || product?.slug === id,
+    );
+    if (exactMatch) return normalizeCommerceProduct(serialize(exactMatch));
+
+    // Preserve existing CMS-authored homepage links until their product
+    // bindings are migrated from legacy p-N positions to canonical IDs.
+    const legacyPosition = /^p-(\d+)$/.exec(id)?.[1];
+    if (!legacyPosition) return null;
+
+    const activeProducts = catalog.filter(
+      (product: any) => product?.status === undefined || product.status === "active",
+    );
+    const legacyMatch = activeProducts[Number(legacyPosition) - 1] ?? null;
+    return legacyMatch
+      ? normalizeCommerceProduct(serialize(legacyMatch))
+      : null;
   } catch (error) {
     console.error(`Error in getSingleProduct for id: ${id}`, error);
     return null;
