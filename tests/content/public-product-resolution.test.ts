@@ -27,4 +27,18 @@ describe("public product resolution", () => {
     const { getSingleProduct } = await import("@/lib/getPageData");
     await expect(getSingleProduct("p-2")).resolves.toMatchObject(product);
   });
+
+  it("falls back to Business Core when the deployed storefront cannot call itself", async () => {
+    const product = { id: "product-3", slug: "oak-chair", status: "active" };
+    vi.stubGlobal("fetch", vi.fn()
+      .mockRejectedValueOnce(new Error("storefront loopback unavailable"))
+      .mockRejectedValueOnce(new Error("storefront loopback unavailable"))
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: [product] }),
+      }));
+
+    const { getSingleProduct } = await import("@/lib/getPageData");
+    await expect(getSingleProduct("oak-chair")).resolves.toMatchObject(product);
+  });
 });

@@ -35,18 +35,26 @@ export const getSingleProduct = cache(async (id: string) => {
       },
       credentials: "include" as const,
     };
-    let res = await fetch(
-      `${SITE_URL}/api/commerce/products/slug/${encodeURIComponent(id)}`,
-      requestOptions,
-    );
-    if (res.status === 404) {
+    let res: Response | null = null;
+    try {
       res = await fetch(
-        `${SITE_URL}/api/commerce/products/${encodeURIComponent(id)}`,
+        `${SITE_URL}/api/commerce/products/slug/${encodeURIComponent(id)}`,
         requestOptions,
+      );
+      if (res.status === 404) {
+        res = await fetch(
+          `${SITE_URL}/api/commerce/products/${encodeURIComponent(id)}`,
+          requestOptions,
+        );
+      }
+    } catch (error) {
+      console.warn(
+        `Storefront product lookup failed for id: ${id}; trying Business Core directly`,
+        error,
       );
     }
 
-    if (res.ok) {
+    if (res?.ok) {
       const json = await res.json();
       const data = json?.data !== undefined ? json.data : json;
       if (data) return normalizeCommerceProduct(serialize(data));
@@ -55,12 +63,20 @@ export const getSingleProduct = cache(async (id: string) => {
     // Business Core currently resolves canonical IDs at the detail endpoint,
     // while public cards and search results use slugs. Resolve those read-only
     // identifiers against the authoritative catalog when detail returns null or 404.
-    let catalogResponse = await fetch(
-      `${SITE_URL}/api/commerce/products`,
-      requestOptions,
-    );
+    let catalogResponse: Response | null = null;
+    try {
+      catalogResponse = await fetch(
+        `${SITE_URL}/api/commerce/products`,
+        requestOptions,
+      );
+    } catch (error) {
+      console.warn(
+        "Storefront catalog lookup failed; trying Business Core directly",
+        error,
+      );
+    }
 
-    if (!catalogResponse.ok) {
+    if (!catalogResponse?.ok) {
       const backendBase = (
         process.env.FASTAPI_URL ||
         process.env.NEXT_PUBLIC_API_BASE_URL ||
