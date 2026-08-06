@@ -46,31 +46,41 @@ export const getSingleProduct = cache(async (id: string) => {
       );
     }
 
-    if (!res.ok) {
-      if (res.status !== 404) {
-        console.error(
-          `Failed to fetch product data for id: ${id}, status: ${res.status}`,
-        );
-      } else {
-        console.warn(
-          `Product data not found for id: ${id} (status: 404)`,
-        );
-      }
-      return null;
+    if (res.ok) {
+      const json = await res.json();
+      const data = json?.data !== undefined ? json.data : json;
+      if (data) return normalizeCommerceProduct(serialize(data));
     }
-
-    const json = await res.json();
-    const data = json?.data !== undefined ? json.data : json;
-
-    if (data) return normalizeCommerceProduct(serialize(data));
 
     // Business Core currently resolves canonical IDs at the detail endpoint,
     // while public cards and search results use slugs. Resolve those read-only
-    // identifiers against the authoritative catalog when detail returns null.
-    const catalogResponse = await fetch(
+    // identifiers against the authoritative catalog when detail returns null or 404.
+    let catalogResponse = await fetch(
       `${SITE_URL}/api/commerce/products`,
       requestOptions,
     );
+
+    if (!catalogResponse.ok) {
+      const backendBase = (
+        process.env.FASTAPI_URL ||
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        "http://127.0.0.1:8000"
+      ).replace(/\/$/, "");
+
+      let dbHeader: Record<string, string> = {};
+      try {
+        const { getConfiguredDatabaseName } = await import("./database-authority");
+        dbHeader = { "x-tenant-db": getConfiguredDatabaseName() };
+      } catch {
+        // preserve unconfigured state if DB_NAME is missing
+      }
+
+      catalogResponse = await fetch(`${backendBase}/commerce/products`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", ...dbHeader },
+      });
+    }
+
     if (!catalogResponse.ok) return null;
 
     const catalogJson = await catalogResponse.json();

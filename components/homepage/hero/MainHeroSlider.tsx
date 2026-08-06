@@ -38,6 +38,41 @@ export const extractTitleParts = (text: string) => {
   };
 };
 
+const DEFAULT_FALLBACK_SLIDES = [
+  {
+    id: "slide-1",
+    props: {
+      label: { en: "Modern Living", hi: "आधुनिक लिविंग" },
+      title: { en: "Furniture That", hi: "फर्नीचर जो" },
+      highlight: { en: "Defines", hi: "परिभाषित" },
+      titleEnd: { en: "Your Space.", hi: "आपकी जगह" },
+      description: {
+        en: "Discover sculptural sofas, refined textures, and timeless furniture pieces crafted to bring warmth, comfort, and luxury into the modern home.",
+        hi: "आधुनिक घर में गर्माहट, आराम और विलासिता लाने के लिए तैयार की गई मूर्तिकला सोफा, परिष्कृत बनावट और कालातीत फर्नीचर की खोज करें।",
+      },
+      image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800",
+      product: { en: "The Archi Sofa", hi: "द आर्ची सोफा" },
+      price: { en: "Starting at ₹1,200", hi: "₹1,200 से शुरू" },
+    },
+  },
+  {
+    id: "slide-2",
+    props: {
+      label: { en: "Bedroom Luxury", hi: "बेडरूम लक्ज़री" },
+      title: { en: "Designed For", hi: "के लिए डिज़ाइन" },
+      highlight: { en: "Quiet", hi: "शांत" },
+      titleEnd: { en: "Comfort.", hi: "आराम" },
+      description: {
+        en: "Elevate your bedroom with calming palettes, elegant beds, and thoughtfully designed furniture that blends sophistication with everyday ease.",
+        hi: "शांत पैलेट, सुरुचिपूर्ण बेड और सोच-समझकर डिज़ाइन किए गए फर्नीचर के साथ अपने बेडरूम को ऊपर उठाएं जो परिष्कार को रोजमर्रा की सहजता के साथ मिश्रित करता है।",
+      },
+      image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800",
+      product: { en: "The Haven Bed", hi: "द हेवन बेड" },
+      price: { en: "Starting at ₹1,450", hi: "₹1,450 से शुरू" },
+    },
+  },
+];
+
 const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
@@ -58,18 +93,38 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages) return;
-    return currentPages.content?.find((page: any) =>page.adminTitle === "Premium Hero Slider");
+    return currentPages.content?.find(
+      (page: any) =>
+        page.adminTitle === "Premium Hero Slider" ||
+        page.adminTitle === "Hero" ||
+        page.type === "hero",
+    );
   }, [currentPages]);
 
   const normalizeSlides = (items: any[] = []) =>
     items.map((slide: any) => {
       const p = slide.props || slide;
+      const rawTitle = getLocalizedHeroValue(p.title, lang);
+      const rawHighlight = getLocalizedHeroValue(p.highlight, lang);
+      const rawTitleEnd = getLocalizedHeroValue(p.titleEnd, lang);
+
+      let title = rawTitle;
+      let highlight = rawHighlight;
+      let titleEnd = rawTitleEnd;
+
+      if (!highlight && !titleEnd && rawTitle) {
+        const parsed = extractTitleParts(rawTitle);
+        title = parsed.title;
+        highlight = parsed.highlight;
+        titleEnd = parsed.titleEnd;
+      }
+
       return {
-        id: slide.id || slide._id || getLocalizedHeroValue(p.title, lang),
+        id: slide.id || slide._id || rawTitle || "slide-1",
         label: getLocalizedHeroValue(p.label, lang),
-        title: getLocalizedHeroValue(p.title, lang),
-        highlight: getLocalizedHeroValue(p.highlight, lang),
-        titleEnd: getLocalizedHeroValue(p.titleEnd, lang),
+        title,
+        highlight,
+        titleEnd,
         description: getLocalizedHeroValue(p.description, lang),
         image: getLocalizedHeroValue(p.image, lang),
         product: getLocalizedHeroValue(p.product, lang),
@@ -78,10 +133,13 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
     });
 
   const slides = useMemo(() => {
-    if (getCurrentSection && getCurrentSection.content) {
+    if (getCurrentSection && getCurrentSection.content && getCurrentSection.content.length > 0) {
       return normalizeSlides(getCurrentSection.content);
     }
-    return normalizeSlides(initialSlides || []);
+    if (initialSlides && initialSlides.length > 0) {
+      return normalizeSlides(initialSlides);
+    }
+    return normalizeSlides(DEFAULT_FALLBACK_SLIDES);
   }, [getCurrentSection, initialSlides, lang]);
 
   useEffect(() => {
