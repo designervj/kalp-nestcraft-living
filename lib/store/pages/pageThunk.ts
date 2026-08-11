@@ -12,7 +12,7 @@ export const fetchPagesThunk = createAsyncThunk(
         throw new Error(errorData.message || "Failed to fetch pages");
       }
       const data = await response.json();
-      return data.pages;
+      return Array.isArray(data) ? data : data.pages;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -35,7 +35,7 @@ export const fetchFastApiPagesThunk = createAsyncThunk(
       }
       const data = await response.json();
       console.log("all pages fetched ", data);
-      return data.pages;
+      return Array.isArray(data) ? data : data.pages;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }

@@ -120,15 +120,15 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
       }
 
       return {
-        id: slide.id || slide._id || rawTitle || "slide-1",
-        label: getLocalizedHeroValue(p.label, lang),
-        title,
-        highlight,
-        titleEnd,
-        description: getLocalizedHeroValue(p.description, lang),
-        image: getLocalizedHeroValue(p.image, lang),
-        product: getLocalizedHeroValue(p.product, lang),
-        price: getLocalizedHeroValue(p.price, lang),
+        id: slide.id || slide._id || getV(p.title),
+        label: getV(p.label),
+        title: getV(p.title),
+        highlight: getV(p.highlight),
+        titleEnd: getV(p.titleEnd),
+        description: getV(p.description),
+        image: getV(p.image) || p.image?.value || p.image || "",
+        product: getV(p.product),
+        price: getV(p.price),
       };
     });
 

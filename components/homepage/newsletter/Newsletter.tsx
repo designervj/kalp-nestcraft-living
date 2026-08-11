@@ -159,9 +159,9 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
                 onSubmit={handleSubmit}
                 className="flex flex-col gap-4"
               >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <div className="flex flex-wrap items-end gap-3">
                   {newsletterFields.map((field: any) => (
-                    <div key={field.id} className="flex-1">
+                    <div key={field.id} className="flex-1 min-w-[200px]">
                       <label className="mb-1.5 block text-[13px] font-semibold text-white/75 ml-1">
                         {field.placeholder}
                       </label>
@@ -182,7 +182,7 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
                   ))}
 
                   <button
-                    className="inline-flex py-4 items-center justify-center rounded-full bg-[#B8D35A] px-7 text-[14px] font-extrabold uppercase tracking-[0.14em] text-[#14351F] transition hover:translate-y-[-1px] hover:bg-[#c7df72] sm:h-[58px]"
+                    className="flex-1 min-w-[150px] inline-flex py-4 items-center justify-center rounded-full bg-[#B8D35A] px-7 text-[14px] font-extrabold uppercase tracking-[0.14em] text-[#14351F] transition hover:translate-y-[-1px] hover:bg-[#c7df72] sm:h-[58px]"
                     type="submit"
                   >
                     <EditableText value={buttonLabel} isEditable={isEditable} onSave={handle('props.buttonLabel.en')} tag="span" />

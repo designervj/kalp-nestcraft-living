@@ -18,6 +18,19 @@ function serialize(obj: any): any {
 
 export const getPageData = cache(async (slug: string) => {
   try {
+    const SITE_URL = process.env.SITE_URL || "http://127.0.0.1:3000";
+    try {
+      const res = await fetch(`${SITE_URL}/api/pages?slug=${slug}`, { next: { revalidate: 10 } });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.content) {
+          return serialize(data);
+        }
+      }
+    } catch (e) {
+      console.warn("Local API fetch failed, falling back to public site fetch", e);
+    }
+    
     return serialize(normalizePublicPage(await fetchPublicSitePage(slug)));
   } catch (error) {
     console.error(`Error in getPageData for slug: ${slug}`, error);

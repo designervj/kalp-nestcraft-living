@@ -68,7 +68,52 @@ export function normalizePublicPage(
 ): Page | null {
   if (!envelope?.page) return null;
   const source = envelope.page;
-  const content = source.content ?? source.blocks ?? [];
+  const rawContent = source.content ?? source.blocks ?? [];
+  const content = rawContent.map((block: any) => {
+    if (block.adminTitle) return block;
+    const blockId = block.id || "";
+    const type = block.type || "";
+    const c = block.content || {};
+    const p = block.props || {};
+
+    if (type === "hero.split" || blockId === "home-hero") {
+      return {
+        ...block,
+        adminTitle: "Premium Hero Slider",
+        content: [{ props: { ...p, title: c.heading, description: c.body, image: c.image || "https://images.unsplash.com/photo-1618220179428-22790b46a0eb?q=80&w=2727&auto=format&fit=crop" } }]
+      };
+    }
+    if (type === "trust.strip" || blockId === "home-trust") {
+      return {
+        ...block,
+        adminTitle: "USP Section",
+        content: Array.isArray(c.items) ? c.items.map((item: string) => ({ props: { title: item } })) : []
+      };
+    }
+    if (type === "product.grid" || blockId === "home-featured-products") {
+      return {
+        ...block,
+        adminTitle: "New Essentials Slider",
+        props: { ...p, heading: c.heading, limit: block.dataSource?.limit || 8 }
+      };
+    }
+    if (type === "story.feature" || blockId === "home-story") {
+      return {
+        ...block,
+        adminTitle: "Craft & Quality Section",
+        content: [{ props: { ...p, title: c.heading, description: c.body } }]
+      };
+    }
+    if (type === "newsletter.form" || blockId === "home-newsletter") {
+      return {
+        ...block,
+        adminTitle: "Newsletter Section",
+        props: { ...p, title: c.heading, description: c.body }
+      };
+    }
+    return block;
+  });
+
   return {
     ...source,
     title: localized(source.title) || { en: source.slug || "Page", hi: source.slug || "Page" },
