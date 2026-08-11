@@ -48,7 +48,9 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
       !["blog", "portfolio"].includes(String(category.type || "").toLowerCase()) &&
       !["archived", "inactive"].includes(String(category.pageStatus || "").toLowerCase()),
   );
-  const items = (
+  
+  const rawContent = (section as any)?.content || [];
+  let items = Array.isArray(rawContent) && rawContent.length > 0 ? rawContent : (
     configuredSlugs.length
       ? configuredSlugs
           .map((slug: string) => productCategories.find((category) => category.slug === slug))
@@ -96,9 +98,10 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {items.map((item: any, idx: number) => {
-          const name = item.name || item.title || "";
+          const sp = item.props || {};
+          const name = getV(sp.name) || getV(sp.title) || getV(item.name) || getV(item.title) || "";
           const id = item.slug || item.id || item._id;
-          const img = resolveCategoryImage(item);
+          const img = getV(sp.image) || sp.image?.value || sp.image || resolveCategoryImage(item);
           const exploreLabel = getV(p.exploreLabel);
 
           return (

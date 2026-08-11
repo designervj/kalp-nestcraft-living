@@ -45,6 +45,7 @@ import { logoutThunk } from "@/lib/store/auth/authThunks";
 import { fetchProducts } from "@/lib/store/products/productsThunk";
 import { Button } from "./ui/button";
 import AdminBar from "./AdminBar";
+import { resolveProductImage } from "@/lib/commerce/product-normalization";
 import {
   Tooltip,
   TooltipContent,
@@ -731,7 +732,7 @@ const SearchOverlay = ({
                 {filteredProducts.length > 0 ? (
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {filteredProducts.map((product) => {
-                      const image = product.gallery?.[0]?.url || product.primaryImageId || "/assets/Image/nestcraft-logo.svg";
+                      const image = product.gallery?.[0]?.url || resolveProductImage(product);
                       const price = product.pricing?.price || product.price || "0";
 
                       return (

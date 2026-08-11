@@ -72,7 +72,7 @@ const Collections = ({ section: propSection }: CollectionsProps) => {
         {items?.map((item: any, idx: number) => {
           const sp = item.props || {};
           const title = getV(sp.title) || getV(item.title) || "";
-          const image = sp.image?.value || sp.image || item.image || "";
+          const image = getV(sp.image) || sp.image?.value || sp.image || item.image || "";
           const link = sp.link?.value || sp.link || item.link || "/shop";
 
           return (

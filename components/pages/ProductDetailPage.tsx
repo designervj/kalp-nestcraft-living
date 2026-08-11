@@ -895,7 +895,7 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
         <strong>{currentProduct.name}</strong>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-12 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start max-w-6xl mx-auto">
         {/* LEFT: GALLERY */}
         <div className="space-y-4">
           <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden border border-border bg-muted/5">
@@ -925,7 +925,7 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
         </div>
 
         {/* RIGHT: INFO */}
-        <div className="lg:sticky lg:top-[128px] space-y-8">
+        <div className="lg:sticky lg:top-[128px] space-y-6">
           <div className="space-y-4">
             <div className="flex justify-between items-start gap-4">
               <div>
@@ -1136,7 +1136,7 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
       </div>
 
       {/* Tabs Section */}
-      <section className="mt-24">
+      <section className="mt-24 max-w-6xl mx-auto">
         <div className="flex border-b border-border mb-10 overflow-x-auto no-scrollbar">
           {["overview", "specifications", "reviews"].map((tab) => (
             <button
@@ -1191,55 +1191,58 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
           )}
 
           {activeTab === "specifications" && (
-            <div className="max-w-3xl mx-auto space-y-8">
-              {/* Basic Product Info */}
-              <div className="space-y-4">
-                <h3 className="text-[11px] font-black uppercase tracking-[2px] text-secondary mb-4">
-                  Product Information
-                </h3>
-                {[
-                  { label: "Product Type", value: currentProduct.type },
-                  { label: "SKU", value: currentProduct.sku },
-                  { label: "Status", value: currentProduct.status },
-                ].map((spec) => (
-                  <div
-                    key={spec.label}
-                    className="flex justify-between p-4 border-b border-border/50"
-                  >
-                    <span className="text-[11px] font-black uppercase tracking-[2px] text-muted">
-                      {spec.label}
-                    </span>
-                    <span className="font-bold capitalize">{spec.value}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Grouped Options by Attribute Set */}
-              {Object.keys(groupedOptions).map((attributeSetId) => (
-                <div key={attributeSetId} className="space-y-4">
-                  <h3 className="text-[11px] font-black uppercase tracking-[2px] text-secondary mb-4">
-                    {attributeSetId
-                      .split("-")
-                      .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
+            <div className="max-w-6xl mx-auto space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                {(() => {
+                  const allSpecs = [
+                    { label: "Product Type", value: currentProduct.type },
+                    { label: "SKU", value: currentProduct.sku },
+                    { label: "Status", value: currentProduct.status },
+                    ...(currentProduct.options || [])
+                      .filter(
+                        (opt: any) =>
+                          opt.selectedValues && opt.selectedValues.length > 0,
                       )
-                      .join(" ")}
-                  </h3>
-                  {groupedOptions[attributeSetId].map((option: any) => (
-                    <div
-                      key={option.key}
-                      className="flex justify-between p-4 border-b border-border/50"
-                    >
-                      <span className="text-[11px] font-black uppercase tracking-[2px] text-muted">
-                        {option.label}
-                      </span>
-                      <span className="font-bold capitalize">
-                        {option.selectedValues.join(", ")}
-                      </span>
+                      .map((opt: any) => ({
+                        label: opt.label,
+                        value: opt.selectedValues.join(", "),
+                      })),
+                  ].filter((spec) => spec.value);
+
+                  const half = Math.ceil(allSpecs.length / 2);
+                  const leftSpecs = allSpecs.slice(0, half);
+                  const rightSpecs = allSpecs.slice(half);
+
+                  const renderTable = (specs: any[]) => (
+                    <div className="border border-border/50 rounded-2xl overflow-hidden bg-surface">
+                      <table className="w-full text-left text-sm">
+                        <tbody>
+                          {specs.map((spec, idx) => (
+                            <tr
+                              key={idx}
+                              className="border-b border-border/50 last:border-0 hover:bg-muted/5 transition-colors"
+                            >
+                              <th className="py-4 px-5 font-black uppercase tracking-[1px] text-[11px] text-muted w-2/5 bg-muted/10">
+                                {spec.label}
+                              </th>
+                              <td className="py-4 px-5 font-bold text-foreground/90 capitalize">
+                                {spec.value}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  ))}
-                </div>
-              ))}
+                  );
+
+                  return (
+                    <>
+                      {leftSpecs.length > 0 && renderTable(leftSpecs)}
+                      {rightSpecs.length > 0 && renderTable(rightSpecs)}
+                    </>
+                  );
+                })()}
+              </div>
             </div>
           )}
 
