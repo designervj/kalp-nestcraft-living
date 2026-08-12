@@ -93,7 +93,7 @@ const ContactHero = ({ section }: { section?: any }) => {
                 />
               </span>
             </h1>
-            <p className="text-xl text-muted font-semibold max-w-[500px] leading-relaxed">
+            <div className="text-xl text-muted font-semibold max-w-[500px] leading-relaxed">
               <EditableText
                 value={description}
                 currentPages={currentPages}
@@ -101,7 +101,7 @@ const ContactHero = ({ section }: { section?: any }) => {
                 fieldPath="props.description"
                 tag="p"
               />
-            </p>
+            </div>
 
             <div className="mt-12 flex gap-8">
               <div className="flex flex-col">

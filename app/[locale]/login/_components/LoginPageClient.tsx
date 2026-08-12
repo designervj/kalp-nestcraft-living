@@ -53,18 +53,35 @@ export default function LoginPageClient() {
             credentials: "include",
           });
 
-          const response = await res.json();
-
-          if (response.success) {
-            window.open(redirectUri + `?code=${response.code}`, "_blank");
+          try {
+            if (res.ok) {
+              const responseData = await res.json();
+              if (responseData.success) {
+                toast.success("Login Successful!");
+                window.open(redirectUri + `?code=${responseData.code}`, "_blank");
+                router.push("/");
+              } else {
+                toast.success("Welcome back! (SSO unavailable)");
+                router.push("/");
+              }
+            } else {
+              console.warn("SSO endpoint returned an error status:", res.status);
+              toast.success("Welcome back! (SSO unavailable)");
+              router.push("/");
+            }
+          } catch (err) {
+            console.error("Failed to parse SSO response", err);
+            toast.success("Welcome back! (SSO unavailable)");
             router.push("/");
           }
+        } else {
+          toast.success("Welcome back!");
         }
-        toast.success("Welcome back!");
       }
     } catch (err: any) {
-      setError(err || "Authentication failed");
-      toast.error(err || "Authentication failed");
+      const errorMessage = typeof err === 'string' ? err : (err?.message || "Authentication failed");
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -93,7 +93,7 @@ const ContactPage = ({ initialData }: { initialData?: Page | null }) => {
                     fieldPath="props.showroomTitle"
                   />
                 </h4>
-                <p className="text-muted font-semibold mb-6">
+                <div className="text-muted font-semibold mb-6">
                   <EditableText
                     value={showroomDesc}
                     currentPages={currentPages}
@@ -101,7 +101,7 @@ const ContactPage = ({ initialData }: { initialData?: Page | null }) => {
                     fieldPath="props.showroomDesc"
                     tag="p"
                   />
-                </p>
+                </div>
                 <div className="flex items-center gap-3 text-secondary font-black uppercase tracking-widest text-xs">
                   <Clock size={16} />
                   <EditableText

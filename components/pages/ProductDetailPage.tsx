@@ -632,6 +632,7 @@ import {
   resolveCompareAtPrice,
   resolveProductImage,
 } from "@/lib/commerce/product-normalization";
+import { toast } from "sonner";
 
 const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
   const { allCategories } = useSelector(
@@ -1308,7 +1309,7 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
       {/* Ask Question Modal */}
       <AnimatePresence>
         {isAskQuestionOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="fixed inset-0 z-[50000] flex items-center justify-center p-4 bg-black/50">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1322,15 +1323,43 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
                 <X size={20} />
               </button>
               <h3 className="text-xl font-black mb-6">Ask a Question</h3>
-              <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsAskQuestionOpen(false); }}>
+              <form className="space-y-4" onSubmit={async (e) => { 
+                e.preventDefault(); 
+                const form = e.currentTarget;
+                const formData = new FormData(form);
+                const name = formData.get("name") as string;
+                const phone = formData.get("phone") as string;
+                const email = formData.get("email") as string;
+                const textMessage = formData.get("message") as string;
+                const message = phone ? `Phone: ${phone}\n\n${textMessage}` : textMessage;
+                const subject = `Question about ${currentProduct?.name || "a product"}`;
+
+                try {
+                  const res = await fetch("/api/contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, subject, message }),
+                  });
+                  if (res.ok) {
+                    toast.success("Message sent successfully!");
+                    form.reset();
+                    setIsAskQuestionOpen(false);
+                  } else {
+                    toast.error("Failed to send message. Please try again.");
+                  }
+                } catch (error) {
+                  console.error("Error sending message:", error);
+                  toast.error("Failed to send message. Please try again.");
+                }
+              }}>
                 <div className="grid grid-cols-2 gap-4">
-                  <input type="text" placeholder="Your name*" required className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary" />
-                  <input type="text" placeholder="Your phone number" className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary" />
+                  <input type="text" name="name" placeholder="Your name*" required className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary" />
+                  <input type="text" name="phone" placeholder="Your phone number" className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary" />
                 </div>
-                <input type="email" placeholder="Your email*" required className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary" />
-                <textarea placeholder="Your message*" required rows={4} className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary resize-none"></textarea>
+                <input type="email" name="email" placeholder="Your email*" required className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary" />
+                <textarea name="message" placeholder="Your message*" required rows={4} className="w-full px-4 py-3 rounded-xl border border-border bg-transparent outline-none focus:border-secondary resize-none"></textarea>
                 <p className="text-sm text-muted">* Required fields cannot be left blank.</p>
-                <button type="submit" className="w-full py-4 rounded-xl bg-black text-white font-black hover:bg-black/90 transition-colors">
+                <button type="submit" className="w-full py-4 rounded-xl bg-black text-white font-black hover:bg-black/90 transition-colors cursor-pointer">
                   Send Your Message
                 </button>
               </form>

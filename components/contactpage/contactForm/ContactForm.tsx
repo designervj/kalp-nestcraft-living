@@ -16,7 +16,6 @@ import { useAppSelector } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import {
   createFormAttemptKey,
-  submitPublicForm,
 } from "@/lib/forms/public-forms-client";
 
 const TENANT_SLUG = process.env.NEXT_PUBLIC_TENANT_SLUG;
@@ -176,17 +175,50 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
     setIsSubmitting(true);
 
     try {
-      await submitPublicForm({
-        tenantSlug: TENANT_SLUG,
-        formId: formConfig?.id || CONTACT_FORM_ID,
-        submission: {
-          data: formData,
-          metadata: { source: "nestcraft-contact-page", language: lang },
-          consent: {},
-          honeypot: "",
-          idempotencyKey: attemptKey,
-        },
+      const getFieldValue = (keys: string[]) => {
+        for (const k of keys) {
+          if (formData[k]) return formData[k];
+        }
+        return '';
+      };
+
+      const firstName = getFieldValue(['firstName', 'first_name', 'name']);
+      const lastName = getFieldValue(['lastName', 'last_name']);
+      
+      const name = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : 'Unknown Name';
+      const email = getFieldValue(['email', 'email_address']) || 'no-email@provided.com';
+      const subject = formData.subject || 'New Contact Inquiry';
+      
+      // Collect any other fields into the message body
+      const otherFields = Object.keys(formData)
+        .filter(k => !['name', 'firstName', 'lastName', 'first_name', 'last_name', 'email', 'email_address', 'subject'].includes(k))
+        .map(k => {
+          // format key nicely e.g., 'phone_number' -> 'Phone Number'
+          const formattedKey = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          return `**${formattedKey}:** ${formData[k]}`;
+        })
+        .join('<br>');
+      
+      let message = formData.message || '';
+      if (otherFields) {
+         message = message ? `${message}<br><br><b>Other Details:</b><br>${otherFields}` : otherFields;
+      }
+      if (!message) message = 'No message provided';
+
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          subject,
+          message,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
       setIsSubmitted(true);
       setAttemptKey(createFormAttemptKey("contact"));
       const resetData: Record<string, any> = {};
@@ -313,7 +345,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                     fieldPath="props.successHeading"
                   />
                 </h3>
-                <p className="text-muted font-semibold mb-10 text-lg">
+                <div className="text-muted font-semibold mb-10 text-lg">
                   <EditableText
                     value={successDescription}
                     currentPages={currentPages}
@@ -321,7 +353,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                     fieldPath="props.successDescription"
                     tag="p"
                   />
-                </p>
+                </div>
                 <button
                   onClick={() => setIsSubmitted(false)}
                   className="bg-primary text-white px-12 h-14 rounded-full text-[15px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all cursor-pointer"
@@ -345,7 +377,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                       fieldPath="props.formHeading"
                     />
                   </h3>
-                  <p className="text-muted font-semibold">
+                  <div className="text-muted font-semibold">
                     <EditableText
                       value={formDescription}
                       currentPages={currentPages}
@@ -353,7 +385,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                       fieldPath="props.formDescription"
                       tag="p"
                     />
-                  </p>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-10">
@@ -378,9 +410,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                             name={fieldKey}
                             value={formData[fieldKey] || ""}
                             onChange={handleChange}
-                            rows={4}
                             placeholder={getLocalizedValue(field.placeholder)}
-                            className="w-full bg-transparent border-b-2 border-border py-4 outline-none focus:border-secondary transition-all font-bold text-xl resize-none placeholder:text-muted/30"
+                            className="w-full bg-transparent border-b-2 border-border py-3 outline-none focus:border-secondary transition-all font-medium text-base placeholder:text-muted/40 min-h-[120px] resize-y autofill:shadow-[inset_0_0_0px_1000px_transparent] autofill:transition-colors autofill:duration-[5000000ms]"
                           />
                         ) : field.type === "select" ? (
                           <select
@@ -448,7 +479,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                             value={formData[fieldKey] || ""}
                             onChange={handleChange}
                             placeholder={getLocalizedValue(field.placeholder)}
-                            className="w-full bg-transparent border-b-2 border-border py-4 outline-none focus:border-secondary transition-all font-bold text-xl placeholder:text-muted/30"
+                            className="w-full bg-transparent border-b-2 border-border py-3 outline-none focus:border-secondary transition-all font-medium text-base placeholder:text-muted/40 autofill:shadow-[inset_0_0_0px_1000px_transparent] autofill:transition-colors autofill:duration-[5000000ms]"
                           />
                         )}
                       </div>
