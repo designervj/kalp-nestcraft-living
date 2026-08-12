@@ -9,13 +9,13 @@ async function run() {
     const db = client.db("kp_nestcraft");
 
     // Homepage
-    const homeData = JSON.parse(fs.readFileSync("kalphelp/nestcraft-live/data/homepage.json", "utf8"));
+    const homeData = JSON.parse(fs.readFileSync("data/homepage.json", "utf8"));
     if (homeData._id) delete homeData._id;
     await db.collection("pages").updateOne({ slug: "home" }, { $set: homeData }, { upsert: true });
     console.log("Upserted homepage");
 
     // About
-    const aboutData = JSON.parse(fs.readFileSync("kalphelp/nestcraft-live/public/about.json", "utf8"));
+    const aboutData = JSON.parse(fs.readFileSync("public/about.json", "utf8"));
     if (aboutData._id) delete aboutData._id;
     await db.collection("pages").updateOne({ slug: "about" }, { $set: aboutData }, { upsert: true });
     console.log("Upserted about");

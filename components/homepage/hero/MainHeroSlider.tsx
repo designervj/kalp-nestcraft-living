@@ -104,9 +104,10 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
   const normalizeSlides = (items: any[] = []) =>
     items.map((slide: any) => {
       const p = slide.props || slide;
-      const rawTitle = getLocalizedHeroValue(p.title, lang);
-      const rawHighlight = getLocalizedHeroValue(p.highlight, lang);
-      const rawTitleEnd = getLocalizedHeroValue(p.titleEnd, lang);
+      const getV = (field: any) => getLocalizedHeroValue(field, lang);
+      const rawTitle = getV(p.title);
+      const rawHighlight = getV(p.highlight);
+      const rawTitleEnd = getV(p.titleEnd);
 
       let title = rawTitle;
       let highlight = rawHighlight;
@@ -120,11 +121,11 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
       }
 
       return {
-        id: slide.id || slide._id || getV(p.title),
+        id: slide.id || slide._id || title,
         label: getV(p.label),
-        title: getV(p.title),
-        highlight: getV(p.highlight),
-        titleEnd: getV(p.titleEnd),
+        title: title,
+        highlight: highlight,
+        titleEnd: titleEnd,
         description: getV(p.description),
         image: getV(p.image) || p.image?.value || p.image || "",
         product: getV(p.product),
