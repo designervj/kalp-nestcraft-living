@@ -54,11 +54,12 @@ const HomePageServer = ({ data, lang }: HomePageServerProps) => {
       {/* Content is rendered from the server-read site_pages document. */}
       <Hero section={getSection(content, "Premium Hero Slider")} />
       <USP section={getSection(content, "USP Section")} />
-      <Services section={getSection(content, "Services")} />
+
       <Collections section={getSection(content, "Collections")} />
       <ShopByRoom section={getSection(content, "Shop By Room Section")} />
       <FeaturedBanner section={getSection(content, "FeaturedBanner")} />
       <ProductSlider section={getSection(content, "New Essentials Slider")} />
+      <Services section={getSection(content, "Services")} />
       <Craft section={getSection(content, "Craft & Quality Section")} />
       <Testimonials section={getSection(content, "Customer Testimonials")} />
       <Blog section={getSection(content, "Latest Blog Posts")} />
@@ -70,10 +71,15 @@ const HomePageServer = ({ data, lang }: HomePageServerProps) => {
       {ctaBlock && (
         <section
           data-annotate-id="home-cta-section"
-          className="bg-foreground/90 text-surface text-center py-[110px] px-[5%] border-t border-border"
+          className="relative text-surface text-center py-[110px] px-[5%] border-t border-border overflow-hidden bg-cover bg-center bg-fixed"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000')"
+          }}
         >
-          <div className="opacity-100 transform-none">
-            <h2 className="text-[38px] lg:text-[48px] font-bold tracking-tight">
+          <div className="absolute inset-0 bg-secondary/85 z-0"></div>
+          
+          <div className="relative z-10 opacity-100 transform-none">
+            <h2 className="text-[38px] lg:text-[48px] font-bold tracking-tight  text-white">
               {ctaTitle}
             </h2>
             <p className="text-white/70 font-semibold mt-[18px] mb-[34px] max-w-[600px] mx-auto">

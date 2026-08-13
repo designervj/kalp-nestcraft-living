@@ -58,9 +58,7 @@ const FAQ = ({ section: propSection }: FAQProps) => {
       className="md:py-[120px] md:px-[5%] py-[50px] px-[5%] "
     >
       <div className="flex flex-col items-center text-center mb-[60px]">
-        <h2 className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight mb-4">
-          <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')} tag="span" />
-        </h2>
+        <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight mb-4" />
         {subheading && <p className="text-muted max-w-2xl mb-6"><EditableText value={subheading} isEditable={isEditable} onSave={handle('props.subheading.en')} tag="span" /></p>}
         <Link
           href={viewAllLink}
@@ -83,9 +81,7 @@ const FAQ = ({ section: propSection }: FAQProps) => {
               onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
             >
               <div className="flex justify-between items-center gap-3.5">
-                <h4 className="font-heading text-[20px] font-bold">
-                  <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)} tag="span" />
-                </h4>
+                <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)}  tag="h4" className="font-heading text-[20px] font-bold" />
                 {activeIndex === idx ? (
                   <Minus className="text-secondary" size={22} />
                 ) : (

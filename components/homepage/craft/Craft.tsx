@@ -54,8 +54,8 @@ const Craft = ({ section: propSection }: CraftProps) => {
   const listBlock = content.find((b: any) => b.type === "list");
   const buttonsBlock = content.find((b: any) => b.type === "buttons");
 
-  const listItems = listBlock?.items || listBlock?.props?.items?.value || [];
-  const buttons = buttonsBlock?.items || buttonsBlock?.props?.items?.value || [];
+  const listItems = listBlock?.items || listBlock?.props?.items?.value || listBlock?.props?.items || [];
+  const buttons = buttonsBlock?.items || buttonsBlock?.props?.items?.value || buttonsBlock?.props?.items || [];
 
   const handle = (fieldPath: string) => (value: string) =>
     saveField(dispatch, currentPages, section?.id, fieldPath, value);
@@ -70,9 +70,7 @@ const Craft = ({ section: propSection }: CraftProps) => {
           <p className="text-secondary uppercase tracking-[3px] text-[12px] font-black mb-2.5">
             <EditableText value={badge} isEditable={isEditable} onSave={handle('props.badge.en')} tag="span" />
           </p>
-          <h2 className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight">
-            <EditableText value={title} isEditable={isEditable} onSave={handle('props.title.en')} tag="span" />
-          </h2>
+          <EditableText value={title} isEditable={isEditable} onSave={handle('props.title.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         </div>
         <Link
           href={buttonLink}
@@ -82,65 +80,75 @@ const Craft = ({ section: propSection }: CraftProps) => {
         </Link>
       </div>
 
-      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
+      <div className="relative max-w-7xl mx-auto flex flex-col lg:flex-row items-center mt-[40px]">
+        {/* Image side */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="h-[520px] rounded-lg overflow-hidden bg-muted/10 border border-border "
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full lg:w-[65%] h-[450px] lg:h-[650px] rounded-[24px] overflow-hidden shadow-2xl relative z-10"
         >
           <img
             src={imgBlock?.url || "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&q=80&w=1600"}
             alt={imgBlock?.alt || "Materials"}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-[1.5s] hover:scale-[1.03]"
           />
         </motion.div>
 
+        {/* Text Card Side */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-background/70 border border-border p-[34px] rounded-lg shadow-sm"
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="w-[92%] lg:w-[45%] -mt-20 lg:mt-0 lg:-ml-32 relative z-20"
         >
-          <h3 className="font-heading md:text-[42px] text-[28px] font-extrabold leading-none">
-            <EditableText value={mainHeading} isEditable={isEditable} onSave={handle('props.mainHeading.en')} tag="span" />
-          </h3>
-          <p className="text-muted font-semibold mt-2.5">
-            <EditableText value={description} isEditable={isEditable} onSave={handle('props.description.en')} tag="span" />
-          </p>
+          <div className="bg-surface/95 backdrop-blur-xl border border-border p-[40px] lg:p-[60px] rounded-[24px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)]">
+            <EditableText value={mainHeading} isEditable={isEditable} onSave={handle('props.mainHeading.en')}  tag="h3" className="font-heading md:text-[46px] text-[32px] font-extrabold leading-[1.1] text-foreground tracking-tight" />
+            <p className="text-foreground/70 font-medium mt-6 text-[18px] leading-relaxed">
+              <EditableText value={description} isEditable={isEditable} onSave={handle('props.description.en')} tag="span" />
+            </p>
 
-          <div className="grid gap-3 mt-[18px]">
-            {listItems.map((li: any, idx: number) => {
-              const text = getV(li);
-              return (
-                <div
-                  key={idx}
-                  className="flex gap-2.5 items-start font-bold text-foreground/85"
-                >
-                  <CheckCircle2 className="text-secondary mt-0.5" size={18} />
-                  <EditableText value={text} isEditable={isEditable} onSave={handle(`content.${content.indexOf(listBlock)}.items.${idx}.en`)} tag="span" />
-                </div>
-              );
-            })}
-          </div>
+            {listItems && listItems.length > 0 && (
+              <div className="grid gap-4 mt-8">
+                {listItems.map((li: any, idx: number) => {
+                  const text = getV(li);
+                  return (
+                    <div
+                      key={idx}
+                      className="flex gap-3 items-start font-bold text-foreground/90 text-[16px]"
+                    >
+                      <div className="bg-secondary/10 p-1 rounded-full mt-0.5">
+                        <CheckCircle2 className="text-secondary" size={16} strokeWidth={3} />
+                      </div>
+                      <EditableText value={text} isEditable={isEditable} onSave={handle(`content.${content.indexOf(listBlock)}.items.${idx}.en`)} tag="span" />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
-          <div className="mt-[22px] flex gap-3 flex-wrap">
-            {buttons.map((btn: any, i: number) => {
-              const label = getV(btn.label);
-              return (
-                <Link
-                  key={i}
-                  href={btn.link || "#"}
-                  className={`px-[18px] h-11 rounded-full text-[14px] font-semibold uppercase tracking-wider transition-all flex items-center ${
-                    i === 0
-                    ? "bg-primary text-white hover:bg-primary/90"
-                    : "border border-secondary/45 text-foreground hover:bg-secondary/15"
-                  }`}
-                >
-                  <EditableText value={label} isEditable={isEditable} onSave={handle(`content.${content.indexOf(buttonsBlock)}.items.${i}.label.en`)} tag="span" />
-                </Link>
-              );
-            })}
+            {buttons && buttons.length > 0 && (
+              <div className="mt-[36px] flex gap-4 flex-wrap">
+                {buttons.map((btn: any, i: number) => {
+                  const label = getV(btn.label);
+                  return (
+                    <Link
+                      key={i}
+                      href={btn.link || "#"}
+                      className={`px-[28px] h-14 rounded-full text-[14px] font-bold uppercase tracking-[1.5px] transition-all flex items-center shadow-sm hover:shadow-md hover:-translate-y-1 ${
+                        i === 0
+                        ? "bg-primary text-white hover:opacity-90"
+                        : "bg-transparent border-2 border-foreground/20 text-foreground hover:border-foreground/40 hover:bg-foreground/5"
+                      }`}
+                    >
+                      <EditableText value={label} isEditable={isEditable} onSave={handle(`content.${content.indexOf(buttonsBlock)}.items.${i}.label.en`)} tag="span" />
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

@@ -79,9 +79,7 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
           <p className="text-secondary uppercase tracking-[3px] text-[12px] font-black mb-2.5">
             <EditableText value={badge} isEditable={isEditable} onSave={handle('props.badge.en')} tag="span" />
           </p>
-          <h2 className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight">
-            <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')} tag="span" />
-          </h2>
+          <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         </div>
       </div>
 

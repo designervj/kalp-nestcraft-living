@@ -5,6 +5,8 @@ import React from "react";
 import GetCart from "@/lib/GetAllDetails/GetCart";
 import AnalyticsInjector from "./AnalyticsInjector";
 
+import { Toaster } from "sonner";
+
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <>
@@ -12,6 +14,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <GetCart />
       <AnalyticsInjector />
       {children}
+      <Toaster richColors />
     </>
   );
 }

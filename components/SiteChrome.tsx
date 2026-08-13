@@ -433,7 +433,7 @@ const Header = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[50000] bg-black/50"
+              className="fixed top-0 left-0 w-screen h-[100dvh] z-[50000] bg-black/50"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             {/* Primary Drawer */}
@@ -442,7 +442,7 @@ const Header = ({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed left-0 top-0 z-[50001] h-full w-[min(85vw,400px)] overflow-y-auto bg-background px-8 py-8 shadow-2xl"
+              className="fixed left-0 top-0 z-[50002] h-[100dvh] w-[min(85vw,400px)] overflow-y-auto bg-background px-8 py-8 shadow-2xl lg:shadow-none lg:border-r lg:border-border"
             >
               <div className="mb-6 flex items-center justify-between border-b pb-4">
                 <img
@@ -468,37 +468,61 @@ const Header = ({
                   return (
                     <div
                       key={tab.key}
-                      className="border-b border-border pb-3"
+                      className={`mb-1 rounded-xl transition-all ${isExpanded ? "bg-primary shadow-md" : "border border-transparent hover:bg-secondary/15"}`}
                       onMouseEnter={() => {
                         if (hasSubMenu) setExpandedDrawerTab(tab.key);
                       }}
                     >
-                      <div className="flex items-center justify-between group cursor-pointer">
-                        <Link
-                          href={`/category/${categorySlug}`}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className={`block text-[16px] font-sans font-medium flex-1 ${tab.isLuxe ? "text-black" : "text-foreground"} group-hover:text-secondary transition-colors`}
-                        >
-                          {tab.title}
-                        </Link>
+                      <div className="flex items-center justify-between group cursor-pointer px-4 py-2.5">
+                        {hasSubMenu ? (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setExpandedDrawerTab(isExpanded ? null : tab.key);
+                            }}
+                            className={`block text-left text-[15px] font-sans flex-1 ${
+                              isExpanded 
+                                ? "text-white font-bold" 
+                                : tab.isLuxe 
+                                  ? "text-black font-medium" 
+                                  : "text-foreground font-medium"
+                            } ${!isExpanded ? "group-hover:text-[#063A1D]" : ""} transition-colors`}
+                          >
+                            {tab.title}
+                          </button>
+                        ) : (
+                          <Link
+                            href={`/category/${categorySlug}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`block text-[15px] font-sans flex-1 ${
+                              isExpanded 
+                                ? "text-white font-bold" 
+                                : tab.isLuxe 
+                                  ? "text-black font-medium" 
+                                  : "text-foreground font-medium"
+                            } ${!isExpanded ? "group-hover:text-[#063A1D]" : ""} transition-colors`}
+                          >
+                            {tab.title}
+                          </Link>
+                        )}
                         {hasSubMenu && (
                           <button
                             onClick={() =>
                               setExpandedDrawerTab(isExpanded ? null : tab.key)
                             }
-                            className="p-2 text-muted hover:text-foreground transition-colors lg:hidden"
+                            className={`p-1.5 transition-colors lg:hidden ${isExpanded ? "text-white" : "text-muted hover:text-foreground"}`}
                           >
                             <ChevronRight
-                              size={20}
+                              size={18}
                               className={`transition-transform duration-200 ${isExpanded ? "rotate-90" : ""}`}
                             />
                           </button>
                         )}
                         {/* On Desktop, show a right arrow always if it has submenu, matching Swadesh */}
                         {hasSubMenu && (
-                          <div className="hidden lg:flex p-2 text-muted">
+                          <div className={`hidden lg:flex p-1.5 transition-colors ${isExpanded ? "text-secondary" : "text-muted group-hover:text-[#063A1D]"}`}>
                             <ChevronRight
-                              size={20}
+                              size={18}
                               className="transition-transform duration-200 group-hover:translate-x-1"
                             />
                           </div>
@@ -522,7 +546,7 @@ const Header = ({
                                       {col.sections?.map(
                                         (section: any, secIdx: number) => (
                                           <div key={secIdx}>
-                                            <h4 className="text-[16px] font-sans font-medium text-foreground mb-3">
+                                            <h4 className="text-[16px] font-sans font-medium text-white/90 mb-3">
                                               {section.heading}
                                             </h4>
                                             <ul className="space-y-2.5">
@@ -544,7 +568,7 @@ const Header = ({
                                                             false,
                                                           )
                                                         }
-                                                        className="text-[16px] font-sans font-medium text-muted hover:text-secondary transition-colors block"
+                                                        className="text-[15px] font-medium text-white/70 hover:text-white hover:translate-x-1.5 hover:font-semibold transition-all inline-block py-1.5"
                                                       >
                                                         {link.title}
                                                       </Link>
@@ -580,7 +604,7 @@ const Header = ({
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ type: "tween", duration: 0.2 }}
-                    className="fixed left-[400px] top-0 z-[50000] h-full w-[450px] overflow-y-auto bg-surface px-10 py-12 shadow-2xl border-l border-border"
+                    className="fixed left-[400px] top-0 z-[50001] bg-white h-full w-[450px] overflow-y-auto bg-surface px-10 py-10 shadow-[20px_0_40px_-15px_rgba(0,0,0,0.05)] border-l border-border"
                   >
                     {(() => {
                       const activeTab = displayMenus.find(
@@ -593,13 +617,13 @@ const Header = ({
                         : activeTab.key.toLowerCase().replace(/\s+/g, "-");
 
                       return (
-                        <div className="space-y-10">
+                        <div className="space-y-8">
                           <Link
                             href={`/category/${activeCategorySlug}`}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="text-[16px] font-sans font-medium text-foreground hover:text-secondary transition-colors block mb-4"
+                            className="flex items-center justify-center w-full py-3 rounded-full bg-primary text-white text-[12px] font-black uppercase tracking-[2px] hover:bg-primary/90 transition-all shadow-md hover:shadow-lg"
                           >
-                            See all {activeTab.title} products
+                            Explore all {activeTab.title}
                           </Link>
 
                           {activeTab.columns.map((col: any, colIdx: number) => (
@@ -607,10 +631,11 @@ const Header = ({
                               {col.sections?.map(
                                 (section: any, secIdx: number) => (
                                   <div key={secIdx}>
-                                    <h4 className="text-[12px] font-sans font-bold uppercase tracking-wider text-slate-400 mb-3">
+                                    <h4 className="text-[10px] font-black uppercase tracking-[3px] text-secondary mb-4 flex items-center gap-2">
                                       {section.heading}
+                                      <div className="h-px bg-secondary/30 flex-1"></div>
                                     </h4>
-                                    <ul className="space-y-3">
+                                    <ul className="space-y-1">
                                       {section.links?.map(
                                         (link: any, linkIdx: number) => {
                                           // Optional: Format submenu links too, just in case backend has them as just text names without paths,
@@ -626,9 +651,10 @@ const Header = ({
                                                 onClick={() =>
                                                   setIsMobileMenuOpen(false)
                                                 }
-                                                className="text-[16px] font-sans font-medium text-foreground hover:text-secondary transition-colors block"
+                                                className="group flex items-center gap-2 text-[15px] font-medium text-foreground/80 hover:text-[#063A1D] transition-all py-1.5"
                                               >
-                                                {link.title}
+                                                <span className="w-1.5 h-1.5 rounded-full bg-secondary/0 group-hover:bg-secondary transition-colors"></span>
+                                                <span className="group-hover:translate-x-1 transition-transform">{link.title}</span>
                                               </Link>
                                             </li>
                                           );
@@ -915,7 +941,7 @@ const Footer = ({
       <div className="flex items-center justify-center gap-8">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group relative text-center inline-flex items-center  text-[14px] font-medium transition-colors text-[#0b1610] hover:text-[#98c45f]"
+          className="group relative text-center inline-flex items-center  text-[14px] font-medium transition-colors text-[#0b1610] hover:text-secondary"
         >
           Back to Top <ArrowUp size={14} className="ml-1" />
         </button>

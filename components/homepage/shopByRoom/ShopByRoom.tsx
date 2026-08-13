@@ -84,9 +84,7 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
           <p className="text-secondary uppercase tracking-[3px] text-[12px] font-black mb-2.5">
             <EditableText value={badge} isEditable={isEditable} onSave={handle('props.badge.en')} tag="span" />
           </p>
-          <h2 className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight">
-            <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')} tag="span" />
-          </h2>
+          <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         </div>
         <Link
           href={buttonLink}
@@ -101,7 +99,19 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
           const sp = item.props || {};
           const name = getV(sp.name) || getV(sp.title) || getV(item.name) || getV(item.title) || "";
           const id = item.slug || item.id || item._id;
-          const img = getV(sp.image) || sp.image?.value || sp.image || resolveCategoryImage(item);
+          const nameStr = name.toLowerCase();
+          let img = getV(sp.image) || resolveCategoryImage(item);
+          
+          // Force high-quality images for specific rooms to avoid broken backend URLs
+          if (nameStr.includes("living")) {
+            img = "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200";
+          } else if (nameStr.includes("bed")) {
+            img = "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=1200";
+          } else if (nameStr.includes("din")) {
+            img = "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&q=80&w=1200";
+          } else if (nameStr.includes("office") || nameStr.includes("study")) {
+            img = "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1200";
+          }
           const exploreLabel = getV(p.exploreLabel);
 
           return (
@@ -125,9 +135,7 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
                 </div>
                 <div className="p-[18px_18px_20px] flex justify-between items-end gap-3">
                   <div>
-                    <h4 className="text-[26px] font-bold leading-tight">
-                      <EditableText value={name} isEditable={isEditable} onSave={handle(`content.${idx}.props.name.en`)} tag="span" />
-                    </h4>
+                    <EditableText value={name} isEditable={isEditable} onSave={handle(`content.${idx}.props.name.en`)}  tag="h4" className="text-[26px] font-bold leading-tight" />
                     <small className="text-muted font-black tracking-[2px] uppercase text-[11px] block mt-1">
                       <EditableText value={exploreLabel} isEditable={isEditable} onSave={handle('props.exploreLabel.en')} tag="span" />
                     </small>

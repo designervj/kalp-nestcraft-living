@@ -74,12 +74,10 @@ const FeaturedBanner = ({ section: propSection }: FeaturedBannerProps) => {
         viewport={{ once: true }}
         className="p-[50px] lg:p-[90px]"
       >
-        <span className="text-secondary uppercase text-[12px] tracking-[3px] font-black">
+        <span className="text-white/60 uppercase text-[12px] tracking-[3px] font-black">
           <EditableText value={badge} isEditable={isEditable} onSave={handle('props.badge.en')} tag="span" />
         </span>
-        <h2 className="text-[38px] lg:text-[48px] font-bold leading-tight mt-2">
-          <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')} tag="span" />
-        </h2>
+        <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="text-[38px] lg:text-[48px] font-bold leading-tight mt-2" />
         <p className="text-white/80 font-semibold max-w-[540px] mt-3">
           <EditableText value={description} isEditable={isEditable} onSave={handle('props.description.en')} tag="span" />
         </p>

@@ -200,74 +200,6 @@
       ]
     },
     {
-      "id": "sec-services",
-      "type": "features",
-      "adminTitle": "Services",
-      "layout": "grid_3",
-      "props": {
-        "badge": {
-          "en": "What We Do",
-          "hi": "हम क्या करते हैं"
-        },
-        "heading": {
-          "en": "Our Services",
-          "hi": "हमारी सेवाएं"
-        },
-        "viewAllLabel": {
-          "en": "View All",
-          "hi": "सभी देखें"
-        },
-        "viewAllLink": "/services"
-      },
-      "content": [
-        {
-          "id": "svc-1",
-          "type": "feature",
-          "props": {
-            "icon": "pen-tool",
-            "title": {
-              "en": "Custom Design",
-              "hi": "कस्टम डिज़ाइन"
-            },
-            "description": {
-              "en": "Bespoke furniture tailored to your taste",
-              "hi": "आपकी पसंद के अनुसार विशेष फर्नीचर"
-            }
-          }
-        },
-        {
-          "id": "svc-2",
-          "type": "feature",
-          "props": {
-            "icon": "hammer",
-            "title": {
-              "en": "Premium Craftsmanship",
-              "hi": "प्रीमियम कारीगरी"
-            },
-            "description": {
-              "en": "Handcrafted by master artisans",
-              "hi": "मास्टर कारीगरों द्वारा हस्तनिर्मित"
-            }
-          }
-        },
-        {
-          "id": "svc-3",
-          "type": "feature",
-          "props": {
-            "icon": "package",
-            "title": {
-              "en": "Pan India Delivery",
-              "hi": "पूरे भारत में डिलीवरी"
-            },
-            "description": {
-              "en": "Delivered to your doorstep anywhere in India",
-              "hi": "भारत में कहीं भी आपके दरवाजे तक डिलीवरी"
-            }
-          }
-        }
-      ]
-    },
-    {
       "id": "sec-collections",
       "type": "grid",
       "adminTitle": "Collections",
@@ -304,7 +236,7 @@
               "en": "Dining Tables",
               "hi": "डाइनिंग टेबल"
             },
-            "image":  "https://images.unsplash.com/photo-1577157581154-a31421063ca4?auto=format&fit=crop&q=80",
+            "image": "https://images.unsplash.com/photo-1577157581154-a31421063ca4?auto=format&fit=crop&q=80",
             "link": "/category/dining"
           }
         },
@@ -328,7 +260,7 @@
               "en": "Lighting",
               "hi": "लाइटिंग"
             },
-            "image":  "https://images.unsplash.com/photo-1595428774223-ea526281bb0a?auto=format&fit=crop&q=80",
+            "image": "https://images.unsplash.com/photo-1595428774223-ea526281bb0a?auto=format&fit=crop&q=80",
             "link": "/category/lighting"
           }
         }
@@ -548,26 +480,94 @@
       ]
     },
     {
+      "id": "sec-services",
+      "type": "features",
+      "adminTitle": "Services",
+      "layout": "grid_3",
+      "props": {
+        "badge": {
+          "en": "What We Do",
+          "hi": "हम क्या करते हैं"
+        },
+        "heading": {
+          "en": "Our Services",
+          "hi": "हमारी सेवाएं"
+        },
+        "viewAllLabel": {
+          "en": "View All",
+          "hi": "सभी देखें"
+        },
+        "viewAllLink": "/services"
+      },
+      "content": [
+        {
+          "id": "svc-1",
+          "type": "feature",
+          "props": {
+            "icon": "pen-tool",
+            "title": {
+              "en": "Custom Design",
+              "hi": "कस्टम डिज़ाइन"
+            },
+            "description": {
+              "en": "Bespoke furniture tailored to your taste",
+              "hi": "आपकी पसंद के अनुसार विशेष फर्नीचर"
+            }
+          }
+        },
+        {
+          "id": "svc-2",
+          "type": "feature",
+          "props": {
+            "icon": "hammer",
+            "title": {
+              "en": "Premium Craftsmanship",
+              "hi": "प्रीमियम कारीगरी"
+            },
+            "description": {
+              "en": "Handcrafted by master artisans",
+              "hi": "मास्टर कारीगरों द्वारा हस्तनिर्मित"
+            }
+          }
+        },
+        {
+          "id": "svc-3",
+          "type": "feature",
+          "props": {
+            "icon": "package",
+            "title": {
+              "en": "Pan India Delivery",
+              "hi": "पूरे भारत में डिलीवरी"
+            },
+            "description": {
+              "en": "Delivered to your doorstep anywhere in India",
+              "hi": "भारत में कहीं भी आपके दरवाजे तक डिलीवरी"
+            }
+          }
+        }
+      ]
+    },
+    {
       "id": "sec-craft",
       "type": "text",
       "adminTitle": "Craft & Quality Section",
       "layout": "two_column",
       "props": {
         "badge": {
-          "en": "Our Craft",
-          "hi": "हमारी कारीगरी"
+          "en": "Master Craftsmanship",
+          "hi": "उत्कृष्ट कारीगरी"
         },
         "title": {
-          "en": "Craft & Quality",
-          "hi": "कारीगरी और गुणवत्ता"
+          "en": "Artistry in Every Detail",
+          "hi": "हर विवरण में कला"
         },
         "mainHeading": {
-          "en": "Where Tradition Meets Modern Design",
-          "hi": "जहां परंपरा मिलती है आधुनिक डिज़ाइन से"
+          "en": "Where Timeless Tradition Meets Modern Aesthetics",
+          "hi": "जहां कालजयी परंपरा का आधुनिक सौंदर्य से मिलन होता है"
         },
         "description": {
-          "en": "Every piece is thoughtfully designed and meticulously crafted.",
-          "hi": "हर टुकड़ा सोच-समझकर डिज़ाइन और सावधानीपूर्वक तैयार किया गया है"
+          "en": "Our furniture isn't just built; it's meticulously sculpted. We blend centuries-old woodworking techniques with contemporary design principles to create heirloom-quality pieces that elevate your living spaces. Every curve, joint, and finish is a testament to our unwavering dedication to excellence.",
+          "hi": "हमारा फर्नीचर सिर्फ बनाया नहीं जाता; इसे सावधानीपूर्वक तराशा जाता है। हम आपके रहने के स्थानों को उन्नत करने के लिए समकालीन डिजाइन सिद्धांतों के साथ सदियों पुरानी लकड़ी की तकनीक का मिश्रण करते हैं।"
         },
         "buttonLabel": {
           "en": "Discover Our Story",
@@ -590,16 +590,20 @@
           "props": {
             "items": [
               {
-                "en": "Premium teakwood & sheesham",
-                "hi": "प्रीमियम सागौन और शीशम"
+                "en": "Sustainably sourced premium hardwoods",
+                "hi": "स्थायी रूप से प्राप्त प्रीमियम दृढ़ लकड़ी"
               },
               {
-                "en": "Eco-friendly finishes",
-                "hi": "इको-फ्रेंडली फिनिश"
+                "en": "Precision hand-carved detailing by master artisans",
+                "hi": "मास्टर कारीगरों द्वारा हस्तशिल्प विवरण"
               },
               {
-                "en": "Hand-carved detailing",
-                "hi": "हस्तनक्काशीदार विवरण"
+                "en": "Eco-friendly, multi-layer protective finishes",
+                "hi": "इको-फ्रेंडली, मल्टी-लेयर प्रोटेक्टिव फिनिश"
+              },
+              {
+                "en": "Lifetime warranty on structural integrity",
+                "hi": "संरचनात्मक अखंडता पर आजीवन वारंटी"
               }
             ]
           }

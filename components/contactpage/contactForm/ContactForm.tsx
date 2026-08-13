@@ -16,7 +16,6 @@ import { useAppSelector } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import {
   createFormAttemptKey,
-  submitPublicForm,
 } from "@/lib/forms/public-forms-client";
 
 const TENANT_SLUG = process.env.NEXT_PUBLIC_TENANT_SLUG;
@@ -176,17 +175,50 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
     setIsSubmitting(true);
 
     try {
-      await submitPublicForm({
-        tenantSlug: TENANT_SLUG,
-        formId: formConfig?.id || CONTACT_FORM_ID,
-        submission: {
-          data: formData,
-          metadata: { source: "nestcraft-contact-page", language: lang },
-          consent: {},
-          honeypot: "",
-          idempotencyKey: attemptKey,
-        },
+      const getFieldValue = (keys: string[]) => {
+        for (const k of keys) {
+          if (formData[k]) return formData[k];
+        }
+        return '';
+      };
+
+      const firstName = getFieldValue(['firstName', 'first_name', 'name']);
+      const lastName = getFieldValue(['lastName', 'last_name']);
+      
+      const name = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : 'Unknown Name';
+      const email = getFieldValue(['email', 'email_address']) || 'no-email@provided.com';
+      const subject = formData.subject || 'New Contact Inquiry';
+      
+      // Collect any other fields into the message body
+      const otherFields = Object.keys(formData)
+        .filter(k => !['name', 'firstName', 'lastName', 'first_name', 'last_name', 'email', 'email_address', 'subject'].includes(k))
+        .map(k => {
+          // format key nicely e.g., 'phone_number' -> 'Phone Number'
+          const formattedKey = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          return `**${formattedKey}:** ${formData[k]}`;
+        })
+        .join('<br>');
+      
+      let message = formData.message || '';
+      if (otherFields) {
+         message = message ? `${message}<br><br><b>Other Details:</b><br>${otherFields}` : otherFields;
+      }
+      if (!message) message = 'No message provided';
+
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          subject,
+          message,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
       setIsSubmitted(true);
       setAttemptKey(createFormAttemptKey("contact"));
       const resetData: Record<string, any> = {};
@@ -216,7 +248,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
-
   const getFieldGridClass = (type: string) => {
     if (type === "textarea" || type === "checkbox" || type === "terms") {
       return "col-span-2";
@@ -225,33 +256,43 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
   };
 
   return (
-    <section className="py-32 px-[5%] max-w-7xl mx-auto">
-      <div className="grid lg:grid-cols-[1.2fr_1.8fr] gap-24">
+    <div className="bg-secondary/5 border-y border-border/50 relative">
+      <section className="py-32 px-[5%] max-w-7xl mx-auto relative z-10">
+        {/* Background Decorators */}
+        <div className="absolute top-[20%] right-[-5%] w-[30%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[30%] bg-secondary/10 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="grid lg:grid-cols-[1.2fr_1.8fr] gap-16 lg:gap-24 relative">
         {/* Left Side: Info Cards */}
-        <div className="space-y-16">
+        <div className="space-y-16 py-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h2 className="text-3xl font-black mb-10 tracking-tight">
-              <EditableText
-                value={contactHeading}
+            <EditableText value={contactHeading}
                 currentPages={currentPages}
                 sectionId={contactInfoSection?.id}
-                fieldPath="props.sectionHeading"
-              />
-            </h2>
-            <div className="space-y-12">
+                fieldPath="props.sectionHeading" tag="h2" className="text-[40px] font-black mb-12 tracking-tight  text-foreground" />
+            
+            <div className="space-y-6">
               {contactItems?.map((item: any, index: number) => {
                 const IconComponent = iconMap[item.icon] || MapPin;
                 return (
-                  <div key={index} className="group cursor-pointer">
-                    <div className="flex items-center gap-4 mb-3">
-                      <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all">
-                        <IconComponent size={18} />
+                  <motion.div 
+                    key={index} 
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.15, duration: 0.6 }}
+                    className="group cursor-pointer bg-surface/30 hover:bg-surface/60 backdrop-blur-md border border-white/10 hover:border-white/20 p-6 rounded-3xl transition-all duration-500 shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+                  >
+                    <div className="flex items-center gap-5 mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-[#98c45f]/20 border border-[#98c45f]/30 flex items-center justify-center text-[#063A1D] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:bg-[#063A1D] group-hover:text-[#ffffff] shadow-sm">
+                        <IconComponent size={22} strokeWidth={2.5} />
                       </div>
-                      <span className="text-[11px] font-black uppercase tracking-[2px] text-muted">
+                      <span className="text-[12px] font-bold uppercase tracking-[3px] text-muted group-hover:text-[#063A1D] transition-colors">
                         <EditableText
                           value={getLocalizedValue(item.label)}
                           currentPages={currentPages}
@@ -263,7 +304,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                     {item.href ? (
                       <a
                         href={item.href}
-                        className="text-2xl font-bold tracking-tight inline-block"
+                        className="text-lg md:text-xl font-bold tracking-tight inline-block text-[#063A1D] group-hover:text-[#98c45f] transition-colors [&_*]:!text-[#063A1D] group-hover:[&_*]:!text-[#98c45f]"
                       >
                         <EditableText
                           value={getLocalizedValue(item.value)}
@@ -273,7 +314,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                         />
                       </a>
                     ) : (
-                      <p className="text-2xl font-bold tracking-tight">
+                      <p className="text-lg md:text-xl font-bold tracking-tight text-[#063A1D] group-hover:text-[#98c45f] transition-colors [&_*]:!text-[#063A1D] group-hover:[&_*]:!text-[#98c45f]">
                         <EditableText
                           value={getLocalizedValue(item.value)}
                           currentPages={currentPages}
@@ -282,8 +323,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                         />
                       </p>
                     )}
-                    <div className="w-0 group-hover:w-full h-px bg-secondary transition-all duration-500 mt-2" />
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -292,28 +332,30 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
 
         {/* Right Side: Form */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
           className="relative"
         >
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-secondary/5 rounded-full blur-3xl" />
-
-          <div className="bg-surface border border-border p-10 lg:p-16 rounded-[48px] shadow-2xl relative z-10">
+          <div className="bg-surface/50 backdrop-blur-2xl border border-white/20 p-8 md:p-12 lg:p-16 rounded-[40px] shadow-[0_20px_80px_rgba(0,0,0,0.08)] relative z-10 overflow-hidden">
+            {/* Inner subtle glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] pointer-events-none" />
+            
             {isSubmitted ? (
-              <div className="py-20 text-center">
-                <div className="w-24 h-24 bg-secondary/10 text-secondary rounded-full flex items-center justify-center mx-auto mb-8">
-                  <CheckCircle2 size={48} />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="py-20 text-center relative z-10"
+              >
+                <div className="w-28 h-28 bg-gradient-to-br from-secondary/20 to-primary/20 text-secondary rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
+                  <CheckCircle2 size={56} strokeWidth={2} />
                 </div>
-                <h3 className="text-4xl font-black mb-4 tracking-tight">
-                  <EditableText
-                    value={successHeading}
+                <EditableText value={successHeading}
                     currentPages={currentPages}
                     sectionId={formSection?.id}
-                    fieldPath="props.successHeading"
-                  />
-                </h3>
-                <p className="text-muted font-semibold mb-10 text-lg">
+                    fieldPath="props.successHeading" tag="h3" className="text-[40px] font-black mb-6 tracking-tight text-foreground" />
+                <div className="text-muted font-medium mb-12 text-lg md:text-xl max-w-md mx-auto">
                   <EditableText
                     value={successDescription}
                     currentPages={currentPages}
@@ -321,10 +363,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                     fieldPath="props.successDescription"
                     tag="p"
                   />
-                </p>
+                </div>
                 <button
                   onClick={() => setIsSubmitted(false)}
-                  className="bg-primary text-white px-12 h-14 rounded-full text-[15px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all cursor-pointer"
+                  className="bg-foreground text-background px-12 h-14 rounded-full text-[15px] font-bold uppercase tracking-[2px] hover:scale-105 hover:bg-primary hover:text-white transition-all duration-300 shadow-xl cursor-pointer"
                 >
                   <EditableText
                     value={successButtonText}
@@ -333,19 +375,15 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                     fieldPath="props.successButtonText"
                   />
                 </button>
-              </div>
+              </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="space-y-2">
-                  <h3 className="text-3xl font-black tracking-tight mb-2">
-                    <EditableText
-                      value={formHeading}
+              <form onSubmit={handleSubmit} className="space-y-12 relative z-10">
+                <div className="space-y-3">
+                  <EditableText value={formHeading}
                       currentPages={currentPages}
                       sectionId={formSection?.id}
-                      fieldPath="props.formHeading"
-                    />
-                  </h3>
-                  <p className="text-muted font-semibold">
+                      fieldPath="props.formHeading" tag="h3" className="text-[32px] md:text-[40px] font-black tracking-tight mb-2 text-foreground" />
+                  <div className="text-muted font-medium text-lg">
                     <EditableText
                       value={formDescription}
                       currentPages={currentPages}
@@ -353,71 +391,77 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                       fieldPath="props.formDescription"
                       tag="p"
                     />
-                  </p>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-10">
+                <div className="grid grid-cols-2 gap-8 md:gap-10">
                   {fieldsToRender.map((field: any) => {
                     const fieldKey = field.name || field.id;
                     const gridClass = getFieldGridClass(field.type);
 
                     return (
-                      <div key={field.id} className={`${gridClass} space-y-3`}>
-                        <label className="text-[10px] font-black uppercase tracking-[3px] text-muted ml-1 flex items-center gap-1 select-none">
+                      <div key={field.id} className={`${gridClass} relative group`}>
+                        <label className="text-[10px] font-bold uppercase tracking-[3px] text-muted mb-3 flex items-center gap-1 select-none">
                           {getLocalizedValue(field.label)}
                           {field.required && (
-                            <span className="text-rose-500 font-bold ml-0.5">
-                              •
-                            </span>
+                             <span className="text-secondary font-black ml-0.5">*</span>
                           )}
                         </label>
 
                         {field.type === "textarea" ? (
-                          <textarea
-                            required={field.required}
-                            name={fieldKey}
-                            value={formData[fieldKey] || ""}
-                            onChange={handleChange}
-                            rows={4}
-                            placeholder={getLocalizedValue(field.placeholder)}
-                            className="w-full bg-transparent border-b-2 border-border py-4 outline-none focus:border-secondary transition-all font-bold text-xl resize-none placeholder:text-muted/30"
-                          />
+                          <div className="relative">
+                            <textarea
+                              required={field.required}
+                              name={fieldKey}
+                              value={formData[fieldKey] || ""}
+                              onChange={handleChange}
+                              placeholder={getLocalizedValue(field.placeholder)}
+                              className="w-full bg-surface/40 backdrop-blur-sm border border-border/60 hover:border-border/80 focus:border-secondary focus:ring-1 focus:ring-secondary/50 rounded-2xl p-5 outline-none transition-all font-medium text-base text-foreground placeholder:text-muted/60 min-h-[140px] resize-y"
+                            />
+                          </div>
                         ) : field.type === "select" ? (
-                          <select
-                            required={field.required}
-                            name={fieldKey}
-                            value={formData[fieldKey] || ""}
-                            onChange={handleChange}
-                            className="w-full bg-transparent border-b-2 border-border py-4 outline-none focus:border-secondary transition-all font-bold text-xl appearance-none cursor-pointer"
-                          >
-                            <option value="" disabled className="bg-surface">
-                              {getLocalizedValue(field.placeholder) ||
-                                "Select an option"}
-                            </option>
-                            {(field.options || []).map(
-                              (option: any, index: number) => {
-                                const val =
-                                  typeof option === "object"
-                                    ? option.value
-                                    : option;
-                                const label =
-                                  typeof option === "object"
-                                    ? getLocalizedValue(option.label)
-                                    : option;
-                                return (
-                                  <option
-                                    key={index}
-                                    value={val}
-                                    className="bg-surface"
-                                  >
-                                    {label}
-                                  </option>
-                                );
-                              },
-                            )}
-                          </select>
+                          <div className="relative">
+                            <select
+                              required={field.required}
+                              name={fieldKey}
+                              value={formData[fieldKey] || ""}
+                              onChange={handleChange}
+                              className="w-full bg-surface/40 backdrop-blur-sm border border-border/60 hover:border-border/80 focus:border-secondary focus:ring-1 focus:ring-secondary/50 rounded-2xl px-5 py-4 outline-none transition-all font-bold text-lg text-foreground appearance-none cursor-pointer"
+                            >
+                              <option value="" disabled className="bg-surface text-muted">
+                                {getLocalizedValue(field.placeholder) ||
+                                  "Select an option"}
+                              </option>
+                              {(field.options || []).map(
+                                (option: any, index: number) => {
+                                  const val =
+                                    typeof option === "object"
+                                      ? option.value
+                                      : option;
+                                  const label =
+                                    typeof option === "object"
+                                      ? getLocalizedValue(option.label)
+                                      : option;
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={val}
+                                      className="bg-surface text-foreground font-medium"
+                                    >
+                                      {label}
+                                    </option>
+                                  );
+                                },
+                              )}
+                            </select>
+                            <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-muted">
+                              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </div>
+                          </div>
                         ) : field.type === "checkbox" ? (
-                          <div className="flex items-center gap-3 py-2">
+                          <div className="flex items-center gap-4 py-2">
                             <input
                               type="checkbox"
                               required={field.required}
@@ -429,57 +473,60 @@ export const ContactForm: React.FC<ContactFormProps> = ({ data }) => {
                                     [fieldKey]: e.target.checked,
                                   });
                               }}
-                              className="w-5 h-5 rounded border-border text-primary focus:ring-secondary cursor-pointer"
-                              id={field.id}
+                              className="w-5 h-5 rounded-md border-2 border-border/80 text-secondary focus:ring-secondary focus:ring-offset-background transition-all cursor-pointer bg-surface/50"
                             />
-                            <label
-                              htmlFor={field.id}
-                              className="text-sm font-bold text-muted cursor-pointer select-none"
-                            >
-                              {getLocalizedValue(field.placeholder) ||
-                                getLocalizedValue(field.label)}
-                            </label>
+                            <span className="text-sm font-medium text-muted-foreground select-none cursor-pointer">
+                              {getLocalizedValue(field.placeholder) || "I agree"}
+                            </span>
                           </div>
                         ) : (
-                          <input
-                            required={field.required}
-                            type={field.type || "text"}
-                            name={fieldKey}
-                            value={formData[fieldKey] || ""}
-                            onChange={handleChange}
-                            placeholder={getLocalizedValue(field.placeholder)}
-                            className="w-full bg-transparent border-b-2 border-border py-4 outline-none focus:border-secondary transition-all font-bold text-xl placeholder:text-muted/30"
-                          />
+                          <div className="relative">
+                            <input
+                              type={field.type}
+                              required={field.required}
+                              name={fieldKey}
+                              value={formData[fieldKey] || ""}
+                              onChange={handleChange}
+                              placeholder={getLocalizedValue(field.placeholder)}
+                              className="w-full bg-surface/40 backdrop-blur-sm border border-border/60 hover:border-border/80 focus:border-secondary focus:ring-1 focus:ring-secondary/50 rounded-2xl px-5 py-4 outline-none transition-all font-bold text-lg text-foreground placeholder:text-muted/60 placeholder:font-medium"
+                            />
+                          </div>
                         )}
                       </div>
                     );
                   })}
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="group w-full flex relative h-12 items-center justify-center rounded-full bg-primary px-8 text-[14px] font-semibold uppercase tracking-wider text-white transition-all overflow-hidden scroll-mt-20 cursor-pointer"
-                >
-                  <div className="absolute inset-0 bg-secondary translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                  <span className="relative z-10 flex gap-2 items-center">
-                    <EditableText
-                      value={submitButtonText}
-                      currentPages={currentPages}
-                      sectionId={formSection?.id}
-                      fieldPath="props.submitButtonText"
-                    />
-                    <ArrowRight
-                      size={20}
-                      className="group-hover:translate-x-2 transition-transform"
-                    />
-                  </span>
-                </button>
+                <div className="pt-6">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-foreground text-background h-16 rounded-[20px] text-[15px] font-bold uppercase tracking-[2px] flex items-center justify-between px-8 group hover:shadow-xl transition-all duration-500 overflow-hidden relative"
+                  >
+                    <div className="absolute inset-0 bg-primary translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                    <span className="relative z-10 flex gap-2 items-center group-hover:text-white transition-colors duration-500">
+                      <EditableText
+                        value={submitButtonText}
+                        currentPages={currentPages}
+                        sectionId={formSection?.id}
+                        fieldPath="props.submitButtonText"
+                      />
+                    </span>
+                    <div className="relative z-10 w-10 h-10 rounded-full bg-background/10 backdrop-blur-md flex items-center justify-center group-hover:bg-white/20 group-hover:text-white transition-all duration-500 group-hover:translate-x-1">
+                      {isSubmitting ? (
+                        <div className="w-5 h-5 border-2 border-background/20 border-t-background rounded-full animate-spin group-hover:border-white/20 group-hover:border-t-white" />
+                      ) : (
+                        <ArrowRight size={18} />
+                      )}
+                    </div>
+                  </button>
+                </div>
               </form>
             )}
           </div>
         </motion.div>
       </div>
     </section>
+    </div>
   );
 };
