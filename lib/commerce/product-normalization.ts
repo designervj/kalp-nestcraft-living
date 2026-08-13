@@ -87,10 +87,13 @@ export function resolveCategoryImage(category: CommerceRecord): string {
   if (typeof provided === "string" && provided.trim()) return provided;
 
   const key = String(category.slug || category.name || category.title || "").toLowerCase();
-  if (key.includes("mattress") || key.includes("bed")) return "/assets/Image/matterss.jpeg";
-  if (key.includes("dining")) return "/assets/Image/dining.jpeg";
-  if (key.includes("study") || key.includes("office")) return "/assets/Image/study.jpeg";
-  if (key.includes("storage") || key.includes("wardrobe")) return "/assets/Image/storage.jpg";
-  if (key.includes("decor")) return "/assets/Image/decor.jpg";
-  return "/assets/Image/Sofa.jpg";
+  if (key.includes("mattress") || key.includes("bed")) return "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=1200";
+  if (key.includes("dinning") || key.includes("dining")) return "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&q=80&w=1200";
+  if (key.includes("study") || key.includes("office")) return "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1200";
+  if (key.includes("storage") || key.includes("wardrobe") || key.includes("cabinet")) return "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=1200";
+  if (key.includes("decor")) return "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=1200";
+  if (key.includes("kitchen")) return "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&q=80&w=1200";
+  if (key.includes("living")) return "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200";
+  
+  return "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1200";
 }

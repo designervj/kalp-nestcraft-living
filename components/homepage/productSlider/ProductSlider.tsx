@@ -105,9 +105,7 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
           <p className="text-secondary uppercase tracking-[3px] text-[12px] font-black mb-2.5">
             <EditableText value={badge} isEditable={isEditable} onSave={handle('props.badge.en')} tag="span" />
           </p>
-          <h2 className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight">
-            <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')} tag="span" />
-          </h2>
+          <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         </div>
         <Link
           href={viewAllLink}
@@ -154,9 +152,7 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-heading text-[26px] font-bold leading-tight mb-1.5">
-                      <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)} tag="span" />
-                    </h4>
+                    <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)}  tag="h4" className="font-heading text-[26px] font-bold leading-tight mb-1.5" />
                     <div className="flex justify-between items-center gap-2.5">
                       <div className="text-muted text-[14px] font-black">{price}</div>
                     </div>

@@ -78,9 +78,7 @@ const Blog = ({ section: propSection }: BlogProps) => {
       className="md:py-[40px] md:px-[5%] py-[50px] px-[5%] "
     >
       <div className="flex justify-between items-end mb-[60px] gap-[18px]">
-        <h2 className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight">
-          <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')} tag="span" />
-        </h2>
+        <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         <Link
           href={viewAllLink}
           className="bg-primary text-white px-8 h-11 rounded-full text-[14px] font-semibold uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center md:flex hidden"
@@ -118,9 +116,7 @@ const Blog = ({ section: propSection }: BlogProps) => {
                   <span className="text-[11px] text-secondary tracking-[2px] uppercase font-black">
                     <EditableText value={description} isEditable={isEditable} onSave={handle(`content.${idx}.props.description.en`)} tag="span" />
                   </span>
-                  <h4 className="font-heading text-[26px] mt-2.5 mb-3 leading-tight font-bold">
-                    <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)} tag="span" />
-                  </h4>
+                  <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)}  tag="h4" className="font-heading text-[26px] mt-2.5 mb-3 leading-tight font-bold" />
                   <div
                     className="inline-block mt-3 text-[12px] font-black tracking-wider uppercase border-b border-secondary hover:text-secondary transition-colors"
                   >

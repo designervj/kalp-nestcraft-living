@@ -926,8 +926,8 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
         </div>
 
         {/* RIGHT: INFO */}
-        <div className="lg:sticky lg:top-[128px] space-y-6">
-          <div className="space-y-4">
+        <div className="lg:sticky lg:top-[128px] space-y-4">
+          <div className="space-y-2">
             <div className="flex justify-between items-start gap-4">
               <div>
                 <small className="text-secondary tracking-[3px] uppercase text-[10px] font-black mb-2 block">
@@ -980,7 +980,7 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
 
           {/* Variant Options ONLY */}
           {variantOptions.length > 0 && (
-            <div className="space-y-6 py-4 border-y border-border/60">
+            <div className="space-y-2 py-3 border-y border-border/60">
               {variantOptions.map((option: any) => (
                 <div key={option.key} className="space-y-3">
                   <label className="text-[11px] mb-4  font-black uppercase tracking-[2px] text-foreground/70">
@@ -1008,7 +1008,7 @@ const ProductDetailPage = ({ currentProduct }: { currentProduct: any }) => {
 
           {/* Actions */}
           {/* Compare, Ask, Share */}
-          <div className="flex items-center  gap-4 py-2 flex-wrap ">
+          <div className="flex items-center  gap-4 py-0 flex-wrap ">
 
             <button
               onClick={() => setIsAskQuestionOpen(true)}

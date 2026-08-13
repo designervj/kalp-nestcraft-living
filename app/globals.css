@@ -8,12 +8,12 @@
 
 :root {
   --surface: #FFFFFF;
-  --muted: oklch(0.97 0 0);
-  --border: oklch(0.922 0 0);
+  --muted: #f4f4f5;
+  --border: #e4e4e7;
 
-  --primary: oklch(0.205 0 0);
+  --primary: #063A1D;
   --secondary: #98c45f;
-  --accent: oklch(0.97 0 0);
+  --accent: #f4f4f5;
   --dark: #063A1D;
 
   --radius-sm: 10px;
@@ -22,33 +22,33 @@
 
   --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.1);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary-foreground: #ffffff;
+  --secondary-foreground: #063A1D;
+  --muted-foreground: #64748b;
+  --accent-foreground: #063A1D;
+  --destructive: #ef4444;
+  --input: #e4e4e7;
+  --ring: #063A1D;
+  --chart-1: #3b82f6;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #8b5cf6;
+  --chart-5: #f43f5e;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #063A1D;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f4f4f5;
+  --sidebar-accent-foreground: #063A1D;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #063A1D;
 }
 
 [data-theme="dark"] {
@@ -96,12 +96,13 @@
     scroll-behavior: smooth;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif !important;
   }
   html {
     @apply font-sans;
   }
 }
+  
 
 @layer utilities {
   .reveal {

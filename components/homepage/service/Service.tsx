@@ -72,9 +72,7 @@ const Services = ({ section: propSection }: ServiceProps) => {
           <p className="text-secondary uppercase tracking-[3px] text-[12px] font-black mb-2.5">
             <EditableText value={badge} isEditable={isEditable} onSave={handle('props.badge.en')} tag="span" />
           </p>
-          <h2 className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight">
-            <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')} tag="span" />
-          </h2>
+          <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         </motion.div>
         <Link
           href={viewAllLink}
@@ -101,9 +99,7 @@ const Services = ({ section: propSection }: ServiceProps) => {
               className="p-[34px] bg-surface border border-border rounded-lg shadow-lg hover:-translate-y-2.5 hover:border-secondary/55 hover:shadow-2xl transition-all duration-180"
             >
               <Icon className="text-secondary mb-[18px]" size={40} />
-              <h4 className="text-[22px] font-bold tracking-tight mb-2">
-                <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)} tag="span" />
-              </h4>
+              <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)}  tag="h4" className="text-[22px] font-bold tracking-tight mb-2" />
               <p className="text-muted font-semibold">
                 <EditableText value={description} isEditable={isEditable} onSave={handle(`content.${idx}.props.description.en`)} tag="span" />
               </p>
