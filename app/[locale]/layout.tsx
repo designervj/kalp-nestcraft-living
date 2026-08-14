@@ -12,6 +12,7 @@ import BrandingInitializer from "@/components/branding/BrandingInitializer";
 import BusinessBlueprintDataInitialiser from "@/components/businessBluePrints/BusinessBlueprintDataInitialiser";
 import ThemeInitializer from "@/components/theme/ThemeInitializer";
 import GetUser from "@/lib/GetAllDetails/GetUser";
+import ThemeProvider from "@/components/ThemeProvider";
 import { Inter } from "next/font/google";
 import FetchAllData from "@/components/pages/FetchAllData";
 import EditModeToggle from "@/components/EditModeToggle/EditModeToggle";
@@ -49,6 +50,8 @@ export default async function LocaleLayout({
     token ? getAuthUser(token).catch(() => null) : Promise.resolve(null),
   ]);
 
+  console.log("=== BUSINESS BLUEPRINT FROM BACKEND ===", JSON.stringify(businessBlueprint?.payload?.public_theme?.colors, null, 2));
+
   return (
     <html
       lang={locale || "en"}
@@ -66,9 +69,11 @@ export default async function LocaleLayout({
           <Providers>
             <GetUser user={user} />
             <FetchAllData />
-            <LayoutWrapper brandConfig={tenantRegistry}>
-              {children}
-            </LayoutWrapper>
+            <ThemeProvider businessBlueprint={businessBlueprint}>
+              <LayoutWrapper brandConfig={tenantRegistry}>
+                {children}
+              </LayoutWrapper>
+            </ThemeProvider>
             <EditModeToggle />
           </Providers>
         </StoreProvider>

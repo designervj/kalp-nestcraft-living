@@ -1,6 +1,6 @@
 "use client";
 import { RefreshCcw, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { motion } from "motion/react";
+// import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useMemo } from "react";
@@ -49,13 +49,13 @@ const USP = ({ section: propSection }: { section?: any }) => {
 
   return (
     <section
-      data-annotate-id="home-usp-section"
+      data-annotate-id="home-usp-section aaa"
       className="px-[5%] pb-[90px] -mt-16 z-10 relative"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+      <div
+        // initial={{ opacity: 0, y: 20 }}
+        // whileInView={{ opacity: 1, y: 0 }}
+        // viewport={{ once: true }}
         className="bg-surface border border-border md:shadow-2xl grid sm:grid-cols-2 lg:grid-cols-4 gap-[18px] p-[22px] rounded-lg"
       >
         {items?.map((item: any, idx: number) => {
@@ -68,7 +68,7 @@ const USP = ({ section: propSection }: { section?: any }) => {
 
           return (
             <div key={idx} className="flex gap-3 items-start p-[6px_8px]">
-              <Icon className="text-secondary mt-0.5" size={22} />
+              <Icon className="text-primary mt-0.5" size={22} />
               <div>
                 <EditableText
                   value={title}
@@ -88,7 +88,7 @@ const USP = ({ section: propSection }: { section?: any }) => {
             </div>
           );
         })}
-      </motion.div>
+      </div>
     </section>
   );
 };
