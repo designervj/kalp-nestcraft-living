@@ -29,6 +29,7 @@ interface HomePageServerProps {
 }
 
 const HomePageServer = ({ data, lang }: HomePageServerProps) => {
+  console.log("data", data)
   const content = Array.isArray(data?.content) ? data.content : [];
 
   const ctaSection = getSection(content, "CTA");

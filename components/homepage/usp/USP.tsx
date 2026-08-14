@@ -4,7 +4,7 @@ import { RefreshCcw, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useMemo } from "react";
-// import { defaultUSPItems } from "./uspData";
+import { defaultUSPItems } from "./uspData";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
 
@@ -26,7 +26,8 @@ const USP = ({ section: propSection }: { section?: any }) => {
   }, [currentPages]);
 
   const section = propSection || getCurrentSection;
-  const items = section?.content;
+  const rawItems = section?.content;
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultUSPItems;
 
   const iconMap: Record<string, any> = {
     "truck": Truck,

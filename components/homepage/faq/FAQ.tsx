@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+
+import { defaultFAQs } from "./faqData";
 
 interface FAQProps {
   section?: any;
@@ -47,7 +49,8 @@ const FAQ = ({ section: propSection }: FAQProps) => {
   const viewAllLabel = getV(p.viewAllLabel);
   const viewAllLink = p.viewAllLink?.value || p.viewAllLink || "/faq";
 
-  const items = (section as any)?.content || [];
+  const rawItems = (section as any)?.content;
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultFAQs;
 
   const handle = (fieldPath: string) => (value: string) =>
     saveField(dispatch, currentPages, section?.id, fieldPath, value);
@@ -68,37 +71,56 @@ const FAQ = ({ section: propSection }: FAQProps) => {
         </Link>
       </div>
 
-      <div className="max-w-[800px] mx-auto">
+      <div className="max-w-[800px] mx-auto space-y-3">
         {items.map((faq: any, idx: number) => {
           const fp = faq.props || {};
           const title = getV(fp.title) || getV(faq.title) || "";
           const description = getV(fp.description) || getV(faq.description) || "";
+          const isExpanded = activeIndex === idx;
 
           return (
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1, duration: 0.6 }}
               key={idx}
-              className="border-b border-border py-[22px] cursor-pointer"
-              onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
+              className={`bg-surface/40 backdrop-blur-md border rounded-xl transition-all duration-500 cursor-pointer group shadow-sm ${
+                isExpanded ? 'border-primary/40 bg-surface/60 shadow-[0_10px_40px_rgba(13,101,51,0.08)]' : 'border-border/60 hover:border-secondary/50 hover:bg-surface/50 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)]'
+              }`}
+              onClick={() => setActiveIndex(isExpanded ? null : idx)}
             >
-              <div className="flex justify-between items-center gap-3.5">
-                <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)}  tag="h4" className="font-heading text-[20px] font-bold" />
-                {activeIndex === idx ? (
-                  <Minus className="text-secondary" size={22} />
-                ) : (
-                  <Plus className="text-secondary" size={22} />
-                )}
+              <div className="p-5 md:p-6">
+                <h4 className="text-[18px] md:text-[20px] font-bold flex items-center justify-between gap-4 transition-colors duration-300 text-foreground font-heading">
+                  <span onClick={(e) => e.stopPropagation()} className="leading-tight">
+                    <EditableText value={title} isEditable={isEditable} onSave={handle(`content.${idx}.props.title.en`)} tag="span" />
+                  </span>
+                  <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
+                    isExpanded ? 'bg-primary text-white rotate-180 shadow-md' : 'bg-surface border border-border text-muted group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20'
+                  }`}>
+                    {isExpanded ? <Minus size={20} strokeWidth={2.5} /> : <Plus size={20} strokeWidth={2.5} />}
+                  </div>
+                </h4>
+
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-5 border-t border-border/50 mt-5" onClick={(e) => e.stopPropagation()}>
+                        <div className="text-muted font-medium text-[15px] leading-relaxed">
+                          <EditableText value={description} isEditable={isEditable} onSave={handle(`content.${idx}.props.description.en`)} tag="div" />
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-              <motion.div
-                initial={false}
-                animate={{
-                  height: activeIndex === idx ? "auto" : 0,
-                  marginTop: activeIndex === idx ? 12 : 0,
-                }}
-                className="overflow-hidden text-muted text-[15px] font-semibold"
-              >
-                <EditableText value={description} isEditable={isEditable} onSave={handle(`content.${idx}.props.description.en`)} tag="div" />
-              </motion.div>
-            </div>
+            </motion.div>
           );
         })}
       </div>

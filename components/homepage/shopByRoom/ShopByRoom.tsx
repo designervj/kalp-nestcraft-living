@@ -9,6 +9,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
 import { resolveCategoryImage } from "@/lib/commerce/product-normalization";
+import { defaultShopByRoomData } from "./shopByRoomData";
 
 interface ShopByRoomProps {
   section?: any;
@@ -50,13 +51,15 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
   );
   
   const rawContent = (section as any)?.content || [];
-  let items = Array.isArray(rawContent) && rawContent.length > 0 ? rawContent : (
+  let computedItems = Array.isArray(rawContent) && rawContent.length > 0 ? rawContent : (
     configuredSlugs.length
       ? configuredSlugs
           .map((slug: string) => productCategories.find((category) => category.slug === slug))
           .filter(Boolean)
       : productCategories
   ).slice(0, limit);
+
+  let items = computedItems.length > 0 ? computedItems : defaultShopByRoomData.content;
 
   const getV = (field: any) => {
     if (!field) return "";
@@ -96,6 +99,7 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {items.map((item: any, idx: number) => {
+          if (!item) return null;
           const sp = item.props || {};
           const name = getV(sp.name) || getV(sp.title) || getV(item.name) || getV(item.title) || "";
           const id = item.slug || item.id || item._id;
