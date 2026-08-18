@@ -113,9 +113,7 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
               </span>
             </div>
 
-            <h3 className="max-w-[760px] font-heading text-[42px] font-bold leading-[0.95] tracking-[-0.03em] text-white sm:text-[56px] lg:text-[74px]">
-              <EditableText value={title} isEditable={isEditable} onSave={handle('props.title.en')} tag="span" />
-            </h3>
+            <EditableText value={title} isEditable={isEditable} onSave={handle('props.title.en')}  tag="h3" className="max-w-[760px] font-heading text-[42px] font-bold leading-[0.95] tracking-[-0.03em] text-white sm:text-[56px] lg:text-[74px]" />
 
             <p className="mt-6 max-w-[620px] text-[18px] font-medium leading-8 text-white/80 sm:text-[20px]">
               <EditableText value={description} isEditable={isEditable} onSave={handle('props.description.en')} tag="span" />
