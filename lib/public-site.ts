@@ -76,35 +76,37 @@ export function normalizePublicPage(
     const c = block.content || {};
     const p = block.props || {};
 
-    if (type === "hero.split" || blockId === "home-hero") {
+    if (type === "hero.split" || type === "nestcraft.hero.carousel" || blockId === "home-hero" || blockId === "sec-hero") {
+      const parsedContent = Array.isArray(c) && c.length > 0 ? c : Array.isArray(c.columns?.[0]) && c.columns[0].length > 0 ? c.columns[0] : Array.isArray(c.items) && c.items.length > 0 ? c.items : [{ props: { ...p, title: c.heading, description: c.body, image: c.image || "https://images.unsplash.com/photo-1618220179428-22790b46a0eb?q=80&w=2727&auto=format&fit=crop" } }];
       return {
         ...block,
         adminTitle: "Premium Hero Slider",
-        content: [{ props: { ...p, title: c.heading, description: c.body, image: c.image || "https://images.unsplash.com/photo-1618220179428-22790b46a0eb?q=80&w=2727&auto=format&fit=crop" } }]
+        content: parsedContent
       };
     }
-    if (type === "trust.strip" || blockId === "home-trust") {
+    if (type === "trust.strip" || type === "nestcraft.trust.strip" || blockId === "home-trust" || blockId === "sec-usp") {
+      const parsedContent = Array.isArray(c) && c.length > 0 ? c : Array.isArray(c.columns?.[0]) && c.columns[0].length > 0 ? c.columns[0] : Array.isArray(c.items) && c.items.length > 0 ? c.items.map((item: any) => typeof item === "string" ? { props: { title: item } } : item) : [];
       return {
         ...block,
         adminTitle: "USP Section",
-        content: Array.isArray(c.items) ? c.items.map((item: string) => ({ props: { title: item } })) : []
+        content: parsedContent
       };
     }
-    if (type === "product.grid" || blockId === "home-featured-products") {
+    if (type === "product.grid" || type === "nestcraft.product.grid" || type === "nestcraft.product.carousel" || blockId === "home-featured-products") {
       return {
         ...block,
         adminTitle: "New Essentials Slider",
         props: { ...p, heading: c.heading, limit: block.dataSource?.limit || 8 }
       };
     }
-    if (type === "story.feature" || blockId === "home-story") {
+    if (type === "story.feature" || type === "nestcraft.story.feature" || blockId === "home-story") {
       return {
         ...block,
         adminTitle: "Craft & Quality Section",
         content: [{ props: { ...p, title: c.heading, description: c.body } }]
       };
     }
-    if (type === "newsletter.form" || blockId === "home-newsletter") {
+    if (type === "newsletter.form" || type === "nestcraft.newsletter.form" || blockId === "home-newsletter") {
       return {
         ...block,
         adminTitle: "Newsletter Section",
