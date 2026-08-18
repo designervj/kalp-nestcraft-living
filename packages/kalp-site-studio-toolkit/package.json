@@ -1,0 +1,10 @@
+{
+  "name": "@kalp/site-studio-toolkit",
+  "displayName": "Kalp Developer Toolkit — Site Studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

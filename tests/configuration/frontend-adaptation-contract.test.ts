@@ -39,7 +39,10 @@ describe("governed frontend adaptation contract", () => {
     expect(commentRoute).toContain("publishing/page-reviews/comments");
     expect(commentRoute).not.toContain("getMongoClient");
     const editor = source("lib/editorUtils.ts");
-    expect(editor).toContain("/api/publishing/page-drafts/field-changes");
+    const adapter = source("packages/kalp-site-studio-toolkit/src/index.ts");
+    expect(editor).toContain("fieldDraftAdapter.save");
+    expect(adapter).toContain("/api/publishing/page-drafts/field-changes");
+    expect(adapter).toContain('credentials: "include"');
     expect(editor).not.toContain("updatePageThunk");
   });
 });

@@ -1,5 +1,6 @@
 import { setCurrentPages } from '@/lib/store/pages/pagesSlice';
 import { setError } from '@/lib/store/pages/pagesSlice';
+import { fieldDraftAdapter } from '@/packages/kalp-site-studio-toolkit/src';
 
 export async function saveField(dispatch: any, currentPages: any, sectionId: string, fieldPath: string, value: string) {
   const updated = JSON.parse(JSON.stringify(currentPages));
@@ -24,20 +25,14 @@ export async function saveField(dispatch: any, currentPages: any, sectionId: str
   }
 
   try {
-    const response = await fetch('/api/publishing/page-drafts/field-changes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        pageSlug,
-        pageId,
-        sectionId,
-        fieldPath,
-        value,
-        expectedPageUpdatedAt: currentPages.updatedAt || null,
-      }),
+    await fieldDraftAdapter.save({
+      pageSlug,
+      pageId,
+      sectionId,
+      fieldPath,
+      value,
+      expectedPageUpdatedAt: currentPages.updatedAt || null,
     });
-    if (!response.ok) throw new Error('Draft save was rejected');
     dispatch(setError(false));
     return true;
   } catch {
