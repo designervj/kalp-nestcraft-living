@@ -43,6 +43,12 @@ by this toolkit.
 Run `Doctor.ps1` for read-only setup and service diagnostics. Add
 `-JsonReport .kalp/site-studio-doctor.json` for a machine-readable report.
 Doctor separates installed/configured checks from API readiness and does not
-start the site. Site Launcher verifies every bundled package file against the
+start the site. It detects the package manager from lockfiles/configuration,
+verifies the real executable (using Corepack for pnpm/Yarn when needed), checks
+the install syntax without installing, and probes package-store writability.
+If a shared pnpm store is unavailable it prints one verified command using a
+project-specific temporary store. Project, environment, and service findings
+are reported separately; Doctor never presents an unverified install command.
+Site Launcher verifies every bundled package file against the
 root `CHECKSUMS.sha256` before copying it. `PROVENANCE.json` identifies the
 product, version, source revision, and build time without containing secrets.
