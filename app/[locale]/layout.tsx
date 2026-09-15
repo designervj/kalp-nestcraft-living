@@ -12,6 +12,7 @@ import BrandingInitializer from "@/components/branding/BrandingInitializer";
 import BusinessBlueprintDataInitialiser from "@/components/businessBluePrints/BusinessBlueprintDataInitialiser";
 import ThemeInitializer from "@/components/theme/ThemeInitializer";
 import GetUser from "@/lib/GetAllDetails/GetUser";
+import ThemeProvider from "@/components/ThemeProvider";
 import { Inter } from "next/font/google";
 import FetchAllData from "@/components/pages/FetchAllData";
 import EditModeToggle from "@/components/EditModeToggle/EditModeToggle";
@@ -19,16 +20,28 @@ import EditModeToggle from "@/components/EditModeToggle/EditModeToggle";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-export const metadata: Metadata = {
-  title: "NestCraft Interiors",
-  description:
-    "Design-led interiors and furniture storefront built with Next.js.",
-  icons: {
-    icon: "/assets/Image/favicon.svg",
-    shortcut: "/assets/Image/favicon.svg",
-    apple: "/assets/Image/favicon.svg",
-  },
-};
+function resolveFavicon(brandConfig: any) {
+  return brandConfig?.faviconUrl ||
+    brandConfig?.brandKit?.logo?.favicon ||
+    brandConfig?.brandKit?.faviconUrl ||
+    brandConfig?.business?.brand?.faviconRef ||
+    brandConfig?.business?.brand?.businessDna?.faviconUrl ||
+    "/assets/Image/favicon.svg";
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const brandConfig = await getTenantRegistry();
+  const favicon = resolveFavicon(brandConfig);
+  return {
+    title: "NestCraft Interiors",
+    description: "Design-led interiors and furniture storefront built with Next.js.",
+    icons: {
+      icon: favicon,
+      shortcut: favicon,
+      apple: favicon,
+    },
+  };
+}
 
 export default async function LocaleLayout({
   children,
@@ -49,6 +62,8 @@ export default async function LocaleLayout({
     token ? getAuthUser(token).catch(() => null) : Promise.resolve(null),
   ]);
 
+  console.log("=== BUSINESS BLUEPRINT FROM BACKEND ===", JSON.stringify(businessBlueprint?.payload?.public_theme?.colors, null, 2));
+
   return (
     <html
       lang={locale || "en"}
@@ -66,9 +81,11 @@ export default async function LocaleLayout({
           <Providers>
             <GetUser user={user} />
             <FetchAllData />
-            <LayoutWrapper brandConfig={tenantRegistry}>
-              {children}
-            </LayoutWrapper>
+            <ThemeProvider businessBlueprint={businessBlueprint}>
+              <LayoutWrapper brandConfig={tenantRegistry}>
+                {children}
+              </LayoutWrapper>
+            </ThemeProvider>
             <EditModeToggle />
           </Providers>
         </StoreProvider>

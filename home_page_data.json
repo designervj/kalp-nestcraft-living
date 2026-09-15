@@ -1,0 +1,1201 @@
+{
+  "_id": "6a29559ebf0fa6d84638800b",
+  "title": {
+    "en": "Home",
+    "hi": "होम"
+  },
+  "slug": "home",
+  "content": [
+    {
+      "id": "sec-hero",
+      "type": "nestcraft.hero.carousel",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "fullwidth",
+      "content": [
+        {
+          "id": "slide-1",
+          "type": "hero-slide",
+          "props": {
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "Modern Living",
+                "hi": "आधुनिक लिविंग"
+              }
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Furniture That",
+                "hi": "फर्नीचर जो"
+              }
+            },
+            "highlight": {
+              "type": "text",
+              "value": {
+                "en": "Defines",
+                "hi": "परिभाषित"
+              }
+            },
+            "titleEnd": {
+              "type": "text",
+              "value": {
+                "en": "Your Space.",
+                "hi": "आपकी जगह"
+              }
+            },
+            "description": {
+              "type": "textarea",
+              "value": {
+                "en": "Discover sculptural sofas, refined textures, and timeless furniture pieces crafted to bring warmth, comfort, and luxury into the modern home.",
+                "hi": "आधुनिक घर में गर्माहट, आराम और विलासिता लाने के लिए तैयार की गई मूर्तिकला सोफा, परिष्कृत बनावट और कालातीत फर्नीचर की खोज करें।"
+              }
+            },
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800"
+            },
+            "product": {
+              "type": "text",
+              "value": {
+                "en": "The Archi Sofa",
+                "hi": "द आर्ची सोफा"
+              }
+            },
+            "price": {
+              "type": "text",
+              "value": {
+                "en": "Starting at ₹1,200",
+                "hi": "₹1,200 से शुरू"
+              }
+            }
+          }
+        },
+        {
+          "id": "slide-2",
+          "type": "hero-slide",
+          "props": {
+            "label": {
+              "type": "text",
+              "value": {
+                "en": "Bedroom Luxury",
+                "hi": "बेडरूम लक्ज़री"
+              }
+            },
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Designed For",
+                "hi": "के लिए डिज़ाइन"
+              }
+            },
+            "highlight": {
+              "type": "text",
+              "value": {
+                "en": "Quiet",
+                "hi": "शांत"
+              }
+            },
+            "titleEnd": {
+              "type": "text",
+              "value": {
+                "en": "Comfort.",
+                "hi": "आराम"
+              }
+            },
+            "description": {
+              "type": "textarea",
+              "value": {
+                "en": "Elevate your bedroom with calming palettes, elegant beds, and thoughtfully designed furniture that blends sophistication with everyday ease.",
+                "hi": "शांत पैलेट, सुरुचिपूर्ण बेड और सोच-समझकर डिज़ाइन किए गए फर्नीचर के साथ अपने बेडरूम को ऊपर उठाएं जो परिष्कार को रोजमर्रा की सहजता के साथ मिश्रित करता है।"
+              }
+            },
+            "image": {
+              "type": "image",
+              "value": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800"
+            },
+            "product": {
+              "type": "text",
+              "value": {
+                "en": "The Haven Bed",
+                "hi": "द हेवन बेड"
+              }
+            },
+            "price": {
+              "type": "text",
+              "value": {
+                "en": "Starting at ₹1,450",
+                "hi": "₹1,450 से शुरू"
+              }
+            }
+          }
+        }
+      ],
+      "props": {
+        "autoplaySpeed": 5000,
+        "legacyEditor": {
+          "id": "sec-hero",
+          "type": "nestcraft.hero.carousel",
+          "layout": "fullwidth",
+          "props": {
+            "autoplaySpeed": 5000
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      },
+      "adminTitle": "Premium Hero Slider"
+    },
+    {
+      "id": "sec-usp",
+      "type": "nestcraft.trust.strip",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "grid_4",
+      "content": [
+        {
+          "id": "usp-1",
+          "type": "usp-item",
+          "props": {
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Free Shipping",
+                "hi": "मुफ़्त शिपिंग"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "On orders over ₹5000",
+                "hi": "₹5000 से अधिक के ऑर्डर पर"
+              }
+            },
+            "icon": {
+              "type": "select",
+              "value": "truck"
+            }
+          }
+        },
+        {
+          "id": "usp-2",
+          "type": "usp-item",
+          "props": {
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Quality Guarantee",
+                "hi": "गुणवत्ता की गारंटी"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Handcrafted with care",
+                "hi": "देखभाल के साथ हस्तनिर्मित"
+              }
+            },
+            "icon": {
+              "type": "select",
+              "value": "shield"
+            }
+          }
+        },
+        {
+          "id": "usp-3",
+          "type": "usp-item",
+          "props": {
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "Secure Payments",
+                "hi": "सुरक्षित भुगतान"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "100% secure checkout",
+                "hi": "100% सुरक्षित चेकआउट"
+              }
+            },
+            "icon": {
+              "type": "select",
+              "value": "lock"
+            }
+          }
+        },
+        {
+          "id": "usp-4",
+          "type": "usp-item",
+          "props": {
+            "title": {
+              "type": "text",
+              "value": {
+                "en": "24/7 Support",
+                "hi": "24/7 सहायता"
+              }
+            },
+            "description": {
+              "type": "text",
+              "value": {
+                "en": "Dedicated team",
+                "hi": "समर्पित टीम"
+              }
+            },
+            "icon": {
+              "type": "select",
+              "value": "headset"
+            }
+          }
+        }
+      ],
+      "props": {
+        "legacyEditor": {
+          "id": "sec-usp",
+          "type": "nestcraft.trust.strip",
+          "layout": "grid_4",
+          "props": {},
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      },
+      "adminTitle": "USP Section"
+    },
+    {
+      "id": "sec-services",
+      "type": "nestcraft.feature.grid",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "grid_3",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "What We Do",
+          "hi": "हम क्या करते हैं"
+        },
+        "heading": {
+          "en": "Our Services",
+          "hi": "हमारी सेवाएं"
+        },
+        "viewAllLabel": {
+          "en": "View All",
+          "hi": "सभी देखें"
+        },
+        "viewAllLink": "/services",
+        "legacyEditor": {
+          "id": "sec-services",
+          "type": "nestcraft.feature.grid",
+          "layout": "grid_3",
+          "props": {
+            "badge": {
+              "en": "What We Do",
+              "hi": "हम क्या करते हैं"
+            },
+            "heading": {
+              "en": "Our Services",
+              "hi": "हमारी सेवाएं"
+            },
+            "viewAllLabel": {
+              "en": "View All",
+              "hi": "सभी देखें"
+            },
+            "viewAllLink": "/services"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-collections",
+      "type": "nestcraft.collection.grid",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "grid_4",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "heading": {
+          "en": "Shop by Collections Two",
+          "hi": "संग्रह द्वारा खरीदें"
+        },
+        "viewAllLabel": {
+          "en": "View All",
+          "hi": "सभी देखें"
+        },
+        "viewAllLink": "/collections",
+        "legacyEditor": {
+          "id": "sec-collections",
+          "type": "nestcraft.collection.grid",
+          "layout": "grid_4",
+          "props": {
+            "heading": {
+              "en": "Shop by Collections Two",
+              "hi": "संग्रह द्वारा खरीदें"
+            },
+            "viewAllLabel": {
+              "en": "View All",
+              "hi": "सभी देखें"
+            },
+            "viewAllLink": "/collections"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-shop-by-room",
+      "type": "nestcraft.category.grid",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "grid_4",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "Rooms",
+          "hi": "कमरे"
+        },
+        "heading": {
+          "en": "Shop by Room",
+          "hi": "कमरे के अनुसार खरीदें"
+        },
+        "buttonLabel": {
+          "en": "Explore",
+          "hi": "एक्सप्लोर करें"
+        },
+        "source": "catalog",
+        "limit": 4,
+        "categorySlugs": [
+          "living-room",
+          "bedroom",
+          "dinning-room",
+          "office-study"
+        ],
+        "legacyEditor": {
+          "id": "sec-shop-by-room",
+          "type": "nestcraft.category.grid",
+          "layout": "grid_4",
+          "props": {
+            "badge": {
+              "en": "Rooms",
+              "hi": "कमरे"
+            },
+            "heading": {
+              "en": "Shop by Room",
+              "hi": "कमरे के अनुसार खरीदें"
+            },
+            "buttonLabel": {
+              "en": "Explore",
+              "hi": "एक्सप्लोर करें"
+            },
+            "source": "catalog",
+            "limit": 4,
+            "categorySlugs": [
+              "living-room",
+              "bedroom",
+              "dinning-room",
+              "office-study"
+            ]
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-featured-banner",
+      "type": "nestcraft.cta.featured-banner",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "two_column",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "Featured",
+          "hi": "फीचर्ड"
+        },
+        "heading": {
+          "en": "Art & Decor",
+          "hi": "कला और सजावट"
+        },
+        "description": {
+          "en": "A showcase of paintings, tapestries, sculptures, homeware, lighting, and design objects spanning centuries of artistry and technique.",
+          "hi": "पेंटिंग, टेपेस्ट्री, मूर्तियों, होमवेयर, प्रकाश व्यवस्था और डिजाइन वस्तुओं का प्रदर्शन जो कलात्मकता और तकनीक के सदियों तक फैले हुए हैं।"
+        },
+        "buttonLabel": {
+          "en": "Learn More",
+          "hi": "और जानें"
+        },
+        "buttonLink": "/about",
+        "legacyEditor": {
+          "id": "sec-featured-banner",
+          "type": "nestcraft.cta.featured-banner",
+          "layout": "two_column",
+          "props": {
+            "badge": {
+              "en": "Featured",
+              "hi": "फीचर्ड"
+            },
+            "heading": {
+              "en": "Art & Decor",
+              "hi": "कला और सजावट"
+            },
+            "description": {
+              "en": "A showcase of paintings, tapestries, sculptures, homeware, lighting, and design objects spanning centuries of artistry and technique.",
+              "hi": "पेंटिंग, टेपेस्ट्री, मूर्तियों, होमवेयर, प्रकाश व्यवस्था और डिजाइन वस्तुओं का प्रदर्शन जो कलात्मकता और तकनीक के सदियों तक फैले हुए हैं।"
+            },
+            "buttonLabel": {
+              "en": "Learn More",
+              "hi": "और जानें"
+            },
+            "buttonLink": "/about"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-product-slider",
+      "type": "nestcraft.product.carousel",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "slider",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "New In",
+          "hi": "नया आया"
+        },
+        "heading": {
+          "en": "New Essentials",
+          "hi": "नई आवश्यक वस्तुएं"
+        },
+        "viewAllLabel": {
+          "en": "View All",
+          "hi": "सभी देखें"
+        },
+        "viewAllLink": "/shop",
+        "source": "latest",
+        "limit": 8,
+        "productSlugs": [],
+        "legacyEditor": {
+          "id": "sec-product-slider",
+          "type": "nestcraft.product.carousel",
+          "layout": "slider",
+          "props": {
+            "badge": {
+              "en": "New In",
+              "hi": "नया आया"
+            },
+            "heading": {
+              "en": "New Essentials",
+              "hi": "नई आवश्यक वस्तुएं"
+            },
+            "viewAllLabel": {
+              "en": "View All",
+              "hi": "सभी देखें"
+            },
+            "viewAllLink": "/shop",
+            "source": "latest",
+            "limit": 8,
+            "productSlugs": []
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-craft",
+      "type": "nestcraft.story.feature",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "two_column",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "Our Craft",
+          "hi": "हमारी कारीगरी"
+        },
+        "title": {
+          "en": "Craft & Quality",
+          "hi": "कारीगरी और गुणवत्ता"
+        },
+        "mainHeading": {
+          "en": "Where Tradition Meets Modern Design",
+          "hi": "जहां परंपरा मिलती है आधुनिक डिज़ाइन से"
+        },
+        "description": {
+          "en": "Every piece is thoughtfully designed and meticulously crafted.",
+          "hi": "हर टुकड़ा सोच-समझकर डिज़ाइन और सावधानीपूर्वक तैयार किया गया है"
+        },
+        "buttonLabel": {
+          "en": "Discover Our Story",
+          "hi": "हमारी कहानी जानें"
+        },
+        "buttonLink": "/about",
+        "legacyEditor": {
+          "id": "sec-craft",
+          "type": "nestcraft.story.feature",
+          "layout": "two_column",
+          "props": {
+            "badge": {
+              "en": "Our Craft",
+              "hi": "हमारी कारीगरी"
+            },
+            "title": {
+              "en": "Craft & Quality",
+              "hi": "कारीगरी और गुणवत्ता"
+            },
+            "mainHeading": {
+              "en": "Where Tradition Meets Modern Design",
+              "hi": "जहां परंपरा मिलती है आधुनिक डिज़ाइन से"
+            },
+            "description": {
+              "en": "Every piece is thoughtfully designed and meticulously crafted.",
+              "hi": "हर टुकड़ा सोच-समझकर डिज़ाइन और सावधानीपूर्वक तैयार किया गया है"
+            },
+            "buttonLabel": {
+              "en": "Discover Our Story",
+              "hi": "हमारी कहानी जानें"
+            },
+            "buttonLink": "/about"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-testimonials",
+      "type": "nestcraft.testimonial.carousel",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "slider",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "Testimonials",
+          "hi": "प्रशंसापत्र"
+        },
+        "heading": {
+          "en": "What Our Customers Say",
+          "hi": "हमारे ग्राहक क्या कहते हैं"
+        },
+        "legacyEditor": {
+          "id": "sec-testimonials",
+          "type": "nestcraft.testimonial.carousel",
+          "layout": "slider",
+          "props": {
+            "badge": {
+              "en": "Testimonials",
+              "hi": "प्रशंसापत्र"
+            },
+            "heading": {
+              "en": "What Our Customers Say",
+              "hi": "हमारे ग्राहक क्या कहते हैं"
+            }
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-blog",
+      "type": "nestcraft.content.card-grid",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "slider",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "heading": {
+          "en": "Latest from Our Blog",
+          "hi": "हमारे ब्लॉग से ताज़ा अपडेट"
+        },
+        "viewAllLabel": {
+          "en": "View All Posts",
+          "hi": "सभी पोस्ट देखें"
+        },
+        "viewAllLink": "/blog",
+        "legacyEditor": {
+          "id": "sec-blog",
+          "type": "nestcraft.content.card-grid",
+          "layout": "slider",
+          "props": {
+            "heading": {
+              "en": "Latest from Our Blog",
+              "hi": "हमारे ब्लॉग से ताज़ा अपडेट"
+            },
+            "viewAllLabel": {
+              "en": "View All Posts",
+              "hi": "सभी पोस्ट देखें"
+            },
+            "viewAllLink": "/blog"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-faq",
+      "type": "nestcraft.faq.accordion",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "list",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "heading": {
+          "en": "Frequently Asked Questions",
+          "hi": "अक्सर पूछे जाने वाले प्रश्न"
+        },
+        "subheading": {
+          "en": "Everything you need to know",
+          "hi": "वह सब जो आपको जानना चाहिए"
+        },
+        "viewAllLabel": {
+          "en": "View All FAQs",
+          "hi": "सभी FAQ देखें"
+        },
+        "viewAllLink": "/faq",
+        "legacyEditor": {
+          "id": "sec-faq",
+          "type": "nestcraft.faq.accordion",
+          "layout": "list",
+          "props": {
+            "heading": {
+              "en": "Frequently Asked Questions",
+              "hi": "अक्सर पूछे जाने वाले प्रश्न"
+            },
+            "subheading": {
+              "en": "Everything you need to know",
+              "hi": "वह सब जो आपको जानना चाहिए"
+            },
+            "viewAllLabel": {
+              "en": "View All FAQs",
+              "hi": "सभी FAQ देखें"
+            },
+            "viewAllLink": "/faq"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-newsletter",
+      "type": "nestcraft.newsletter.form",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "two_column",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "Stay Connected",
+          "hi": "जुड़े रहें"
+        },
+        "title": {
+          "en": "Join Our Community",
+          "hi": "हमारे समुदाय से जुड़ें"
+        },
+        "description": {
+          "en": "Get exclusive offers and design inspiration.",
+          "hi": "विशेष ऑफ़र और डिज़ाइन प्रेरणा प्राप्त करें।"
+        },
+        "joinTitle": {
+          "en": "Join the list",
+          "hi": "सूची में शामिल हों"
+        },
+        "joinSub": {
+          "en": "Be the first to hear about launches, curated inspiration, and private offers.",
+          "hi": "लॉन्च, क्यूरेटेड प्रेरणा और निजी ऑफ़र के बारे में सबसे पहले सुनें।"
+        },
+        "feature1": {
+          "en": "10% off your first order",
+          "hi": "पहले ऑर्डर पर 10% छूट"
+        },
+        "feature2": {
+          "en": "Weekly design tips",
+          "hi": "साप्ताहिक डिज़ाइन टिप्स"
+        },
+        "feature3": {
+          "en": "Early access to new collections",
+          "hi": "नए संग्रह तक शीघ्र पहुंच"
+        },
+        "buttonLabel": {
+          "en": "SubscribE",
+          "hi": "सब्सक्राइब करें"
+        },
+        "msgSuccess": {
+          "en": "Thank you for subscribing!",
+          "hi": "सब्सक्राइब करने के लिए धन्यवाद!"
+        },
+        "noSpam": {
+          "en": "No spam, ever.",
+          "hi": "कोई स्पैम नहीं।"
+        },
+        "unsubscribe": {
+          "en": "Unsubscribe anytime.",
+          "hi": "कभी भी अनसब्सक्राइब करें।"
+        },
+        "updates": {
+          "en": "Latest updates straight to your inbox.",
+          "hi": "नवीनतम अपडेट सीधे आपके इनबॉक्स में।"
+        },
+        "form": {
+          "id": "6a33915780b4f6a585e55d37",
+          "name": "Contact form",
+          "fields": [
+            {
+              "id": "field-1781764345044",
+              "type": "text",
+              "name": "first_name",
+              "label": "First Name",
+              "placeholder": "First Name",
+              "required": true
+            },
+            {
+              "id": "field-1782285335002",
+              "type": "text",
+              "name": "last_name",
+              "label": "Last Name",
+              "placeholder": "Last Name",
+              "required": true
+            },
+            {
+              "id": "field-1781764411953",
+              "type": "email",
+              "name": "email",
+              "label": "Email",
+              "placeholder": "user@gmail.com",
+              "required": true
+            },
+            {
+              "id": "field-1782372341259",
+              "type": "phone",
+              "name": "phone",
+              "label": "Phone",
+              "placeholder": "Enter Mobile Number",
+              "required": false
+            }
+          ],
+          "settings": {
+            "sendEmail": true,
+            "email": {
+              "to": "[email]",
+              "from": "support@nestcraft.com",
+              "subject": "New form submission",
+              "replyTo": "support@nestcraft.com",
+              "body": "[first_name]\n[last_name]\n[email]\n[phone]"
+            },
+            "successMessage": "Thanks! Your response has been recorded."
+          },
+          "tenant_slug": "unknown",
+          "document_key": "contact-form",
+          "createdAt": "2026-06-18T06:33:59.177000",
+          "updatedAt": "2026-07-06T07:15:06.444000"
+        },
+        "legacyEditor": {
+          "id": "sec-newsletter",
+          "type": "nestcraft.newsletter.form",
+          "layout": "two_column",
+          "props": {
+            "badge": {
+              "en": "Stay Connected",
+              "hi": "जुड़े रहें"
+            },
+            "title": {
+              "en": "Join Our Community",
+              "hi": "हमारे समुदाय से जुड़ें"
+            },
+            "description": {
+              "en": "Get exclusive offers and design inspiration.",
+              "hi": "विशेष ऑफ़र और डिज़ाइन प्रेरणा प्राप्त करें।"
+            },
+            "joinTitle": {
+              "en": "Join the list",
+              "hi": "सूची में शामिल हों"
+            },
+            "joinSub": {
+              "en": "Be the first to hear about launches, curated inspiration, and private offers.",
+              "hi": "लॉन्च, क्यूरेटेड प्रेरणा और निजी ऑफ़र के बारे में सबसे पहले सुनें।"
+            },
+            "feature1": {
+              "en": "10% off your first order",
+              "hi": "पहले ऑर्डर पर 10% छूट"
+            },
+            "feature2": {
+              "en": "Weekly design tips",
+              "hi": "साप्ताहिक डिज़ाइन टिप्स"
+            },
+            "feature3": {
+              "en": "Early access to new collections",
+              "hi": "नए संग्रह तक शीघ्र पहुंच"
+            },
+            "buttonLabel": {
+              "en": "SubscribE",
+              "hi": "सब्सक्राइब करें"
+            },
+            "msgSuccess": {
+              "en": "Thank you for subscribing!",
+              "hi": "सब्सक्राइब करने के लिए धन्यवाद!"
+            },
+            "noSpam": {
+              "en": "No spam, ever.",
+              "hi": "कोई स्पैम नहीं।"
+            },
+            "unsubscribe": {
+              "en": "Unsubscribe anytime.",
+              "hi": "कभी भी अनसब्सक्राइब करें।"
+            },
+            "updates": {
+              "en": "Latest updates straight to your inbox.",
+              "hi": "नवीनतम अपडेट सीधे आपके इनबॉक्स में।"
+            },
+            "form": {
+              "id": "6a33915780b4f6a585e55d37",
+              "name": "Contact form",
+              "fields": [
+                {
+                  "id": "field-1781764345044",
+                  "type": "text",
+                  "name": "first_name",
+                  "label": "First Name",
+                  "placeholder": "First Name",
+                  "required": true
+                },
+                {
+                  "id": "field-1782285335002",
+                  "type": "text",
+                  "name": "last_name",
+                  "label": "Last Name",
+                  "placeholder": "Last Name",
+                  "required": true
+                },
+                {
+                  "id": "field-1781764411953",
+                  "type": "email",
+                  "name": "email",
+                  "label": "Email",
+                  "placeholder": "user@gmail.com",
+                  "required": true
+                },
+                {
+                  "id": "field-1782372341259",
+                  "type": "phone",
+                  "name": "phone",
+                  "label": "Phone",
+                  "placeholder": "Enter Mobile Number",
+                  "required": false
+                }
+              ],
+              "settings": {
+                "sendEmail": true,
+                "email": {
+                  "to": "[email]",
+                  "from": "support@nestcraft.com",
+                  "subject": "New form submission",
+                  "replyTo": "support@nestcraft.com",
+                  "body": "[first_name]\n[last_name]\n[email]\n[phone]"
+                },
+                "successMessage": "Thanks! Your response has been recorded."
+              },
+              "tenant_slug": "unknown",
+              "document_key": "contact-form",
+              "createdAt": "2026-06-18T06:33:59.177000",
+              "updatedAt": "2026-07-06T07:15:06.444000"
+            }
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-instagram",
+      "type": "nestcraft.social.gallery",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "grid_6",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "badge": {
+          "en": "Follow Us",
+          "hi": "हमें फॉलो करें"
+        },
+        "heading": {
+          "en": "@NestCraftLiving on Instagram",
+          "hi": "@NestCraftLiving इंस्टाग्राम पर"
+        },
+        "buttonLabel": {
+          "en": "Follow Us",
+          "hi": "फॉलो करें"
+        },
+        "buttonLink": "https://instagram.com/nestcraftliving",
+        "legacyEditor": {
+          "id": "sec-instagram",
+          "type": "nestcraft.social.gallery",
+          "layout": "grid_6",
+          "props": {
+            "badge": {
+              "en": "Follow Us",
+              "hi": "हमें फॉलो करें"
+            },
+            "heading": {
+              "en": "@NestCraftLiving on Instagram",
+              "hi": "@NestCraftLiving इंस्टाग्राम पर"
+            },
+            "buttonLabel": {
+              "en": "Follow Us",
+              "hi": "फॉलो करें"
+            },
+            "buttonLink": "https://instagram.com/nestcraftliving"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    },
+    {
+      "id": "sec-cta",
+      "type": "nestcraft.cta.banner",
+      "version": "1.0",
+      "enabled": true,
+      "variant": "centered",
+      "content": {
+        "items": [],
+        "columns": [],
+        "adminTitle": ""
+      },
+      "props": {
+        "title": {
+          "en": "Ready to Transform Your Home?",
+          "hi": "अपने घर को बदलने के लिए तैयार हैं?"
+        },
+        "description": {
+          "en": "Visit our store or book a free consultation with our design experts.",
+          "hi": "हमारे स्टोर पर आएं या हमारे डिज़ाइन विशेषज्ञों के साथ मुफ्त परामर्श बुक करें।"
+        },
+        "buttonLabel": {
+          "en": "Shop Now",
+          "hi": "अभी खरीदें"
+        },
+        "buttonLink": "/shop",
+        "legacyEditor": {
+          "id": "sec-cta",
+          "type": "nestcraft.cta.banner",
+          "layout": "centered",
+          "props": {
+            "title": {
+              "en": "Ready to Transform Your Home?",
+              "hi": "अपने घर को बदलने के लिए तैयार हैं?"
+            },
+            "description": {
+              "en": "Visit our store or book a free consultation with our design experts.",
+              "hi": "हमारे स्टोर पर आएं या हमारे डिज़ाइन विशेषज्ञों के साथ मुफ्त परामर्श बुक करें।"
+            },
+            "buttonLabel": {
+              "en": "Shop Now",
+              "hi": "अभी खरीदें"
+            },
+            "buttonLink": "/shop"
+          },
+          "content": [],
+          "columns": []
+        }
+      },
+      "dataSource": {
+        "kind": "static"
+      },
+      "visibility": {},
+      "style": {},
+      "provenance": {
+        "origin": "kalp_admin_page_editor",
+        "editor": "page-editor-v2-adapter"
+      }
+    }
+  ],
+  "isPublished": true,
+  "metaTitle": {
+    "en": "NestCraft Living - Premium Home Decor",
+    "hi": "नेस्टक्राफ्ट लिविंग - प्रीमियम होम डेकोर"
+  },
+  "metaDescription": {
+    "en": "Discover premium furniture and home decor",
+    "hi": "प्रीमियम फर्नीचर और होम डेकोर खोजें"
+  },
+  "status": null,
+  "type": null,
+  "template": null,
+  "isHomepage": true,
+  "createdAt": "2026-06-10T12:16:30.833Z",
+  "updatedAt": "2026-08-14T11:07:54.747Z",
+  "studioRevision": 2,
+  "updatedBy": "ba4a09e0-6fbe-4a10-89f1-11c4201fe55e",
+  "schemaVersion": "2.0.0"
+}

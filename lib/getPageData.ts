@@ -6,6 +6,7 @@ import {
   fetchPublicSitePage,
   normalizePublicPage,
 } from "./public-site";
+import { MongoClient } from "mongodb";
 
 function serialize(obj: any): any {
   if (obj === null || obj === undefined) return null;
@@ -151,6 +152,27 @@ export const getTenantRegistry = cache(async () => {
 
 export const getBusinessBlueprint = cache(async () => {
   try {
+    const uri = process.env.MONGODB_URI;
+    const dbName = process.env.DB_NAME;
+    if (uri && dbName) {
+      const client = new MongoClient(uri);
+      try {
+        await client.connect();
+        const db = client.db(dbName);
+        const doc = await db.collection("business_blueprints").findOne({});
+        if (doc) {
+          return serialize({
+            id: `public:${dbName}`,
+            document_key: "public-site-contract",
+            payload: doc.payload || doc // Use doc.payload if it exists, otherwise doc
+          });
+        }
+      } catch (err) {
+        console.error("Direct MongoDB fetch failed for business_blueprints:", err);
+      } finally {
+        await client.close();
+      }
+    }
     return serialize(blueprintFromPublicSite(await fetchPublicSitePage("home")));
   } catch (error) {
     console.error("Error reading public Business Blueprint projection:", error);

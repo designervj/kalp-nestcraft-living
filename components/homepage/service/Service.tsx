@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-// import { defaultServices, defaultServiceProps } from "./serviceData";
+import { defaultServices, defaultServiceProps } from "./serviceData";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
 
@@ -32,8 +32,11 @@ const Services = ({ section: propSection }: ServiceProps) => {
 
   const section = propSection || getCurrentSection;
 
-  const p = (section as any)?.props
-  const cards = (section as any)?.content
+  const rawProps = (section as any)?.props;
+  const rawCards = (section as any)?.content;
+
+  const p = rawProps || defaultServiceProps;
+  const cards = Array.isArray(rawCards) && rawCards.length > 0 ? rawCards : defaultServices;
 
   const getV = (field: any) => {
     if (!field) return "";

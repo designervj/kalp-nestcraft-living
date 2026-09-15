@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
-// import { defaultCollections, defaultCollectionProps } from "./collectionsData";
+import { resolveCategoryImage } from "@/lib/commerce/product-normalization";
+import { defaultCollections, defaultCollectionProps } from "./collectionsData";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -33,8 +34,11 @@ const Collections = ({ section: propSection }: CollectionsProps) => {
 
   const section = propSection || getCurrentSection;
 
-  const p = (section as any)?.props
-  const items = (section as any)?.content
+  const rawProps = (section as any)?.props;
+  const rawItems = (section as any)?.content;
+  
+  const p = rawProps || defaultCollectionProps;
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultCollections;
 
   const getV = (field: any) => {
     if (!field) return "";
@@ -52,25 +56,38 @@ const Collections = ({ section: propSection }: CollectionsProps) => {
 
   return (
     <section
-      data-annotate-id="home-collections-section"
-      className="md:py-[60px] md:px-[5%] py-[50px] px-[5%] "
-      id="living"
+      data-annotate-id="home-collections"
+      className="md:py-[120px] md:px-[5%] py-[50px] px-[5%] "
     >
       <div className="flex justify-between items-end mb-[40px] md:mb-[60px] gap-4 md:gap-[18px]">
         <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         <Link
           href={viewAllLink}
-          className="px-4 md:px-6 h-10 md:h-11 rounded-full border border-secondary/45 text-foreground text-[12px] md:text-[14px] font-semibold uppercase tracking-wider hover:bg-secondary/15 transition-all flex items-center shrink-0 whitespace-nowrap"
+          className="px-[26px] py-[10px] rounded-full border border-border text-[12px] font-black tracking-[2px] uppercase hover:border-secondary hover:text-secondary transition-colors"
         >
           <EditableText value={viewAllLabel} isEditable={isEditable} onSave={handle('props.viewAllLabel.en')} tag="span" />
         </Link>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 md:gap-5 gap-3.5">
         {items?.map((item: any, idx: number) => {
+          if (!item) return null;
           const sp = item.props || {};
           const title = getV(sp.title) || getV(item.title) || "";
-          const image = getV(sp.image) || sp.image?.value || sp.image || item.image || "";
+          let image = getV(sp.image) || sp.image?.value || sp.image || item.image || resolveCategoryImage(item) || "";
+          
+          const nameStr = title.toLowerCase();
+          if (nameStr.includes("living")) {
+            image = "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200";
+          } else if (nameStr.includes("bed")) {
+            image = "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=1200";
+          } else if (nameStr.includes("din")) {
+            image = "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&q=80&w=1200";
+          } else if (nameStr.includes("office") || nameStr.includes("study")) {
+            image = "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1200";
+          } else if (nameStr.includes("storage")) {
+            image = "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=1200";
+          }
           const link = sp.link?.value || sp.link || item.link || "/shop";
 
           return (

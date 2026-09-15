@@ -41,7 +41,7 @@ export const fetchCategories = createAsyncThunk<
         status: res.status,
       });
     }
-    return data.categories;
+    return Array.isArray(data) ? data : data.categories || data.data?.categories || [];
   } catch (error: any) {
     return rejectWithValue({
       message: error?.message || "Something went wrong",

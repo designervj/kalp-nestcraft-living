@@ -12,6 +12,7 @@ import {
   normalizeCommerceProduct,
   resolveProductImage,
 } from "@/lib/commerce/product-normalization";
+import { defaultProductSliderData } from "./productSliderData";
 
 interface ProductSliderProps {
   section?: any;
@@ -121,19 +122,21 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
           onScroll={handleScroll}
           className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1"
         >
-          {featuredProducts.map((prod: any, idx: number) => {
-          const title = prod.name || prod.title || "";
-          const price = formatCommercePrice(prod.price, prod.currency || "INR");
-          const prodBadge = getV(p.itemBadge);
+          {(featuredProducts.length > 0 ? featuredProducts : defaultProductSliderData.content).map((prod: any, idx: number) => {
+          const isFallback = !!prod.props;
+          const sp = prod.props || {};
+          const title = isFallback ? (getV(sp.title) || "") : (prod.name || prod.title || "");
+          const price = isFallback ? (getV(sp.price) || "") : formatCommercePrice(prod.price, prod.currency || "INR");
+          const prodBadge = getV(p.itemBadge) || (isFallback ? getV(sp.badge) : "");
           const id = prod.slug || prod.id || prod._id;
-          const img = resolveProductImage(prod);
+          const img = isFallback ? (getV(sp.image) || sp.image?.value || sp.image || prod.image || "") : resolveProductImage(prod);
 
             return (
               <div
-                key={id}
+                key={id || idx}
                 className="min-w-[calc(100%-24px)] md:min-w-[calc((100%-48px)/3)] snap-start group"
               >
-                <Link href={`/product/${id}`} className="block">
+                <Link href={isFallback ? "/shop" : `/product/${id}`} className="block">
                   <div className="relative h-[380px] mb-4 overflow-hidden rounded-lg border border-border bg-muted/10">
                     <img
                       src={img}

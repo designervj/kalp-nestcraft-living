@@ -95,12 +95,12 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
   return (
     <section
       data-annotate-id="home-newsletter-section"
-      className="relative overflow-hidden border-y border-white/10 bg-[#0E6E35] px-[5%] py-[90px] text-white lg:py-[110px]"
+      className="relative overflow-hidden border-y border-white/10 bg-primary px-[5%] py-[90px] text-primary-foreground lg:py-[110px]"
     >
       {/* background accents */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-120px] top-[-120px] h-[280px] w-[280px] rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute bottom-[-140px] right-[-80px] h-[320px] w-[320px] rounded-full bg-[#B8D35A]/10 blur-3xl" />
+        <div className="absolute bottom-[-140px] right-[-80px] h-[320px] w-[320px] rounded-full bg-secondary/10 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-[1400px]">
@@ -108,7 +108,7 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
           {/* left content */}
           <div className="max-w-[760px]">
             <div className="mb-5 inline-flex items-center rounded-full border border-white/15 bg-white/8 px-4 py-2">
-              <span className="text-[12px] font-extrabold uppercase tracking-[3px] text-[#B8D35A]">
+              <span className="text-[12px] font-extrabold uppercase tracking-[3px] text-secondary">
                 <EditableText value={badge} isEditable={isEditable} onSave={handle('props.badge.en')} tag="span" />
               </span>
             </div>
@@ -121,19 +121,19 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
 
             <div className="mt-10 hidden items-center gap-8 text-white/65 lg:flex">
               <div className="flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#B8D35A]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-secondary" />
                 <span className="text-[14px] font-semibold">
                   <EditableText value={feature1} isEditable={isEditable} onSave={handle('props.feature1.en')} tag="span" />
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#B8D35A]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-secondary" />
                 <span className="text-[14px] font-semibold">
                   <EditableText value={feature2} isEditable={isEditable} onSave={handle('props.feature2.en')} tag="span" />
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#B8D35A]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-secondary" />
                 <span className="text-[14px] font-semibold">
                   <EditableText value={feature3} isEditable={isEditable} onSave={handle('props.feature3.en')} tag="span" />
                 </span>
@@ -164,7 +164,7 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
                         {field.placeholder}
                       </label>
                       <input
-                        className="py-4 w-full rounded-full border border-white/15 bg-white px-5 text-[16px] font-medium text-black outline-none transition placeholder:text-black/45 focus:border-[#B8D35A] focus:ring-2 focus:ring-[#B8D35A]/30"
+                        className="py-4 w-full rounded-full border border-white/15 bg-white px-5 text-[16px] font-medium text-black outline-none transition placeholder:text-black/45 focus:border-secondary focus:ring-2 focus:ring-secondary/30"
                         type={field.type === "text" && field.name?.toLowerCase().includes("email") ? "email" : field.type}
                         placeholder={field.placeholder || field.label}
                         required={field.required}
@@ -180,7 +180,7 @@ const Newsletter = ({ section: propSection }: { section?: any }) => {
                   ))}
 
                   <button
-                    className="flex-1 min-w-[150px] inline-flex py-4 items-center justify-center rounded-full bg-[#B8D35A] px-7 text-[14px] font-extrabold uppercase tracking-[0.14em] text-[#14351F] transition hover:translate-y-[-1px] hover:bg-[#c7df72] sm:h-[58px]"
+                    className="flex-1 min-w-[150px] inline-flex py-4 items-center justify-center rounded-full bg-secondary px-7 text-[14px] font-extrabold uppercase tracking-[0.14em] text-primary transition hover:translate-y-[-1px] hover:bg-secondary/90 sm:h-[58px]"
                     type="submit"
                   >
                     <EditableText value={buttonLabel} isEditable={isEditable} onSave={handle('props.buttonLabel.en')} tag="span" />

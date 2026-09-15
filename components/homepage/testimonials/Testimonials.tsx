@@ -7,6 +7,8 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
 
+import { defaultTestimonials, defaultTestimonialProps } from "./testimonialsData";
+
 interface TestimonialsProps {
   section?: any;
 }
@@ -32,8 +34,11 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
 
   const section = propSection || getCurrentSection;
 
-  const p = (section as any)?.props || {};
-  const items = (section as any)?.content || [];
+  const rawProps = (section as any)?.props;
+  const rawItems = (section as any)?.content;
+
+  const p = rawProps || defaultTestimonialProps;
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultTestimonials;
 
   const getV = (field: any) => {
     if (!field) return "";

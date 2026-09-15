@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import { defaultBlogPosts } from "./blogData";
 
 interface BlogProps {
   section?: any;
@@ -46,7 +47,8 @@ const Blog = ({ section: propSection }: BlogProps) => {
   const viewAllLabel = getV(p.viewAllLabel);
   const viewAllLink = p.viewAllLink?.value || p.viewAllLink || "/blog";
 
-  const items = (section as any)?.content || [];
+  const rawItems = (section as any)?.content;
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultBlogPosts;
 
   const handle = (fieldPath: string) => (value: string) =>
     saveField(dispatch, currentPages, section?.id, fieldPath, value);
