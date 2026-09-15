@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPageModel } from "@/models";
 
+export const dynamic = "force-dynamic";
+
 // GET all pages
 export async function GET(req: NextRequest) {
   try {
@@ -10,11 +12,11 @@ export async function GET(req: NextRequest) {
 
     if (slug) {
       const page = await PageModel.findOne({ slug });
-      return NextResponse.json(page);
+      return NextResponse.json(page, { headers: { "Cache-Control": "no-store" } });
     }
 
     const pages = await PageModel.find({}).sort({ createdAt: -1 }).toArray();
-    return NextResponse.json({ success: true, pages });
+    return NextResponse.json({ success: true, pages }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("Error fetching pages:", error);
     return NextResponse.json({ success: false, error: "Failed to fetch pages" }, { status: 500 });

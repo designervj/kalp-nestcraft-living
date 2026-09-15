@@ -32,10 +32,10 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages) return;
-    return currentPages.content?.find((page: any) => page?.adminTitle === "Shop By Room Section");
-  }, [currentPages]);
+    return currentPages.content?.find((page: any) => page?.id === propSection?.id || page?.adminTitle === "Shop By Room Section");
+  }, [currentPages, propSection?.id]);
 
-  const section = propSection || getCurrentSection;
+  const section = getCurrentSection || propSection;
 
   const p = (section as any)?.props || {};
   const configuredSlugs = Array.isArray(p.categorySlugs?.value)

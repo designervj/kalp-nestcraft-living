@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MessageCircle, Trash2, CheckCircle2, Clock, AlertCircle, MonitorSmartphone, GripHorizontal, Save } from 'lucide-react';
 import type { Annotation, CommentStatus, ScreenSize } from './store';
 import { useAnnotatorStore } from './store';
-import { isPointVisible, getCssSelector, getScreenSize, resolveTargetElement } from './utils';
+import { clampPopoverPosition, isPointVisible, getCssSelector, getScreenSize, resolveTargetElement } from './utils';
 import { useDispatch } from 'react-redux';
 
 import { deleteCommentThunk, updateCommentThunk } from '@/lib/store/comments/commentThunk';
@@ -21,6 +21,9 @@ const statusConfig: Record<CommentStatus, { color: string; icon: React.ElementTy
   pending: { color: 'bg-yellow-500 ring-yellow-200 text-yellow-700', icon: Clock, label: 'Pending' },
   done: { color: 'bg-green-500 ring-green-200 text-green-700', icon: CheckCircle2, label: 'Done' },
 };
+
+const POPOVER_WIDTH = 320;
+const POPOVER_HEIGHT = 260;
 
 export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
   const markerRef = useRef<HTMLDivElement>(null);
@@ -39,6 +42,9 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isDragging, setIsDragging] = useState(false);
+  const popoverPositionRef = useRef({ left: 16, top: 56 });
+  const [markerPosition, setMarkerPosition] = useState({ x: 0, y: 0 });
+  const [popoverPosition, setPopoverPosition] = useState({ left: 16, top: 56 });
   const [currentScreenSize, setCurrentScreenSize] = useState<ScreenSize>(() =>
     typeof window === 'undefined' ? 'desktop' : getScreenSize(window.innerWidth)
   );
@@ -46,6 +52,15 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
 
   const isActive = activeAnnotationId === annotationKey;
   const config = statusConfig[annotation?.status ?? "open"];
+
+  const syncPopoverPosition = (x: number, y: number) => {
+    const next = clampPopoverPosition(x, y, POPOVER_WIDTH, POPOVER_HEIGHT);
+    const current = popoverPositionRef.current;
+    if (Math.abs(next.left - current.left) > 1 || Math.abs(next.top - current.top) > 1) {
+      popoverPositionRef.current = next;
+      setPopoverPosition(next);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => setCurrentScreenSize(getScreenSize(window.innerWidth));
@@ -96,6 +111,13 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
         markerRef.current.style.opacity = '1';
         markerRef.current.style.pointerEvents = 'auto';
         markerRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        if (isActive) {
+          setMarkerPosition((current) => {
+            if (Math.abs(current.x - x) <= 1 && Math.abs(current.y - y) <= 1) return current;
+            return { x, y };
+          });
+          syncPopoverPosition(x, y);
+        }
       }
 
       rafId = requestAnimationFrame(updatePosition);
@@ -103,7 +125,7 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
 
     rafId = requestAnimationFrame(updatePosition);
     return () => cancelAnimationFrame(rafId);
-  }, [annotation, isDragging]);
+  }, [annotation, isActive, isDragging]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     e.stopPropagation();
@@ -175,7 +197,7 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
         toast.success('comments updated successfully');
       } catch (error) {
         console.error('Failed to update comments in Redux:', error);
-        toast.error('Failed to update comments');
+        toast.error(typeof error === 'string' ? error : error instanceof Error ? error.message : 'Failed to update comments');
       }
     }
   };
@@ -200,7 +222,7 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
       toast.success('comments deleted successfully');
     } catch (error) {
       console.error('Failed to delete comments:', error);
-      toast.error('Failed to delete comments');
+      toast.error(typeof error === 'string' ? error : error instanceof Error ? error.message : 'Failed to delete comments');
     }
   };
 
@@ -221,6 +243,8 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
         onClick={(e) => {
           if (hasDraggedRef.current) return;
           e.stopPropagation();
+          setMarkerPosition({ x: e.clientX, y: e.clientY });
+          syncPopoverPosition(e.clientX, e.clientY);
           setActiveAnnotationId(isActive ? null : annotationKey);
         }}
       >
@@ -235,7 +259,11 @@ export const Marker: React.FC<MarkerProps> = ({ annotation }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-6 left-1/2 -translate-x-1/2 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden"
+            className="absolute w-80 max-h-[calc(100vh-72px)] overflow-auto bg-white rounded-xl shadow-2xl border border-slate-200"
+            style={{
+              left: `${popoverPosition.left - markerPosition.x}px`,
+              top: `${popoverPosition.top - markerPosition.y}px`,
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header / Status Bar */}

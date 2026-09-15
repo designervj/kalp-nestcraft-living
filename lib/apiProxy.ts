@@ -9,6 +9,31 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "http://127.0.0.1:8000";
 
+function getAuthToken(req: NextRequest) {
+  const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
+  const cookieNames = [
+    tenantId ? `auth_token_${tenantId}` : null,
+    "kalp_session",
+    "auth_token",
+    "admin_token",
+    "access_token",
+    "token",
+  ].filter(Boolean) as string[];
+
+  for (const name of cookieNames) {
+    const token = req.cookies.get(name)?.value;
+    if (token) return token;
+  }
+
+  for (const cookie of req.cookies.getAll()) {
+    if (cookie.name.startsWith("auth_token_") && cookie.value) {
+      return cookie.value;
+    }
+  }
+
+  return null;
+}
+
 export async function proxyRequest(
   req: NextRequest,
   targetPath: string,
@@ -53,7 +78,19 @@ export async function proxyRequest(
     }
   });
 
+  if (!headers.has("authorization")) {
+    const authToken = getAuthToken(req);
+    if (authToken) {
+      headers.set("authorization", `Bearer ${authToken}`);
+      headers.set("auth-token", authToken);
+    }
+  }
+
   headers.set("x-tenant-db", databaseName);
+
+  if (!headers.has("x-tenant-slug") && process.env.NEXT_PUBLIC_TENANT_SLUG) {
+    headers.set("x-tenant-slug", process.env.NEXT_PUBLIC_TENANT_SLUG);
+  }
 
   const fetchOptions: RequestInit = {
     method: req.method,

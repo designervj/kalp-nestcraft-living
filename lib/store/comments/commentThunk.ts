@@ -2,7 +2,52 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Annotation } from '@/components/annotationPlugin';
 
 const tenantHeader = process.env.NEXT_PUBLIC_TENANT_ID;
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+function extractComments(data: any): Annotation[] {
+  const value = data?.pages ?? data?.comments ?? data?.data?.pages ?? data?.data?.comments ?? data?.data ?? [];
+  return Array.isArray(value) ? value.map(normalizeComment) : [];
+}
+
+function extractComment(data: any): Annotation {
+  const value = data?.comment ?? data?.data?.comment ?? data?.page ?? data?.data?.page ?? data?.data ?? data;
+  if (!value || typeof value !== 'object') {
+    throw new Error('Comment response was invalid');
+  }
+  return normalizeComment(value as Annotation & { pageSlug?: string; id?: string });
+}
+
+function normalizeComment(comment: Annotation & { pageSlug?: string; id?: string }): Annotation {
+  return {
+    ...comment,
+    _id: comment._id ?? comment.id,
+    slug: comment.slug ?? comment.pageSlug,
+  };
+}
+
+function toCreatePayload(comment: Partial<Annotation>) {
+  return {
+    pageSlug: comment.slug,
+    pageId: comment.pageId || null,
+    selector: comment.selector,
+    offsetX: comment.offsetX,
+    offsetY: comment.offsetY,
+    content: comment.content,
+    status: comment.status || 'open',
+    screenSize: comment.screenSize || 'all',
+  };
+}
+
+function toUpdatePayload(id: string, comment: Partial<Annotation>) {
+  return {
+    id,
+    selector: comment.selector,
+    offsetX: comment.offsetX,
+    offsetY: comment.offsetY,
+    content: comment.content,
+    status: comment.status,
+    screenSize: comment.screenSize,
+  };
+}
 
 // Fetch all comments
 export const fetchCommentsThunk = createAsyncThunk(
@@ -17,10 +62,10 @@ export const fetchCommentsThunk = createAsyncThunk(
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch comments');
+        throw new Error(errorData.detail || errorData.message || errorData.error || 'Failed to fetch comments');
       }
       const data = await response.json();
-      return data.pages;
+      return extractComments(data);
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -40,10 +85,10 @@ export const fetchCommentsByPageThunk = createAsyncThunk(
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch page comments');
+        throw new Error(errorData.detail || errorData.message || errorData.error || 'Failed to fetch page comments');
       }
       const data = await response.json();
-      return data.comments;
+      return extractComments(data);
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -62,14 +107,14 @@ export const createCommentThunk = createAsyncThunk(
           "x-tenant-db": tenantHeader || "",
         },
         credentials: "include",
-        body: JSON.stringify(commentData),
+        body: JSON.stringify(toCreatePayload(commentData)),
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create comment');
+        throw new Error(errorData.detail || errorData.message || errorData.error || 'Failed to create comment');
       }
       const data = await response.json();
-      return data;
+      return { ...commentData, ...extractComment(data) } as Annotation;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -88,14 +133,14 @@ export const updateCommentThunk = createAsyncThunk(
           "x-tenant-db": tenantHeader || "",
         },
         credentials: "include",
-        body: JSON.stringify({ ...commentData, _id: id }),
+        body: JSON.stringify(toUpdatePayload(id, commentData)),
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update comment');
+        throw new Error(errorData.detail || errorData.message || errorData.error || 'Failed to update comment');
       }
       const data = await response.json();
-      return data.comment;
+      return { ...commentData, ...extractComment(data) } as Annotation;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -116,7 +161,7 @@ export const deleteCommentThunk = createAsyncThunk(
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to delete comment');
+        throw new Error(errorData.detail || errorData.message || errorData.error || 'Failed to delete comment');
       }
       return id;
     } catch (error: any) {

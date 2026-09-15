@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { cache } from "react";
 
 function serialize(obj: any) {
@@ -18,7 +17,7 @@ export const getAuthUser = cache(async (token: string) => {
     });
 
     const data = await res.json();
-    return serialize(data);
+    return serialize(data?.session ?? data?.user ?? data?.data?.session ?? data?.data?.user ?? data);
   } catch (error) {
     console.error("Error fetching auth user:", error);
     return null;

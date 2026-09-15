@@ -18,8 +18,15 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   const cookieStore = await cookies();
   const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
-  const key = `auth_token_${tenantId}`
-  const token = cookieStore.get(key)?.value;
+  const authCookieNames = [
+    tenantId ? `auth_token_${tenantId}` : null,
+    "kalp_session",
+    "auth_token",
+    "admin_token",
+  ].filter(Boolean) as string[];
+  const token = authCookieNames
+    .map((name) => cookieStore.get(name)?.value)
+    .find(Boolean);
 
   const [data, user] = await Promise.all([
     getPageData("about"),

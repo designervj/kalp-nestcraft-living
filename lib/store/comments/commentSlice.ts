@@ -2,6 +2,15 @@ import { Annotation } from '@/components/annotationPlugin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createCommentThunk, fetchCommentsThunk, updateCommentThunk, deleteCommentThunk } from './commentThunk';
 
+const upsertComment = (comments: Annotation[], comment: Annotation) => {
+  const key = comment._id ?? comment.id;
+  if (!key) return [...comments, comment];
+  const exists = comments.some((item) => (item._id ?? item.id) === key);
+  return exists
+    ? comments.map((item) => ((item._id ?? item.id) === key ? comment : item))
+    : [...comments, comment];
+};
+
 interface CommentState {
   allComments: Annotation[];
   pageComments: Annotation[];
@@ -44,10 +53,10 @@ const commentSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.
-    addCase(createCommentThunk.fulfilled, (state, action) => {
-        const data= action.payload.comment
-      state.allComments.push(data);
-      state.pageComments.push(data);
+    addCase(createCommentThunk.fulfilled, (state, action: PayloadAction<Annotation>) => {
+      const data = action.payload;
+      state.allComments = upsertComment(state.allComments, data);
+      state.pageComments = upsertComment(state.pageComments, data);
       state.isLoading = false;
       state.isError = false;
     })

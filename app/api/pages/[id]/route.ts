@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPageModel } from "@/models";
 import { ObjectId } from "mongodb";
 
+function pageFilter(id: string) {
+  return { _id: ObjectId.isValid(id) ? { $in: [new ObjectId(id), id] } : id };
+}
+
 // GET a single page by ID
 export async function GET(
   req: NextRequest,
@@ -10,7 +14,7 @@ export async function GET(
   try {
     const { id } = await params;
     const PageModel = await getPageModel();
-    const page = await PageModel.findOne({ _id: new ObjectId(id) });
+    const page = await PageModel.findOne(pageFilter(id) as any);
 
     if (!page) {
       return NextResponse.json(
@@ -41,11 +45,8 @@ export async function PUT(
 
     // Check slug uniqueness if it's being updated
     if (body.slug) {
-      const existingPage = await PageModel.findOne({
-        slug: body.slug,
-        _id: { $ne: new ObjectId(id) },
-      });
-      if (existingPage) {
+      const existingPage = await PageModel.findOne({ slug: body.slug });
+      if (existingPage && String(existingPage._id) !== id) {
         return NextResponse.json(
           { success: false, message: "A page with this slug already exists" },
           { status: 400 },
@@ -57,7 +58,7 @@ export async function PUT(
     updateData.updatedAt = new Date();
 
     const result = await PageModel.updateOne(
-      { _id: new ObjectId(id) },
+      pageFilter(id) as any,
       { $set: updateData },
     );
 
@@ -89,7 +90,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const PageModel = await getPageModel();
-    const result = await PageModel.deleteOne({ _id: new ObjectId(id) });
+    const result = await PageModel.deleteOne(pageFilter(id) as any);
 
     if (result.deletedCount === 0) {
       return NextResponse.json(

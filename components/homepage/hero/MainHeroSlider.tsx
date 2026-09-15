@@ -6,6 +6,8 @@ import { ArrowRight, Check, ChevronLeft, ChevronRight, Pencil, X } from "lucide-
 import { AnimatePresence, motion } from "motion/react";
 import { RootState } from "@/lib/store/store";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { saveField } from "@/lib/editorUtils";
 
 export const getLocalizedHeroValue = (field: any, lang: string): string => {
   if (!field) return "";
@@ -79,6 +81,7 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
   const [editableSlides, setEditableSlides] = useState<any[]>([]);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [draftValue, setDraftValue] = useState("");
+  const dispatch = useAppDispatch();
   const pathname = usePathname();
 
   const lang = useMemo(() => {
@@ -97,9 +100,18 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
       (page: any) =>
         page.adminTitle === "Premium Hero Slider" ||
         page.adminTitle === "Hero" ||
-        page.type === "hero",
+        page.id === "sec-hero" ||
+        page.type === "hero" ||
+        page.type === "nestcraft.hero.carousel",
     );
   }, [currentPages]);
+
+  const getSectionItems = (section: any) => {
+    if (!section?.content) return [];
+    if (Array.isArray(section.content)) return section.content;
+    if (Array.isArray(section.content.items)) return section.content.items;
+    return [];
+  };
 
   const normalizeSlides = (items: any[] = []) =>
     items.map((slide: any) => {
@@ -134,8 +146,9 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
     });
 
   const slides = useMemo(() => {
-    if (getCurrentSection && getCurrentSection.content && getCurrentSection.content.length > 0) {
-      return normalizeSlides(getCurrentSection.content);
+    const sectionItems = getSectionItems(getCurrentSection);
+    if (sectionItems.length > 0) {
+      return normalizeSlides(sectionItems);
     }
     if (initialSlides && initialSlides.length > 0) {
       return normalizeSlides(initialSlides);
@@ -189,13 +202,48 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
     setDraftValue("");
   };
 
-  const saveEditing = () => {
+  const saveEditing = async () => {
     if (editingField === null) return;
+    const nextValue = draftValue.trim();
+    if (!nextValue) return;
+
     setEditableSlides((prev) =>
       prev.map((slide, index) =>
-        index === activeIndex ? { ...slide, [editingField]: draftValue } : slide,
+        index === activeIndex ? { ...slide, [editingField]: nextValue } : slide,
       ),
     );
+
+    if (currentPages && getCurrentSection?.id) {
+      let fieldPath = `content.${activeIndex}.props.${editingField}.en`;
+      let valueToSave = nextValue;
+
+      if (["title", "highlight", "titleEnd"].includes(editingField)) {
+        const nextSlide = { ...activeSlide, [editingField]: nextValue };
+        const rawItems = getSectionItems(getCurrentSection);
+        const rawProps = rawItems[activeIndex]?.props || {};
+        const hasSeparateTitleParts = rawProps.highlight || rawProps.titleEnd;
+
+        if (!hasSeparateTitleParts) {
+          fieldPath = `content.${activeIndex}.props.title.en`;
+          valueToSave = [nextSlide.title, nextSlide.highlight, nextSlide.titleEnd]
+            .filter(Boolean)
+            .join(" ")
+            .replace(/\s+/g, " ")
+            .trim();
+        }
+      }
+
+      const saved = await saveField(
+        dispatch,
+        currentPages,
+        getCurrentSection.id,
+        fieldPath,
+        valueToSave,
+      );
+
+      if (!saved) return;
+    }
+
     setEditingField(null);
     setDraftValue("");
   };
@@ -237,7 +285,7 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
               />
             )}
             <button
-              onClick={saveEditing}
+              onClick={() => void saveEditing()}
               className="mt-1 rounded-full bg-secondary p-1.5 text-black transition hover:scale-105"
               aria-label={`Save ${field}`}
             >
