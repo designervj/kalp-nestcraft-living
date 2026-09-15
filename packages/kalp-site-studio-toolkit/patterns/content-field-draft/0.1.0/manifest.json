@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "kalp.site-studio.pattern.v1",
+  "id": "content-field-draft",
+  "version": "0.1.0",
+  "status": "reviewed",
+  "scope": { "capabilities": ["content"] },
+  "evidence": {
+    "state": "confirmed",
+    "verifiedAt": "2026-08-14",
+    "verification": [
+      "Client contract tests cover authenticated POST and typed failure handling",
+      "Business Core tests cover revisioning, tenant isolation, unsafe paths, and permission denial"
+    ]
+  },
+  "safety": {
+    "syntheticFixtures": true,
+    "containsSecrets": false,
+    "containsPersonalData": false
+  }
+}

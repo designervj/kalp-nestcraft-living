@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kalp.example/schemas/site-studio-pattern-v1.json",
+  "title": "Kalp Site Studio Pattern",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "version", "status", "scope", "evidence", "safety"],
+  "properties": {
+    "schemaVersion": { "const": "kalp.site-studio.pattern.v1" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "status": { "enum": ["draft", "reviewed", "deprecated"] },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capabilities"],
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["content", "media", "catalog", "pricing"] }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "verifiedAt", "verification"],
+      "properties": {
+        "state": { "enum": ["confirmed", "partial", "broken", "unverified"] },
+        "verifiedAt": { "type": "string", "format": "date" },
+        "verification": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["syntheticFixtures", "containsSecrets", "containsPersonalData"],
+      "properties": {
+        "syntheticFixtures": { "const": true },
+        "containsSecrets": { "const": false },
+        "containsPersonalData": { "const": false }
+      }
+    },
+    "supersedes": { "type": "string" },
+    "deprecatedAfter": { "type": "string", "format": "date" }
+  }
+}
