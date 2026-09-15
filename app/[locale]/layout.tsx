@@ -20,16 +20,28 @@ import EditModeToggle from "@/components/EditModeToggle/EditModeToggle";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-export const metadata: Metadata = {
-  title: "NestCraft Interiors",
-  description:
-    "Design-led interiors and furniture storefront built with Next.js.",
-  icons: {
-    icon: "/assets/Image/favicon.svg",
-    shortcut: "/assets/Image/favicon.svg",
-    apple: "/assets/Image/favicon.svg",
-  },
-};
+function resolveFavicon(brandConfig: any) {
+  return brandConfig?.faviconUrl ||
+    brandConfig?.brandKit?.logo?.favicon ||
+    brandConfig?.brandKit?.faviconUrl ||
+    brandConfig?.business?.brand?.faviconRef ||
+    brandConfig?.business?.brand?.businessDna?.faviconUrl ||
+    "/assets/Image/favicon.svg";
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const brandConfig = await getTenantRegistry();
+  const favicon = resolveFavicon(brandConfig);
+  return {
+    title: "NestCraft Interiors",
+    description: "Design-led interiors and furniture storefront built with Next.js.",
+    icons: {
+      icon: favicon,
+      shortcut: favicon,
+      apple: favicon,
+    },
+  };
+}
 
 export default async function LocaleLayout({
   children,

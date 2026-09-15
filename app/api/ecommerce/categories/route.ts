@@ -6,6 +6,25 @@ import { isHex } from "@/lib/utils";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
+function textFromValue(value: unknown): string {
+  if (typeof value === "string") return value.trim();
+  if (!value || typeof value !== "object") return "";
+  const record = value as Record<string, unknown>;
+  return textFromValue(record.en ?? record.default ?? record.value ?? record.name ?? record.title ?? record.label);
+}
+
+function titleFromSlug(value: unknown): string {
+  if (typeof value !== "string" || !value.trim()) return "";
+  return value.trim().replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function normalizeCategory(category: any) {
+  return {
+    ...category,
+    name: textFromValue(category.name) || textFromValue(category.display_name) || textFromValue(category.displayName) || textFromValue(category.title) || textFromValue(category.label) || textFromValue(category.page?.title) || textFromValue(category.seo?.title) || titleFromSlug(category.slug) || "Untitled category",
+    pageStatus: category.pageStatus || category.status || "active",
+  };
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -24,10 +43,10 @@ export async function GET(req: NextRequest) {
     const categories = await categoryColl.find(query).toArray();
 
     if (categories.length === 0) {
-      return NextResponse.json([]);
+      return NextResponse.json({ categories: [] });
     }
 
-    return NextResponse.json(categories);
+    return NextResponse.json({ categories: categories.map(normalizeCategory) });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch categories" },

@@ -92,6 +92,52 @@ const normalizeLogoUrl = (raw?: string) => {
   return trimmed;
 };
 
+const pickLogoUrl = (brandConfig: any) =>
+  normalizeLogoUrl(
+    brandConfig?.logoUrl ||
+      brandConfig?.publicProfile?.logoUrl ||
+      brandConfig?.publicProfile?.logo ||
+      brandConfig?.brandKit?.logo?.primary ||
+      brandConfig?.brandKit?.logo?.icon ||
+      brandConfig?.business?.brand?.logoRef ||
+      brandConfig?.business?.brand?.businessDna?.logoUrl ||
+      brandConfig?.logos?.find((logo: any) => logo.id === "primary" || logo.id === "primary-logo")?.url ||
+      brandConfig?.logos?.[0]?.url,
+  );
+
+const pickFaviconUrl = (brandConfig: any) =>
+  brandConfig?.faviconUrl ||
+  brandConfig?.brandKit?.logo?.favicon ||
+  brandConfig?.brandKit?.faviconUrl ||
+  brandConfig?.business?.brand?.faviconRef ||
+  brandConfig?.business?.brand?.businessDna?.faviconUrl ||
+  "/assets/Image/favicon.svg";
+
+function applyFavicon(href: string) {
+  if (!href || typeof document === "undefined") return;
+  const selectors = ['link[rel="icon"]', 'link[rel="shortcut icon"]', 'link[rel="apple-touch-icon"]'];
+  for (const selector of selectors) {
+    let link = document.querySelector<HTMLLinkElement>(selector);
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = selector.includes("apple") ? "apple-touch-icon" : selector.includes("shortcut") ? "shortcut icon" : "icon";
+      document.head.appendChild(link);
+    }
+    link.href = href;
+  }
+}
+
+function applyLogoImages(href: string) {
+  if (!href || href === DEFAULT_LOGO || typeof document === "undefined") return;
+  const logoImages = document.querySelectorAll<HTMLImageElement>(
+    'img[src*="nestcraft-logo"], img[alt*="NestCraft"], img[alt*="Nestcraft"]',
+  );
+  logoImages.forEach((image) => {
+    image.src = href;
+    image.srcset = "";
+  });
+}
+
 // --- 3-Tier Header Component ---
 const Header = ({
   theme,
@@ -179,8 +225,9 @@ const Header = ({
   }
 
   return (
-    <div
-      className={`w-full z-[1200] transition-all duration-300 ${
+    <>
+      <div
+        className={`w-full z-[1200] transition-all duration-300 ${
         isScrolled
           ? "fixed top-0 left-0 animate-in slide-in-from-top-2"
           : isTransparent
@@ -216,7 +263,7 @@ const Header = ({
             </Link>
           </div>
 
-
+        
           <div className="flex items-center gap-3 sm:gap-4 font-medium">
             <a
               href="tel:+91 9810159604"
@@ -247,7 +294,7 @@ const Header = ({
             </Link>
             <Link
               href="/admin"
-              className="flex items-center gap-1.5 px-2 py-1 rounded-md
+              className="flex items-center gap-1.5 px-2 py-1 rounded-md 
              bg-secondary/10 text-secondary font-medium
              hover:bg-secondary/20 transition-all"
             >
@@ -417,13 +464,14 @@ const Header = ({
               >
                 <User size={20} strokeWidth={1.5} />
                 <span className="text-[15px] font-normal hidden lg:block">
-                  Login
+                  Login 
                 </span>
               </Link>
             )}
           </div>
         </div>
       </header>
+      </div>
 
       {/* Menu Drawer */}
       <AnimatePresence>
@@ -433,7 +481,7 @@ const Header = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed top-0 left-0 w-screen h-[100dvh] z-[50000] bg-black/50"
+              className="fixed inset-0 z-[50000] bg-black/50"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             {/* Primary Drawer */}
@@ -442,7 +490,7 @@ const Header = ({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed left-0 top-0 z-[50002] h-[100dvh] w-[min(85vw,400px)] overflow-y-auto bg-background px-8 py-8 shadow-2xl lg:shadow-none lg:border-r lg:border-border"
+              className="fixed left-0 top-0 z-[50001] h-full w-[min(85vw,400px)] overflow-y-auto bg-background px-8 py-8 shadow-2xl"
             >
               <div className="mb-6 flex items-center justify-between border-b pb-4">
                 <img
@@ -468,61 +516,37 @@ const Header = ({
                   return (
                     <div
                       key={tab.key}
-                      className={`mb-1 rounded-xl transition-all ${isExpanded ? "bg-primary shadow-md" : "border border-transparent hover:bg-secondary/15"}`}
+                      className="border-b border-border pb-3"
                       onMouseEnter={() => {
                         if (hasSubMenu) setExpandedDrawerTab(tab.key);
                       }}
                     >
-                      <div className="flex items-center justify-between group cursor-pointer px-4 py-2.5">
-                        {hasSubMenu ? (
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setExpandedDrawerTab(isExpanded ? null : tab.key);
-                            }}
-                            className={`block text-left text-[15px] font-sans flex-1 ${
-                              isExpanded 
-                                ? "text-white font-bold" 
-                                : tab.isLuxe 
-                                  ? "text-black font-medium" 
-                                  : "text-foreground font-medium"
-                            } ${!isExpanded ? "group-hover:text-[#063A1D]" : ""} transition-colors`}
-                          >
-                            {tab.title}
-                          </button>
-                        ) : (
-                          <Link
-                            href={`/category/${categorySlug}`}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className={`block text-[15px] font-sans flex-1 ${
-                              isExpanded 
-                                ? "text-white font-bold" 
-                                : tab.isLuxe 
-                                  ? "text-black font-medium" 
-                                  : "text-foreground font-medium"
-                            } ${!isExpanded ? "group-hover:text-[#063A1D]" : ""} transition-colors`}
-                          >
-                            {tab.title}
-                          </Link>
-                        )}
+                      <div className="flex items-center justify-between group cursor-pointer">
+                        <Link
+                          href={`/category/${categorySlug}`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`block text-[16px] font-sans font-medium flex-1 ${tab.isLuxe ? "text-black" : "text-foreground"} group-hover:text-secondary transition-colors`}
+                        >
+                          {tab.title}
+                        </Link>
                         {hasSubMenu && (
                           <button
                             onClick={() =>
                               setExpandedDrawerTab(isExpanded ? null : tab.key)
                             }
-                            className={`p-1.5 transition-colors lg:hidden ${isExpanded ? "text-white" : "text-muted hover:text-foreground"}`}
+                            className="p-2 text-muted hover:text-foreground transition-colors lg:hidden"
                           >
                             <ChevronRight
-                              size={18}
+                              size={20}
                               className={`transition-transform duration-200 ${isExpanded ? "rotate-90" : ""}`}
                             />
                           </button>
                         )}
                         {/* On Desktop, show a right arrow always if it has submenu, matching Swadesh */}
                         {hasSubMenu && (
-                          <div className={`hidden lg:flex p-1.5 transition-colors ${isExpanded ? "text-secondary" : "text-muted group-hover:text-[#063A1D]"}`}>
+                          <div className="hidden lg:flex p-2 text-muted">
                             <ChevronRight
-                              size={18}
+                              size={20}
                               className="transition-transform duration-200 group-hover:translate-x-1"
                             />
                           </div>
@@ -546,7 +570,7 @@ const Header = ({
                                       {col.sections?.map(
                                         (section: any, secIdx: number) => (
                                           <div key={secIdx}>
-                                            <h4 className="text-[16px] font-sans font-medium text-white/90 mb-3">
+                                            <h4 className="text-[16px] font-sans font-medium text-foreground mb-3">
                                               {section.heading}
                                             </h4>
                                             <ul className="space-y-2.5">
@@ -568,7 +592,7 @@ const Header = ({
                                                             false,
                                                           )
                                                         }
-                                                        className="text-[15px] font-medium text-white/70 hover:text-white hover:translate-x-1.5 hover:font-semibold transition-all inline-block py-1.5"
+                                                        className="text-[16px] font-sans font-medium text-muted hover:text-secondary transition-colors block"
                                                       >
                                                         {link.title}
                                                       </Link>
@@ -604,7 +628,7 @@ const Header = ({
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ type: "tween", duration: 0.2 }}
-                    className="fixed left-[400px] top-0 z-[50001] bg-white h-full w-[450px] overflow-y-auto bg-surface px-10 py-10 shadow-[20px_0_40px_-15px_rgba(0,0,0,0.05)] border-l border-border"
+                    className="fixed left-[400px] top-0 z-[50000] h-full w-[450px] overflow-y-auto bg-surface px-10 py-12 shadow-2xl border-l border-border"
                   >
                     {(() => {
                       const activeTab = displayMenus.find(
@@ -617,13 +641,13 @@ const Header = ({
                         : activeTab.key.toLowerCase().replace(/\s+/g, "-");
 
                       return (
-                        <div className="space-y-8">
+                        <div className="space-y-10">
                           <Link
                             href={`/category/${activeCategorySlug}`}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="flex items-center justify-center w-full py-3 rounded-full bg-primary text-white text-[12px] font-black uppercase tracking-[2px] hover:bg-primary/90 transition-all shadow-md hover:shadow-lg"
+                            className="text-[16px] font-sans font-medium text-foreground hover:text-secondary transition-colors block mb-4"
                           >
-                            Explore all {activeTab.title}
+                            See all {activeTab.title} products
                           </Link>
 
                           {activeTab.columns.map((col: any, colIdx: number) => (
@@ -631,11 +655,10 @@ const Header = ({
                               {col.sections?.map(
                                 (section: any, secIdx: number) => (
                                   <div key={secIdx}>
-                                    <h4 className="text-[10px] font-black uppercase tracking-[3px] text-secondary mb-4 flex items-center gap-2">
+                                    <h4 className="text-[12px] font-sans font-bold uppercase tracking-wider text-slate-400 mb-3">
                                       {section.heading}
-                                      <div className="h-px bg-secondary/30 flex-1"></div>
                                     </h4>
-                                    <ul className="space-y-1">
+                                    <ul className="space-y-3">
                                       {section.links?.map(
                                         (link: any, linkIdx: number) => {
                                           // Optional: Format submenu links too, just in case backend has them as just text names without paths,
@@ -651,10 +674,9 @@ const Header = ({
                                                 onClick={() =>
                                                   setIsMobileMenuOpen(false)
                                                 }
-                                                className="group flex items-center gap-2 text-[15px] font-medium text-foreground/80 hover:text-[#063A1D] transition-all py-1.5"
+                                                className="text-[16px] font-sans font-medium text-foreground hover:text-secondary transition-colors block"
                                               >
-                                                <span className="w-1.5 h-1.5 rounded-full bg-secondary/0 group-hover:bg-secondary transition-colors"></span>
-                                                <span className="group-hover:translate-x-1 transition-transform">{link.title}</span>
+                                                {link.title}
                                               </Link>
                                             </li>
                                           );
@@ -676,7 +698,7 @@ const Header = ({
           </>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 
@@ -760,7 +782,7 @@ const SearchOverlay = ({
                     {filteredProducts.map((product) => {
                       const image = product.gallery?.[0]?.url || resolveProductImage(product);
                       const price = product.pricing?.price || product.price || "0";
-
+                      
                       return (
                         <button
                           key={product._id || product.id}
@@ -941,7 +963,7 @@ const Footer = ({
       <div className="flex items-center justify-center gap-8">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group relative text-center inline-flex items-center  text-[14px] font-medium transition-colors text-[#0b1610] hover:text-secondary"
+          className="group relative text-center inline-flex items-center  text-[14px] font-medium transition-colors text-[#0b1610] hover:text-[#98c45f]"
         >
           Back to Top <ArrowUp size={14} className="ml-1" />
         </button>
@@ -979,8 +1001,9 @@ export default function SiteChrome({
 }) {
   const [theme, setTheme] = useState("light");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [liveBrandConfig, setLiveBrandConfig] = useState(brandConfig);
   const pathname = usePathname();
-
+  
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const lastScrollY = useRef(0);
@@ -989,7 +1012,7 @@ export default function SiteChrome({
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
+      
       if (currentScrollY > 120) {
         setIsScrolled(true);
       } else {
@@ -1006,7 +1029,7 @@ export default function SiteChrome({
       } else {
         setIsScrollingDown(false);
       }
-
+      
       lastScrollY.current = currentScrollY;
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -1033,6 +1056,33 @@ export default function SiteChrome({
     setIsSearchOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    setLiveBrandConfig(brandConfig);
+  }, [brandConfig]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const refreshBranding = () => fetch(`/api/branding/current?t=${Date.now()}`, { cache: "no-store", credentials: "include" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((body) => {
+        if (cancelled || !body?.branding) return;
+        const logo = pickLogoUrl(body.branding);
+        setLiveBrandConfig(body.branding);
+        applyLogoImages(logo);
+        applyFavicon(pickFaviconUrl(body.branding));
+      })
+      .catch(() => undefined);
+    void refreshBranding();
+    const onVisible = () => { if (document.visibilityState === "visible") void refreshBranding(); };
+    window.addEventListener("focus", refreshBranding);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("focus", refreshBranding);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, []);
+
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -1040,12 +1090,9 @@ export default function SiteChrome({
     localStorage.setItem("theme", newTheme);
   };
 
-  const primaryLogo = normalizeLogoUrl(
-    brandConfig?.logos?.find((l: any) => l.id === "primary")?.url ||
-      brandConfig?.logos?.[0]?.url,
-  );
+  const primaryLogo = pickLogoUrl(liveBrandConfig);
 
-  const companyName = brandConfig?.companyInfo?.name || "NestCraft";
+  const companyName = liveBrandConfig?.companyInfo?.name || "NestCraft";
 
   const cartCount = useAppSelector(selectCartCount);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
@@ -1073,11 +1120,11 @@ export default function SiteChrome({
       <Footer
         logoUrl={primaryLogo}
         companyName={companyName}
-        brandConfig={brandConfig}
+        brandConfig={liveBrandConfig}
       />
 
       {/* Mobile Bottom Navigation Bar */}
-      <div
+      <div 
         className={`sm:hidden fixed bottom-0 left-0 right-0 h-16 bg-background border-t border-border z-[1300] flex justify-around items-center px-2 transition-transform duration-300 ${
           isScrolled && !isScrollingDown ? "translate-y-full" : "translate-y-0"
         }`}
