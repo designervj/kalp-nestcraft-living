@@ -91,12 +91,10 @@ describe("server-configured tenant database authority", () => {
     expect(getNetworkAttemptCount()).toBe(0);
   });
 
-  it("ignores x-tenant-db and preserves the comments success contract", async () => {
+  it("rejects unauthenticated comments without trusting caller tenant headers", async () => {
     process.env.DB_NAME = APPROVED_DATABASE;
     process.env.NEXT_PUBLIC_TENANT_ID = UNTRUSTED_DATABASE;
-    const fetchMock = vi.fn().mockResolvedValue(
-      Response.json({ success: true, pages: [] }, { status: 200 }),
-    );
+    const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
 
     const { GET } = await import("@/app/api/comments/route");
@@ -106,17 +104,16 @@ describe("server-configured tenant database authority", () => {
       }),
     );
 
-    expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ success: true, pages: [] });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const requestOptions = fetchMock.mock.calls[0][1] as RequestInit;
-    const headers = requestOptions.headers as Headers;
-    expect(headers.get("x-tenant-db")).toBe(APPROVED_DATABASE);
-    expect(headers.get("x-tenant-db")).not.toBe(UNTRUSTED_DATABASE);
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({
+      success: false,
+      detail: "Authentication required.",
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
     expect(getNetworkAttemptCount()).toBe(0);
   });
 
-  it("rejects missing comments configuration before Mongo client access", async () => {
+  it("rejects unauthenticated comments before database configuration access", async () => {
     const consoleError = vi
       .spyOn(console, "error")
       .mockImplementation(() => {});
@@ -130,10 +127,10 @@ describe("server-configured tenant database authority", () => {
       );
       const body = await response.json();
 
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(401);
       expect(body).toEqual({
         success: false,
-        error: "Server configuration is unavailable",
+        detail: "Authentication required.",
       });
       expect(JSON.stringify(body)).not.toContain(UNTRUSTED_DATABASE);
       expect(JSON.stringify(body)).not.toContain("DB_NAME");
@@ -168,6 +165,58 @@ describe("server-configured tenant database authority", () => {
     const headers = requestOptions.headers as Headers;
     expect(headers.get("x-tenant-db")).toBe(APPROVED_DATABASE);
     expect(headers.get("x-tenant-db")).not.toBe(UNTRUSTED_DATABASE);
+    expect(getNetworkAttemptCount()).toBe(0);
+  });
+
+  it("promotes the tenant auth cookie to an authorization header", async () => {
+    process.env.DB_NAME = APPROVED_DATABASE;
+    process.env.NEXT_PUBLIC_TENANT_ID = "nestcraft";
+    const fetchMock = vi.fn().mockResolvedValue(
+      Response.json({ success: true }, { status: 200 }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { proxyRequest } = await import("@/lib/apiProxy");
+    const response = await proxyRequest(
+      new NextRequest("http://localhost/api/comments", {
+        headers: {
+          cookie: "auth_token_nestcraft=session-token",
+        },
+      }),
+      "publishing/page-reviews/comments",
+    );
+
+    expect(response.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const requestOptions = fetchMock.mock.calls[0][1] as RequestInit;
+    const headers = requestOptions.headers as Headers;
+    expect(headers.get("authorization")).toBe("Bearer session-token");
+    expect(headers.get("auth-token")).toBe("session-token");
+    expect(getNetworkAttemptCount()).toBe(0);
+  });
+
+  it("promotes dynamic auth_token tenant cookies to an authorization header", async () => {
+    process.env.DB_NAME = APPROVED_DATABASE;
+    const fetchMock = vi.fn().mockResolvedValue(
+      Response.json({ success: true }, { status: 200 }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { proxyRequest } = await import("@/lib/apiProxy");
+    const response = await proxyRequest(
+      new NextRequest("http://localhost/api/comments", {
+        headers: {
+          cookie: "auth_token_kp_nestcraft=dynamic-session-token",
+        },
+      }),
+      "publishing/page-reviews/comments",
+    );
+
+    expect(response.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const requestOptions = fetchMock.mock.calls[0][1] as RequestInit;
+    const headers = requestOptions.headers as Headers;
+    expect(headers.get("authorization")).toBe("Bearer dynamic-session-token");
     expect(getNetworkAttemptCount()).toBe(0);
   });
 

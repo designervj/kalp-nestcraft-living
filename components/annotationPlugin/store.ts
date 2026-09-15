@@ -28,7 +28,7 @@ interface AnnotatorStore {
   activeAnnotationId: string | null;
   settings: AnnotatorSettings;
   toggleCommentMode: () => void;
-  addAnnotation: (annotation: Omit<Annotation, 'id' | 'createdAt'>) => void;
+  addAnnotation: (annotation: Annotation | Omit<Annotation, 'id' | 'createdAt'>) => void;
   removeAnnotation: (id: string) => void;
   updateAnnotationStatus: (id: string, status: CommentStatus) => void;
   updateAnnotationScreen: (id: string, screenSize: ScreenSize) => void;
@@ -59,8 +59,8 @@ export const useAnnotatorStore = create<AnnotatorStore>()((set) => ({
       ...state.annotations,
       {
         ...annotation,
-        id: Math.random().toString(36).substring(2, 9),
-        createdAt: Date.now(),
+        id: 'id' in annotation && annotation.id ? annotation.id : Math.random().toString(36).substring(2, 9),
+        createdAt: 'createdAt' in annotation && annotation.createdAt ? annotation.createdAt : Date.now(),
       }
     ]
   })),

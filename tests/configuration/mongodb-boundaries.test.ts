@@ -77,7 +77,7 @@ describe("MongoDB configuration boundaries", () => {
     expect(getNetworkAttemptCount()).toBe(0);
   });
 
-  it("keeps the comments GET response contract without attempting MongoDB", async () => {
+  it("rejects unauthenticated comments without attempting MongoDB", async () => {
     const consoleError = vi
       .spyOn(console, "error")
       .mockImplementation(() => {});
@@ -88,10 +88,10 @@ describe("MongoDB configuration boundaries", () => {
         new NextRequest("http://localhost/api/comments"),
       );
 
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(401);
       expect(await response.json()).toEqual({
         success: false,
-        error: "Server configuration is unavailable",
+        detail: "Authentication required.",
       });
       expect(mongoCalls.constructor).not.toHaveBeenCalled();
       expect(mongoCalls.instanceConnect).not.toHaveBeenCalled();

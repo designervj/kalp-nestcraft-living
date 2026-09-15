@@ -25,10 +25,10 @@ const FeaturedBanner = ({ section: propSection }: FeaturedBannerProps) => {
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages || !Array.isArray(currentPages.content)) return;
-    return currentPages.content.find((page: any) => page?.adminTitle === "FeaturedBanner");
-  }, [currentPages]);
+    return currentPages.content.find((page: any) => page?.id === propSection?.id || page?.adminTitle === "FeaturedBanner");
+  }, [currentPages, propSection?.id]);
 
-  const section = propSection || getCurrentSection;
+  const section = getCurrentSection || propSection;
 
   const p = (section as any)?.props || {};
   const rawContent = (section as any)?.content || [];

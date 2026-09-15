@@ -22,10 +22,10 @@ const USP = ({ section: propSection }: { section?: any }) => {
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages) return;
-    return currentPages.content?.find((page: any) => page?.adminTitle === "USP Section");
-  }, [currentPages]);
+    return currentPages.content?.find((page: any) => page?.id === propSection?.id || page?.adminTitle === "USP Section");
+  }, [currentPages, propSection?.id]);
 
-  const section = propSection || getCurrentSection;
+  const section = getCurrentSection || propSection;
   const rawItems = section?.content;
   const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultUSPItems;
 

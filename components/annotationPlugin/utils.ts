@@ -6,6 +6,29 @@ export const getScreenSize = (width: number): ScreenSize => {
   return 'desktop';
 };
 
+export const clampPopoverPosition = (
+  anchorX: number,
+  anchorY: number,
+  width: number,
+  height: number,
+  gap = 16,
+  topSafeArea = 56,
+) => {
+  if (typeof window === 'undefined') {
+    return { left: anchorX, top: anchorY };
+  }
+
+  const maxLeft = Math.max(gap, window.innerWidth - width - gap);
+  const maxTop = Math.max(topSafeArea, window.innerHeight - height - gap);
+  const left = Math.min(Math.max(anchorX - width / 2, gap), maxLeft);
+  const preferredTop = anchorY + 28;
+  const flippedTop = anchorY - height - 28;
+  const rawTop = preferredTop + height > window.innerHeight - gap ? flippedTop : preferredTop;
+  const top = Math.min(Math.max(rawTop, topSafeArea), maxTop);
+
+  return { left, top };
+};
+
 export const getCssSelector = (el: Element): string => {
   if (el.tagName.toLowerCase() === 'body') return 'body';
   if (el.id) return `#${el.id}`;

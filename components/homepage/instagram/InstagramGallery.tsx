@@ -25,10 +25,10 @@ const InstagramGallery = ({ section: propSection }: { section?: any }) => {
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages || !Array.isArray(currentPages.content)) return;
-    return currentPages.content.find((page: any) => page?.adminTitle === "Instagram Gallery");
-  }, [currentPages]);
+    return currentPages.content.find((page: any) => page?.id === propSection?.id || page?.adminTitle === "Instagram Gallery");
+  }, [currentPages, propSection?.id]);
 
-  const section = propSection || getCurrentSection;
+  const section = getCurrentSection || propSection;
 
   const p = (section as any)?.props || {};
   const items = (section as any)?.content || [];

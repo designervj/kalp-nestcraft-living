@@ -1,12 +1,13 @@
 'use client';
-import { useState, useRef, useEffect, useCallback, KeyboardEvent } from 'react';
+import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { saveField } from '@/lib/editorUtils';
+import { Check, X } from 'lucide-react';
 
 interface Props {
   value: string;
   isEditable?: boolean;
-  onSave?: (value: string) => void;
+  onSave?: (value: string) => void | boolean | Promise<void | boolean>;
   /** Shorthand: if provided, EditableText wires saveField internally */
   currentPages?: any;
   sectionId?: string;
@@ -16,18 +17,6 @@ interface Props {
   placeholder?: string;
   style?: React.CSSProperties;
 }
-
-const STYLE_KEYS = [
-  'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'lineHeight',
-  'letterSpacing', 'textAlign', 'textTransform', 'textDecoration',
-  'color', 'backgroundColor', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
-  'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
-  'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
-  'borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle',
-  'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor',
-  'borderRadius', 'boxShadow', 'width', 'minWidth', 'maxWidth',
-  'display', 'alignItems', 'justifyContent', 'gap', 'flexWrap',
-] as const;
 
 export default function EditableText({
   value,
@@ -50,103 +39,171 @@ export default function EditableText({
 
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
-  const [inputStyle, setInputStyle] = useState<Record<string, string>>({});
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const displayRef = useRef<HTMLDivElement>(null);
+  const [displayValue, setDisplayValue] = useState(value);
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasLocalValue, setHasLocalValue] = useState(false);
+  const editorRef = useRef<HTMLElement>(null);
+  const wrapperRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (editing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-      inputRef.current.style.height = 'auto';
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+    if (hasLocalValue && value === displayValue) {
+      setHasLocalValue(false);
     }
-  }, [editing]);
 
-  const startEditing = useCallback(() => {
-    if (!isEditable) return;
-    if (displayRef.current) {
-      const computed = window.getComputedStyle(displayRef.current);
-      const styles: Record<string, string> = {};
-      for (const key of STYLE_KEYS) {
-        styles[key] = computed.getPropertyValue(key.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`));
+    if (!editing) {
+      if (hasLocalValue && value !== displayValue) return;
+      setDisplayValue(value);
+      setEditValue(value);
+      if (editorRef.current && editorRef.current.textContent !== value) {
+        editorRef.current.textContent = value || placeholder;
       }
-      setInputStyle(styles);
     }
-    setEditValue(value);
+  }, [displayValue, editing, hasLocalValue, placeholder, value]);
+
+  const startEditing = (event?: React.MouseEvent<HTMLElement>) => {
+    if (!isEditable) return;
+
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (editing) return;
+
     setEditing(true);
-  }, [isEditable, value]);
+    setEditValue(displayValue);
+
+    requestAnimationFrame(() => {
+      const el = editorRef.current;
+      if (!el) return;
+      el.focus();
+
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditValue(displayValue);
+    setEditing(false);
+    if (editorRef.current) {
+      editorRef.current.textContent = displayValue || placeholder;
+    }
+  };
 
   const handleSave = async () => {
-    const trimmed = editValue.trim();
-    if (!trimmed || trimmed === value) {
-      setEditValue(value);
+    if (isSaving) return;
+    const latestValue = editorRef.current?.textContent ?? editValue;
+    const trimmed = latestValue.trim();
+    if (!trimmed || trimmed === displayValue) {
+      setEditValue(displayValue);
       setEditing(false);
       return;
     }
+    const previousValue = displayValue;
+    setIsSaving(true);
+    setDisplayValue(trimmed);
+    setHasLocalValue(true);
     if (onSaveProp) {
-      onSaveProp(trimmed);
+      const saved = await Promise.resolve(onSaveProp(trimmed));
+      if (saved === false) {
+        setIsSaving(false);
+        setHasLocalValue(false);
+        setDisplayValue(previousValue);
+        setEditValue(previousValue);
+        setEditing(true);
+        return;
+      }
     } else if (pages && sectionId && fieldPath) {
       const saved = await saveField(dispatch, pages, sectionId, fieldPath, trimmed);
       if (!saved) {
+        setIsSaving(false);
+        setHasLocalValue(false);
+        setDisplayValue(previousValue);
+        setEditValue(previousValue);
         setEditing(true);
         return;
       }
     }
+    setIsSaving(false);
     setEditing(false);
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       void handleSave();
     }
     if (e.key === 'Escape') {
-      setEditValue(value);
-      setEditing(false);
+      e.preventDefault();
+      cancelEditing();
     }
   };
 
-  if (editing) {
-    return (
-      <textarea
-        ref={inputRef}
-        value={editValue}
-        onChange={(e) => {
-          setEditValue(e.target.value);
-          e.target.style.height = 'auto';
-          e.target.style.height = `${e.target.scrollHeight}px`;
-        }}
-        onBlur={() => void handleSave()}
-        onKeyDown={handleKeyDown}
-        className="editable-input"
-        style={{
-          ...(inputStyle as React.CSSProperties),
-          resize: 'none',
-          overflow: 'hidden',
-          outline: '1px dashed rgba(255, 255, 255, 0.5)',
-          outlineOffset: '4px',
-          borderRadius: '4px',
-        }}
-        rows={1}
-      />
-    );
-  }
-
-  const sharedClassName = `${className} ${isEditable ? 'editable-text' : ''}`;
-
-  const handleRef = (el: any) => {
-    displayRef.current = el;
+  const handleInput = (event: React.FormEvent<HTMLElement>) => {
+    setEditValue(event.currentTarget.textContent || '');
   };
 
-  return (
+  const handlePaste = (event: React.ClipboardEvent<HTMLElement>) => {
+    event.preventDefault();
+    document.execCommand('insertText', false, event.clipboardData.getData('text/plain'));
+  };
+
+  const sharedClassName = `${className} ${isEditable ? 'editable-text' : ''} ${editing ? 'editable-text-active' : ''}`;
+
+  const editor = (
     <Tag
-      ref={handleRef}
+      ref={editorRef as any}
       className={sharedClassName}
+      contentEditable={editing}
+      suppressContentEditableWarning
+      role={isEditable ? 'textbox' : undefined}
+      tabIndex={isEditable ? 0 : undefined}
       onClick={startEditing}
+      onDoubleClick={startEditing}
+      onInput={handleInput}
+      onBlur={(event) => {
+        if (!editing) return;
+        const nextFocus = event.relatedTarget as Node | null;
+        if (nextFocus && wrapperRef.current?.contains(nextFocus)) return;
+        void handleSave();
+      }}
+      onKeyDown={handleKeyDown}
+      onPaste={handlePaste}
       style={passedStyle}
     >
-      {value || placeholder}
+      {displayValue || placeholder}
     </Tag>
+  );
+
+  if (!editing) return editor;
+
+  return (
+    <span ref={wrapperRef} className="editable-control-wrap" onClick={(event) => event.stopPropagation()}>
+      {editor}
+      <span className="editable-controls">
+        <button
+          type="button"
+          className="editable-control-button editable-control-save"
+          disabled={isSaving}
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => void handleSave()}
+        >
+          <Check size={14} />
+          {isSaving ? 'Saving' : 'Save'}
+        </button>
+        <button
+          type="button"
+          className="editable-control-button editable-control-cancel"
+          disabled={isSaving}
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={cancelEditing}
+        >
+          <X size={14} />
+          Cancel
+        </button>
+      </span>
+    </span>
   );
 }

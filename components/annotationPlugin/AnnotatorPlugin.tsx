@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, MessageSquareOff, MessageSquarePlus, Settings2, Eye, EyeOff, ScanLine } from 'lucide-react';
 import { Annotation, useAnnotatorStore } from './store';
-import { getCssSelector, getScreenSize } from './utils';
+import { clampPopoverPosition, getCssSelector, getScreenSize } from './utils';
 import { Marker } from './Marker';
 
 import { createCommentThunk } from '@/lib/store/comments/commentThunk';
@@ -50,14 +50,12 @@ export const AnnotatorPlugin: React.FC = () => {
 
   // update the annotation
   useEffect(() => {
-    if(slug &&allComments){
-    const filterComments = allComments.filter((comment:Annotation) => comment.slug === slug)
-    if (filterComments.length > 0) {
+    if (slug && allComments) {
+      const filterComments = allComments.filter((comment: Annotation) => comment.slug === slug)
       dispatch(setPageComments(filterComments))
       setAnnotations(filterComments)
     }
-  }
-  }, [slug, allComments])
+  }, [dispatch, setAnnotations, slug, allComments])
   // Apply calibration mode styles
   useEffect(() => {
     if (settings.calibrationMode && isCommentModeActive) {
@@ -137,16 +135,15 @@ export const AnnotatorPlugin: React.FC = () => {
       pageId: currentPages?._id || "",
       slug: slug
     }
-    addAnnotation(data);
-    setDraft(null);
-    setDraftContent('');
-
-    // add comment inot Db
-    const response = await dispatch(createCommentThunk(data)).unwrap()
-    if (response.success) {
+    try {
+      const comment = await dispatch(createCommentThunk(data)).unwrap()
+      addAnnotation(comment);
+      setDraft(null);
+      setDraftContent('');
       toast.success("Comment added successfully")
-    } else {
-      toast.error("Failed to add comment")
+    } catch (error) {
+      console.error('Failed to add comment:', error);
+      toast.error(typeof error === 'string' ? error : error instanceof Error ? error.message : "Failed to add comment")
     }
   };
 
@@ -154,6 +151,10 @@ export const AnnotatorPlugin: React.FC = () => {
     setDraft(null);
     setDraftContent('');
   };
+  const draftPopoverPosition = draft
+    ? clampPopoverPosition(draft.x, draft.y, 288, 190)
+    : null;
+
   return (
     <>
 
@@ -209,7 +210,7 @@ export const AnnotatorPlugin: React.FC = () => {
           {draft && (
             <div
               data-annotator-ui="true"
-              className="fixed z-[10000] -translate-x-1/2 -translate-y-1/2"
+              className="fixed z-[10000]"
               style={{ left: `${draft.x}px`, top: `${draft.y}px` }}
             >
               {/* Draft Pin (Red for 'Open' default) */}
@@ -218,7 +219,13 @@ export const AnnotatorPlugin: React.FC = () => {
               </div>
 
               {/* Draft Input Dialog */}
-              <div className="absolute top-6 left-1/2 -translate-x-1/2 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+              <div
+                className="absolute w-72 max-h-[calc(100vh-72px)] overflow-auto bg-white rounded-xl shadow-2xl border border-slate-200"
+                style={draftPopoverPosition ? {
+                  left: `${draftPopoverPosition.left - draft.x}px`,
+                  top: `${draftPopoverPosition.top - draft.y}px`,
+                } : undefined}
+              >
                 <div className="p-4">
                   <textarea
                     autoFocus

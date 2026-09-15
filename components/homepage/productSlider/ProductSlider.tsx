@@ -37,10 +37,10 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages || !Array.isArray(currentPages.content)) return;
-    return currentPages.content.find((page: any) => page?.adminTitle === "New Essentials Slider");
-  }, [currentPages]);
+    return currentPages.content.find((page: any) => page?.id === propSection?.id || page?.adminTitle === "New Essentials Slider");
+  }, [currentPages, propSection?.id]);
 
-  const section = propSection || getCurrentSection;
+  const section = getCurrentSection || propSection;
 
   const p = (section as any)?.props || {};
   const configuredSlugs = Array.isArray(p.productSlugs?.value)

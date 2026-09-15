@@ -27,10 +27,10 @@ const Craft = ({ section: propSection }: CraftProps) => {
 
   const getCurrentSection = useMemo(() => {
     if (!currentPages) return;
-    return currentPages.content?.find((page: any) => page?.adminTitle === "Craft & Quality Section");
-  }, [currentPages]);
+    return currentPages.content?.find((page: any) => page?.id === propSection?.id || page?.adminTitle === "Craft & Quality Section");
+  }, [currentPages, propSection?.id]);
 
-  const section = propSection || getCurrentSection;
+  const section = getCurrentSection || propSection;
   const rawContent = (section as any)?.content || [];
   const content = Array.isArray(rawContent) ? rawContent : [];
 

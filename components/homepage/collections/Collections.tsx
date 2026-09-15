@@ -28,11 +28,11 @@ const Collections = ({ section: propSection }: CollectionsProps) => {
   const getCurrentSection = useMemo(() => {
     if (!currentPages) return;
     return currentPages.content?.find(
-      (page: any) => page?.adminTitle === "Collections",
+      (page: any) => page?.id === propSection?.id || page?.adminTitle === "Collections",
     );
-  }, [currentPages]);
+  }, [currentPages, propSection?.id]);
 
-  const section = propSection || getCurrentSection;
+  const section = getCurrentSection || propSection;
 
   const rawProps = (section as any)?.props;
   const rawItems = (section as any)?.content;

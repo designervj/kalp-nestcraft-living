@@ -21,7 +21,7 @@ export const getPageData = cache(async (slug: string) => {
   try {
     const SITE_URL = process.env.SITE_URL || "http://127.0.0.1:3000";
     try {
-      const res = await fetch(`${SITE_URL}/api/pages?slug=${slug}`, { next: { revalidate: 10 } });
+      const res = await fetch(`${SITE_URL}/api/pages?slug=${slug}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         if (data && data.content) {

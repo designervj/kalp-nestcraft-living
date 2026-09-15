@@ -12,9 +12,8 @@ export default function LogoStrip({ section: propSection }: Props) {
   const currentPages = useAppSelector((state) => state.pages.currentPages);
 
   const section = useMemo(() => {
-    if (propSection) return propSection;
-    if (!currentPages) return null;
-    return currentPages.content?.find((s: any) => s?.adminTitle === 'Client Logos');
+    if (!currentPages) return propSection;
+    return currentPages.content?.find((s: any) => s?.id === propSection?.id || s?.adminTitle === 'Client Logos') || propSection;
   }, [propSection, currentPages]);
 
   if (!section) return null;

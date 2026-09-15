@@ -114,7 +114,7 @@ const authSlice = createSlice({
       })
       .addCase(getUserThunk.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = null;
       })
       .addCase(logoutThunk.pending, (state) => {
         state.isLoading = true;
