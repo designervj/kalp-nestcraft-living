@@ -113,18 +113,22 @@ export default function ThemeInitializer() {
     if (!businessBlueprint) return "";
 
     // Handle both nested and flattened structures
-    const payload = businessBlueprint.payload || businessBlueprint;
-    const brandAssets = payload?.brandAssets;
+    const payload: any = businessBlueprint.payload || businessBlueprint;
+    const themeConfig =
+      payload?.experience?.public?.theme ||
+      payload?.brandKit?.public_theme ||
+      payload?.brandAssets?.public_theme ||
+      payload?.public_theme ||
+      payload?.brandAssets;
 
-    if (!brandAssets) {
+    if (!themeConfig) {
       console.warn(
-        "ThemeInitializer: brandAssets not found in businessBlueprint",
+        "ThemeInitializer: public theme not found in businessBlueprint",
         businessBlueprint,
       );
       return "";
     }
 
-    const themeConfig = brandAssets.public_theme || brandAssets;
     const { colors, typography } = themeConfig || {};
 
     if (!colors || !typography) {
