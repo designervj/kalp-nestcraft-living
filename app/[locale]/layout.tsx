@@ -69,8 +69,6 @@ export default async function LocaleLayout({
     token ? getAuthUser(token).catch(() => null) : Promise.resolve(null),
   ]);
 
-  console.log("=== BUSINESS BLUEPRINT FROM BACKEND ===", JSON.stringify(businessBlueprint?.payload?.public_theme?.colors, null, 2));
-
   return (
     <html
       lang={locale || "en"}

@@ -8,6 +8,49 @@ import {
 } from "./public-site";
 import { MongoClient } from "mongodb";
 
+function adminApiCandidates(): string[] {
+  const configuredApiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL || "https://zero.kalptree.xyz";
+  return [
+    ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:5177"]),
+    adminUrl,
+    configuredApiUrl,
+  ].filter(Boolean) as string[];
+}
+
+async function getBusinessBlueprintFromAdmin() {
+  const tenantDb = process.env.NEXT_PUBLIC_TENANT_ID || process.env.DB_NAME || "kp_nestcraft";
+  const tenantSlug = process.env.NEXT_PUBLIC_TENANT_SLUG || tenantDb.replace(/^kalp_tenant_/, "") || "nestcraft";
+
+  for (const apiUrl of adminApiCandidates()) {
+    try {
+      const response = await fetch(`${apiUrl.replace(/\/$/, "")}/api/cms/business-blueprint`, {
+        headers: {
+          "x-tenant-db": tenantDb,
+          "tenant-slug": tenantSlug,
+          "x-tenant-slug": tenantSlug,
+        },
+        cache: "no-store",
+      });
+      if (!response.ok) continue;
+
+      const body = await response.json();
+      const payload = body?.data?.payload || body?.data || body;
+      if (payload) {
+        return serialize({
+          id: `admin:${tenantDb}`,
+          document_key: "admin-business-blueprint",
+          payload,
+        });
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return null;
+}
+
 function serialize(obj: any): any {
   if (obj === null || obj === undefined) return null;
   return JSON.parse(
@@ -152,6 +195,9 @@ export const getTenantRegistry = cache(async () => {
 
 export const getBusinessBlueprint = cache(async () => {
   try {
+    const adminBlueprint = await getBusinessBlueprintFromAdmin();
+    if (adminBlueprint) return adminBlueprint;
+
     const uri = process.env.MONGODB_URI;
     const dbName = process.env.DB_NAME;
     if (uri && dbName) {
@@ -159,7 +205,10 @@ export const getBusinessBlueprint = cache(async () => {
       try {
         await client.connect();
         const db = client.db(dbName);
-        const doc = await db.collection("business_blueprints").findOne({});
+        const collection = db.collection("business_blueprints");
+        const doc =
+          (await collection.findOne({ document_key: "blueprint" })) ||
+          (await collection.findOne({}));
         if (doc) {
           return serialize({
             id: `public:${dbName}`,

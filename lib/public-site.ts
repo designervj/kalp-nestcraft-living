@@ -41,7 +41,7 @@ export async function fetchPublicSitePage(
   const response = await fetch(url, {
     method: "GET",
     headers: { Accept: "application/json" },
-    next: { revalidate: 60 },
+    cache: "no-store",
   });
   if (response.status === 404) return null;
   if (!response.ok) {

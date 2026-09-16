@@ -13,8 +13,8 @@ export default function ThemeProvider({
   // Select which theme to use based on the section
   const defaultTheme = isAdmin ? themeConfig.admin_theme : themeConfig.public_theme;
   
-  const publicApiTheme = businessBlueprint?.experience?.public?.theme || businessBlueprint?.payload?.experience?.public?.theme || businessBlueprint?.payload?.brandAssets?.public_theme || businessBlueprint?.payload?.public_theme;
-  const adminApiTheme = businessBlueprint?.experience?.admin?.theme || businessBlueprint?.payload?.experience?.admin?.theme || businessBlueprint?.payload?.brandAssets?.admin_theme || businessBlueprint?.payload?.admin_theme;
+  const publicApiTheme = businessBlueprint?.experience?.public?.theme || businessBlueprint?.payload?.experience?.public?.theme || businessBlueprint?.payload?.brandKit?.public_theme || businessBlueprint?.payload?.brandAssets?.public_theme || businessBlueprint?.payload?.public_theme;
+  const adminApiTheme = businessBlueprint?.experience?.admin?.theme || businessBlueprint?.payload?.experience?.admin?.theme || businessBlueprint?.payload?.brandKit?.admin_theme || businessBlueprint?.payload?.brandAssets?.admin_theme || businessBlueprint?.payload?.admin_theme;
   const apiTheme = isAdmin ? adminApiTheme : publicApiTheme;
   
   const theme = {
