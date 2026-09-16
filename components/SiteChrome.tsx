@@ -85,9 +85,12 @@ const DEFAULT_LOGO = "/assets/Image/nestcraft-logo.svg";
 
 const normalizeLogoUrl = (raw?: string) => {
   if (!raw || typeof raw !== "string") return DEFAULT_LOGO;
-  const trimmed = raw.trim();
+  let trimmed = raw.trim();
   if (!trimmed || trimmed === "undefined" || trimmed === "null") {
     return DEFAULT_LOGO;
+  }
+  if (trimmed.includes("localhost:5177/uploads/") || trimmed.includes("127.0.0.1:5177/uploads/")) {
+    trimmed = trimmed.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5177/, "");
   }
   return trimmed;
 };
@@ -105,13 +108,19 @@ const pickLogoUrl = (brandConfig: any) =>
       brandConfig?.logos?.[0]?.url,
   );
 
-const pickFaviconUrl = (brandConfig: any) =>
-  brandConfig?.faviconUrl ||
-  brandConfig?.brandKit?.logo?.favicon ||
-  brandConfig?.brandKit?.faviconUrl ||
-  brandConfig?.business?.brand?.faviconRef ||
-  brandConfig?.business?.brand?.businessDna?.faviconUrl ||
-  "/assets/Image/favicon.svg";
+const pickFaviconUrl = (brandConfig: any) => {
+  const raw =
+    brandConfig?.faviconUrl ||
+    brandConfig?.brandKit?.logo?.favicon ||
+    brandConfig?.brandKit?.faviconUrl ||
+    brandConfig?.business?.brand?.faviconRef ||
+    brandConfig?.business?.brand?.businessDna?.faviconUrl ||
+    "/assets/Image/favicon.svg";
+  if (typeof raw === "string" && (raw.includes("localhost:5177/uploads/") || raw.includes("127.0.0.1:5177/uploads/"))) {
+    return raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5177/, "");
+  }
+  return raw;
+};
 
 function applyFavicon(href: string) {
   if (!href || typeof document === "undefined") return;
