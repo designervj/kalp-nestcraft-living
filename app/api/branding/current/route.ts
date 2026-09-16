@@ -15,13 +15,19 @@ function firstText(...values: unknown[]): string {
   return "";
 }
 
+function sanitizeUrl(rawUrl: string): string {
+  if (!rawUrl) return "";
+  // Strip localhost/127.0.0.1:5177 origin so images load from local public / Vercel public
+  return rawUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5177(?=\/)/i, "");
+}
+
 function buildBrandConfig(payload: any, fallback: any) {
   const business = payload?.business || {};
   const brand = business?.brand || {};
   const brandKit = payload?.brandKit || fallback?.brandKit || {};
   const publicProfile = payload?.publicProfile || fallback?.publicProfile || {};
   const fallbackLogo = Array.isArray(fallback?.logos) ? fallback.logos[0]?.url : "";
-  const logoUrl = firstText(
+  const rawLogoUrl = firstText(
     brand.logoRef,
     brand.businessDna?.logoUrl,
     publicProfile.logoUrl,
@@ -31,13 +37,16 @@ function buildBrandConfig(payload: any, fallback: any) {
     fallback?.logoUrl,
     fallbackLogo,
   );
-  const faviconUrl = firstText(
+  const logoUrl = sanitizeUrl(rawLogoUrl);
+
+  const rawFaviconUrl = firstText(
     brand.faviconRef,
     brand.businessDna?.faviconUrl,
     brandKit.logo?.favicon,
     brandKit.faviconUrl,
     fallback?.faviconUrl,
   );
+  const faviconUrl = sanitizeUrl(rawFaviconUrl);
 
   return {
     ...(fallback || {}),
@@ -72,13 +81,18 @@ async function readLocalBranding() {
 
 async function readRemoteBranding(fallback: any) {
   const configuredApiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const apiCandidates = process.env.NODE_ENV === "production"
-    ? [configuredApiUrl]
-    : ["http://localhost:5177", configuredApiUrl];
-  const tenantDb = process.env.NEXT_PUBLIC_TENANT_ID || "";
+  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL || "https://zero.kalptree.xyz";
+  const apiCandidates = [
+    ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:5177"]),
+    adminUrl,
+    configuredApiUrl,
+  ].filter(Boolean) as string[];
+
+  const tenantDb = process.env.NEXT_PUBLIC_TENANT_ID || "kp_nestcraft";
   const tenantSlug = process.env.NEXT_PUBLIC_TENANT_SLUG || tenantDb.replace(/^kalp_tenant_/, "") || "nestcraft";
   if (!tenantDb) return null;
-  for (const apiUrl of apiCandidates.filter(Boolean)) {
+
+  for (const apiUrl of apiCandidates) {
     try {
       const response = await fetch(`${apiUrl}/api/cms/business-blueprint`, {
         headers: { "x-tenant-db": tenantDb, "tenant-slug": tenantSlug, "x-tenant-slug": tenantSlug },
@@ -87,7 +101,10 @@ async function readRemoteBranding(fallback: any) {
       if (!response.ok) continue;
       const body = await response.json();
       const payload = body?.data?.payload || body?.data || body;
-      return buildBrandConfig(payload, fallback);
+      const config = buildBrandConfig(payload, fallback);
+      if (config?.logoUrl) {
+        return config;
+      }
     } catch {
       continue;
     }
