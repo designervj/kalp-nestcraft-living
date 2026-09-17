@@ -18,7 +18,7 @@ function firstText(...values: unknown[]): string {
 function sanitizeUrl(rawUrl: string): string {
   if (!rawUrl) return "";
   // Strip localhost/127.0.0.1:5177 origin so images load from local public / Vercel public
-  return rawUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5177(?=\/)/i, "");
+  return rawUrl; // FIXED
 }
 
 function buildBrandConfig(payload: any, fallback: any) {
