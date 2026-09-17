@@ -90,7 +90,7 @@ const normalizeLogoUrl = (raw?: string) => {
     return DEFAULT_LOGO;
   }
   if (trimmed.includes("localhost:5177/uploads/") || trimmed.includes("127.0.0.1:5177/uploads/")) {
-    trimmed = trimmed.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5177/, "");
+    // trimmed = trimmed.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5177/, "");
   }
   return trimmed;
 };
@@ -117,7 +117,7 @@ const pickFaviconUrl = (brandConfig: any) => {
     brandConfig?.business?.brand?.businessDna?.faviconUrl ||
     "/assets/Image/favicon.svg";
   if (typeof raw === "string" && (raw.includes("localhost:5177/uploads/") || raw.includes("127.0.0.1:5177/uploads/"))) {
-    return raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5177/, "");
+    return raw; // FIXED
   }
   return raw;
 };
