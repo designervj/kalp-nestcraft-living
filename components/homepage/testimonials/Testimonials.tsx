@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import { getContentItems } from "@/lib/cmsUtils";
 
 import { defaultTestimonials, defaultTestimonialProps } from "./testimonialsData";
 
@@ -35,10 +36,10 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
   const section = getCurrentSection || propSection;
 
   const rawProps = (section as any)?.props;
-  const rawItems = (section as any)?.content;
+  const rawItems = getContentItems((section as any)?.content);
 
   const p = rawProps || defaultTestimonialProps;
-  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultTestimonials;
+  const items = rawItems.length > 0 ? rawItems : defaultTestimonials;
 
   const getV = (field: any) => {
     if (!field) return "";

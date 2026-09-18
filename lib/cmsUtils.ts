@@ -36,3 +36,9 @@ export const getV = (field: any, lang: string) => {
   if (val && typeof val === "object") return val[lang] || val.en || "";
   return val || "";
 };
+
+export const getContentItems = (content: any) => {
+  if (Array.isArray(content)) return content;
+  if (Array.isArray(content?.items)) return content.items;
+  return [];
+};

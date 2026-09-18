@@ -10,6 +10,7 @@ import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
 import { resolveCategoryImage } from "@/lib/commerce/product-normalization";
 import { defaultShopByRoomData } from "./shopByRoomData";
+import { getContentItems } from "@/lib/cmsUtils";
 
 interface ShopByRoomProps {
   section?: any;
@@ -50,8 +51,8 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
       !["archived", "inactive"].includes(String(category.pageStatus || "").toLowerCase()),
   );
   
-  const rawContent = (section as any)?.content || [];
-  let computedItems = Array.isArray(rawContent) && rawContent.length > 0 ? rawContent : (
+  const rawContent = getContentItems((section as any)?.content);
+  let computedItems = rawContent.length > 0 ? rawContent : (
     configuredSlugs.length
       ? configuredSlugs
           .map((slug: string) => productCategories.find((category) => category.slug === slug))
@@ -91,6 +92,9 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
         </div>
         <Link
           href={buttonLink}
+          onClick={(event) => {
+            if (isEditable) event.preventDefault();
+          }}
           className="bg-primary text-white px-8 h-11 rounded-full text-[14px] font-semibold uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center md:flex hidden "
         >
           <EditableText value={buttonLabel} isEditable={isEditable} onSave={handle('props.buttonLabel.en')} tag="span" />
@@ -122,6 +126,9 @@ const ShopByRoom = ({ section: propSection }: ShopByRoomProps) => {
             <Link
               key={id}
               href={`/category/${item.slug || id}`}
+              onClick={(event) => {
+                if (isEditable) event.preventDefault();
+              }}
               className="bg-surface border border-border rounded-lg overflow-hidden cursor-pointer shadow-lg hover:-translate-y-2 hover:shadow-2xl hover:border-secondary/55 transition-all duration-180 group block"
             >
               <motion.div

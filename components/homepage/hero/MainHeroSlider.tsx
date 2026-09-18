@@ -139,7 +139,7 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
         highlight: highlight,
         titleEnd: titleEnd,
         description: getV(p.description),
-        image: getV(p.image) || p.image?.value || p.image || "",
+        image: getLocalizedHeroValue(p.image, lang) || p.image?.value || p.image || "",
         product: getV(p.product),
         price: getV(p.price),
       };

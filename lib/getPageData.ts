@@ -60,19 +60,17 @@ function serialize(obj: any): any {
   );
 }
 
-export const getPageData = cache(async (slug: string) => {
+export const getPageData = async (slug: string) => {
   try {
-    const SITE_URL = process.env.SITE_URL || "http://127.0.0.1:3000";
     try {
-      const res = await fetch(`${SITE_URL}/api/pages?slug=${slug}`, { cache: "no-store" });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.content) {
-          return serialize(data);
-        }
+      const { getPageModel } = await import("@/models");
+      const PageModel = await getPageModel();
+      const data = await PageModel.findOne({ slug });
+      if (data?.content) {
+        return serialize(data);
       }
     } catch (e) {
-      console.warn("Local API fetch failed, falling back to public site fetch", e);
+      console.warn("Tenant site_pages fetch failed, falling back to public site fetch", e);
     }
     
     return serialize(normalizePublicPage(await fetchPublicSitePage(slug)));
@@ -80,7 +78,7 @@ export const getPageData = cache(async (slug: string) => {
     console.error(`Error in getPageData for slug: ${slug}`, error);
     return null;
   }
-});
+};
 
 export const getSingleProduct = cache(async (id: string) => {
   const SITE_URL = process.env.SITE_URL || "http://127.0.0.1:3000";

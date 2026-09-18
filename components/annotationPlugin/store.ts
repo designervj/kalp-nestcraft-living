@@ -28,6 +28,7 @@ interface AnnotatorStore {
   activeAnnotationId: string | null;
   settings: AnnotatorSettings;
   toggleCommentMode: () => void;
+  setCommentMode: (active: boolean) => void;
   addAnnotation: (annotation: Annotation | Omit<Annotation, 'id' | 'createdAt'>) => void;
   removeAnnotation: (id: string) => void;
   updateAnnotationStatus: (id: string, status: CommentStatus) => void;
@@ -53,6 +54,11 @@ export const useAnnotatorStore = create<AnnotatorStore>()((set) => ({
     isCommentModeActive: !state.isCommentModeActive,
     activeAnnotationId: null
   })),
+
+  setCommentMode: (active) => set({
+    isCommentModeActive: active,
+    activeAnnotationId: null,
+  }),
 
   addAnnotation: (annotation) => set((state) => ({
     annotations: [

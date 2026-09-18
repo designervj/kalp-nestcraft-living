@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import { getContentItems } from "@/lib/cmsUtils";
 
 interface CraftProps {
   section?: any;
@@ -31,8 +32,7 @@ const Craft = ({ section: propSection }: CraftProps) => {
   }, [currentPages, propSection?.id]);
 
   const section = getCurrentSection || propSection;
-  const rawContent = (section as any)?.content || [];
-  const content = Array.isArray(rawContent) ? rawContent : [];
+  const content = getContentItems((section as any)?.content);
 
   const p = (section as any)?.props || {};
 
@@ -74,6 +74,9 @@ const Craft = ({ section: propSection }: CraftProps) => {
         </div>
         <Link
           href={buttonLink}
+          onClick={(event) => {
+            if (isEditable) event.preventDefault();
+          }}
           className="px-[18px] h-11 rounded-full bg-secondary/18 text-dark border border-secondary/35 text-[14px] font-semibold uppercase tracking-wider hover:bg-secondary/26 hover:border-secondary/55 transition-all flex items-center md:flex hidden"
         >
           <EditableText value={buttonLabel} isEditable={isEditable} onSave={handle('props.buttonLabel.en')} tag="span" />
@@ -137,6 +140,9 @@ const Craft = ({ section: propSection }: CraftProps) => {
                     <Link
                       key={i}
                       href={btn.link || "#"}
+                      onClick={(event) => {
+                        if (isEditable) event.preventDefault();
+                      }}
                       className={`px-[28px] h-14 rounded-full text-[14px] font-bold uppercase tracking-[1.5px] transition-all flex items-center shadow-sm hover:shadow-md hover:-translate-y-1 ${
                         i === 0
                         ? "bg-primary text-white hover:opacity-90"

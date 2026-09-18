@@ -13,6 +13,7 @@ import {
   resolveProductImage,
 } from "@/lib/commerce/product-normalization";
 import { defaultProductSliderData } from "./productSliderData";
+import { getContentItems } from "@/lib/cmsUtils";
 
 interface ProductSliderProps {
   section?: any;
@@ -43,6 +44,7 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
   const section = getCurrentSection || propSection;
 
   const p = (section as any)?.props || {};
+  const authoredProducts = getContentItems((section as any)?.content);
   const configuredSlugs = Array.isArray(p.productSlugs?.value)
     ? p.productSlugs.value
     : Array.isArray(p.productSlugs)
@@ -110,6 +112,9 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
         </div>
         <Link
           href={viewAllLink}
+          onClick={(event) => {
+            if (isEditable) event.preventDefault();
+          }}
           className="px-6 h-11 rounded-full border border-secondary/45 text-foreground text-[14px] font-semibold uppercase tracking-wider hover:bg-secondary/15 transition-all flex items-center md:flex hidden"
         >
           <EditableText value={viewAllLabel} isEditable={isEditable} onSave={handle('props.viewAllLabel.en')} tag="span" />
@@ -122,7 +127,7 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
           onScroll={handleScroll}
           className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1"
         >
-          {(featuredProducts.length > 0 ? featuredProducts : defaultProductSliderData.content).map((prod: any, idx: number) => {
+          {(authoredProducts.length > 0 ? authoredProducts : featuredProducts.length > 0 ? featuredProducts : defaultProductSliderData.content).map((prod: any, idx: number) => {
           const isFallback = !!prod.props;
           const sp = prod.props || {};
           const title = isFallback ? (getV(sp.title) || "") : (prod.name || prod.title || "");
@@ -136,7 +141,13 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
                 key={id || idx}
                 className="min-w-[calc(100%-24px)] md:min-w-[calc((100%-48px)/3)] snap-start group"
               >
-                <Link href={isFallback ? "/shop" : `/product/${id}`} className="block">
+                <Link
+                  href={isFallback ? "/shop" : `/product/${id}`}
+                  onClick={(event) => {
+                    if (isEditable) event.preventDefault();
+                  }}
+                  className="block"
+                >
                   <div className="relative h-[380px] mb-4 overflow-hidden rounded-lg border border-border bg-muted/10">
                     <img
                       src={img}
