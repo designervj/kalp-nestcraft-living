@@ -8,6 +8,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { defaultServices, defaultServiceProps } from "./serviceData";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import { getContentItems } from "@/lib/cmsUtils";
 
 interface ServiceProps {
   section?: any;
@@ -33,10 +34,10 @@ const Services = ({ section: propSection }: ServiceProps) => {
   const section = getCurrentSection || propSection;
 
   const rawProps = (section as any)?.props;
-  const rawCards = (section as any)?.content;
+  const rawCards = getContentItems((section as any)?.content);
 
   const p = rawProps || defaultServiceProps;
-  const cards = Array.isArray(rawCards) && rawCards.length > 0 ? rawCards : defaultServices;
+  const cards = rawCards.length > 0 ? rawCards : defaultServices;
 
   const getV = (field: any) => {
     if (!field) return "";
@@ -79,6 +80,9 @@ const Services = ({ section: propSection }: ServiceProps) => {
         </motion.div>
         <Link
           href={viewAllLink}
+          onClick={(event) => {
+            if (isEditable) event.preventDefault();
+          }}
           className="md:px-6 px-2 h-11 rounded-full border border-secondary/45 text-foreground md:text-[14px] text-[12px] font-semibold uppercase tracking-wider hover:bg-secondary/15 transition-all flex items-center md:flex hidden"
         >
           <EditableText value={viewAllLabel} isEditable={isEditable} onSave={handle('props.viewAllLabel.en')} tag="span" />

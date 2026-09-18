@@ -8,6 +8,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
 import { defaultBlogPosts } from "./blogData";
+import { getContentItems } from "@/lib/cmsUtils";
 
 interface BlogProps {
   section?: any;
@@ -47,8 +48,8 @@ const Blog = ({ section: propSection }: BlogProps) => {
   const viewAllLabel = getV(p.viewAllLabel);
   const viewAllLink = p.viewAllLink?.value || p.viewAllLink || "/blog";
 
-  const rawItems = (section as any)?.content;
-  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultBlogPosts;
+  const rawItems = getContentItems((section as any)?.content);
+  const items = rawItems.length > 0 ? rawItems : defaultBlogPosts;
 
   const handle = (fieldPath: string) => (value: string) =>
     saveField(dispatch, currentPages, section?.id, fieldPath, value);
@@ -83,6 +84,9 @@ const Blog = ({ section: propSection }: BlogProps) => {
         <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         <Link
           href={viewAllLink}
+          onClick={(event) => {
+            if (isEditable) event.preventDefault();
+          }}
           className="bg-primary text-white px-8 h-11 rounded-full text-[14px] font-semibold uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center md:flex hidden"
         >
           <EditableText value={viewAllLabel} isEditable={isEditable} onSave={handle('props.viewAllLabel.en')} tag="span" />
@@ -107,7 +111,13 @@ const Blog = ({ section: propSection }: BlogProps) => {
                 key={idx}
                 className="min-w-[calc(100%-24px)] md:min-w-[calc((100%-48px)/3)] snap-start group"
               >
-                <Link href={link} className="block">
+                <Link
+                  href={link}
+                  onClick={(event) => {
+                    if (isEditable) event.preventDefault();
+                  }}
+                  className="block"
+                >
                   <div className="relative h-[480px] mb-6 overflow-hidden rounded-lg border border-border bg-muted/10">
                     <img
                       src={image}

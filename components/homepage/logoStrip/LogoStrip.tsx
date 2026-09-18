@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useAppSelector } from '@/lib/store/hooks';
 import { motion } from 'motion/react';
 import EditableText from '@/components/shared/EditableText';
+import { getContentItems } from '@/lib/cmsUtils';
 
 interface Props {
   section?: any;
@@ -18,7 +19,7 @@ export default function LogoStrip({ section: propSection }: Props) {
 
   if (!section) return null;
 
-  const content = section.content;
+  const content = getContentItems(section.content);
 
   return (
     <div className="overflow-hidden py-10 relative z-10">

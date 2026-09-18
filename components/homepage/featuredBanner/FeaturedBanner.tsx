@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import { getContentItems } from "@/lib/cmsUtils";
 
 interface FeaturedBannerProps {
   section?: any;
@@ -31,8 +32,7 @@ const FeaturedBanner = ({ section: propSection }: FeaturedBannerProps) => {
   const section = getCurrentSection || propSection;
 
   const p = (section as any)?.props || {};
-  const rawContent = (section as any)?.content || [];
-  const content = Array.isArray(rawContent) ? rawContent : [];
+  const content = getContentItems((section as any)?.content);
 
   const getV = (field: any) => {
     if (!field) return "";
@@ -84,6 +84,9 @@ const FeaturedBanner = ({ section: propSection }: FeaturedBannerProps) => {
         {buttonLabel && (
           <Link
             href={buttonLink}
+            onClick={(event) => {
+              if (isEditable) event.preventDefault();
+            }}
             className="mt-5 px-6 h-11 inline-flex items-center rounded-full border border-white/70 text-white text-[14px] font-semibold uppercase tracking-wider hover:bg-white/10 transition-all"
           >
             <EditableText value={buttonLabel} isEditable={isEditable} onSave={handle('props.buttonLabel.en')} tag="span" />

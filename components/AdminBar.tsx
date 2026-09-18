@@ -36,10 +36,22 @@ export default function AdminBar() {
     isAuthenticated && user !== null && OPERATOR_ROLES.has(operatorRole);
 
   // ✅ Real comment mode state from AnnotatorStore
-  const { isCommentModeActive, toggleCommentMode, annotations } = useAnnotatorStore();
+  const { isCommentModeActive, setCommentMode, annotations } = useAnnotatorStore();
 
   const [isVisible, setIsVisible] = useState(true);
   const commentCount = annotations.length;
+
+  const handleCommentToggle = () => {
+    const nextCommentMode = !isCommentModeActive;
+    setCommentMode(nextCommentMode);
+    if (nextCommentMode) dispatch(setEditMode(false));
+  };
+
+  const handleEditToggle = () => {
+    const nextEditMode = !isEditable;
+    dispatch(setEditMode(nextEditMode));
+    if (nextEditMode) setCommentMode(false);
+  };
 
   if (!isAdmin) return null;
 
@@ -90,7 +102,7 @@ export default function AdminBar() {
 
           {/* Comments toggle */}
           <button
-            onClick={() => toggleCommentMode()}
+            onClick={handleCommentToggle}
             style={
               isCommentModeActive
                 ? { borderColor: "#98c45f", color: "#98c45f", backgroundColor: "rgba(152,196,95,0.1)" }
@@ -105,7 +117,7 @@ export default function AdminBar() {
 
           {/* ✅ Edit Mode — connected to real Redux state (same as the floating EditModeToggle) */}
           <button
-            onClick={() => dispatch(setEditMode(!isEditable))}
+            onClick={handleEditToggle}
             style={
               isEditable
                 ? { backgroundColor: "#98c45f", borderColor: "#98c45f", color: "#063A1D", boxShadow: "0 0 12px rgba(152,196,95,0.45)" }

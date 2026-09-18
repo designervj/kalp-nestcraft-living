@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import { getContentItems } from "@/lib/cmsUtils";
 
 import { defaultFAQs } from "./faqData";
 
@@ -49,8 +50,8 @@ const FAQ = ({ section: propSection }: FAQProps) => {
   const viewAllLabel = getV(p.viewAllLabel);
   const viewAllLink = p.viewAllLink?.value || p.viewAllLink || "/faq";
 
-  const rawItems = (section as any)?.content;
-  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultFAQs;
+  const rawItems = getContentItems((section as any)?.content);
+  const items = rawItems.length > 0 ? rawItems : defaultFAQs;
 
   const handle = (fieldPath: string) => (value: string) =>
     saveField(dispatch, currentPages, section?.id, fieldPath, value);
@@ -65,6 +66,9 @@ const FAQ = ({ section: propSection }: FAQProps) => {
         {subheading && <p className="text-muted max-w-2xl mb-6"><EditableText value={subheading} isEditable={isEditable} onSave={handle('props.subheading.en')} tag="span" /></p>}
         <Link
           href={viewAllLink}
+          onClick={(event) => {
+            if (isEditable) event.preventDefault();
+          }}
           className="text-secondary font-black tracking-[2px] uppercase text-xs border-b border-secondary pb-1"
         >
           <EditableText value={viewAllLabel} isEditable={isEditable} onSave={handle('props.viewAllLabel.en')} tag="span" />

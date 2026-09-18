@@ -69,9 +69,12 @@ export async function PUT(
       );
     }
 
+    const page = await PageModel.findOne(pageFilter(id) as any);
+
     return NextResponse.json({
       success: true,
       message: "Page updated successfully",
+      page,
     });
   } catch (error) {
     console.error("Error updating page:", error);

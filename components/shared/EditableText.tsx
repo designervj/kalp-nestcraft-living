@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { saveField } from '@/lib/editorUtils';
-import { Check, X } from 'lucide-react';
 
 interface Props {
   value: string;
@@ -42,8 +41,8 @@ export default function EditableText({
   const [displayValue, setDisplayValue] = useState(value);
   const [isSaving, setIsSaving] = useState(false);
   const [hasLocalValue, setHasLocalValue] = useState(false);
-  const editorRef = useRef<HTMLElement>(null);
-  const wrapperRef = useRef<HTMLSpanElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const savingRef = useRef(false);
 
   useEffect(() => {
     if (hasLocalValue && value === displayValue) {
@@ -54,11 +53,16 @@ export default function EditableText({
       if (hasLocalValue && value !== displayValue) return;
       setDisplayValue(value);
       setEditValue(value);
-      if (editorRef.current && editorRef.current.textContent !== value) {
-        editorRef.current.textContent = value || placeholder;
-      }
     }
   }, [displayValue, editing, hasLocalValue, placeholder, value]);
+
+  useEffect(() => {
+    if (!editing) return;
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    });
+  }, [editing]);
 
   const startEditing = (event?: React.MouseEvent<HTMLElement>) => {
     if (!isEditable) return;
@@ -70,31 +74,16 @@ export default function EditableText({
 
     setEditing(true);
     setEditValue(displayValue);
-
-    requestAnimationFrame(() => {
-      const el = editorRef.current;
-      if (!el) return;
-      el.focus();
-
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      const selection = window.getSelection();
-      selection?.removeAllRanges();
-      selection?.addRange(range);
-    });
   };
 
   const cancelEditing = () => {
     setEditValue(displayValue);
     setEditing(false);
-    if (editorRef.current) {
-      editorRef.current.textContent = displayValue || placeholder;
-    }
   };
 
   const handleSave = async () => {
-    if (isSaving) return;
-    const latestValue = editorRef.current?.textContent ?? editValue;
+    if (savingRef.current) return;
+    const latestValue = inputRef.current?.value ?? editValue;
     const trimmed = latestValue.trim();
     if (!trimmed || trimmed === displayValue) {
       setEditValue(displayValue);
@@ -102,30 +91,31 @@ export default function EditableText({
       return;
     }
     const previousValue = displayValue;
+    savingRef.current = true;
     setIsSaving(true);
     setDisplayValue(trimmed);
     setHasLocalValue(true);
-    if (onSaveProp) {
-      const saved = await Promise.resolve(onSaveProp(trimmed));
-      if (saved === false) {
-        setIsSaving(false);
-        setHasLocalValue(false);
-        setDisplayValue(previousValue);
-        setEditValue(previousValue);
-        setEditing(true);
-        return;
+    let saved: void | boolean = true;
+    try {
+      if (onSaveProp) {
+        saved = await Promise.resolve(onSaveProp(trimmed));
+      } else if (pages && sectionId && fieldPath) {
+        saved = await saveField(dispatch, pages, sectionId, fieldPath, trimmed);
       }
-    } else if (pages && sectionId && fieldPath) {
-      const saved = await saveField(dispatch, pages, sectionId, fieldPath, trimmed);
-      if (!saved) {
-        setIsSaving(false);
-        setHasLocalValue(false);
-        setDisplayValue(previousValue);
-        setEditValue(previousValue);
-        setEditing(true);
-        return;
-      }
+    } catch {
+      saved = false;
     }
+
+    if (saved === false) {
+      savingRef.current = false;
+      setIsSaving(false);
+      setHasLocalValue(false);
+      setDisplayValue(previousValue);
+      setEditValue(previousValue);
+      setEditing(true);
+      return;
+    }
+    savingRef.current = false;
     setIsSaving(false);
     setEditing(false);
   };
@@ -141,69 +131,43 @@ export default function EditableText({
     }
   };
 
-  const handleInput = (event: React.FormEvent<HTMLElement>) => {
-    setEditValue(event.currentTarget.textContent || '');
-  };
-
-  const handlePaste = (event: React.ClipboardEvent<HTMLElement>) => {
-    event.preventDefault();
-    document.execCommand('insertText', false, event.clipboardData.getData('text/plain'));
-  };
-
   const sharedClassName = `${className} ${isEditable ? 'editable-text' : ''} ${editing ? 'editable-text-active' : ''}`;
+
+  if (editing) {
+    return (
+      <Tag className={sharedClassName} style={passedStyle}>
+        <input
+          ref={inputRef}
+          className="editable-inline-input"
+          value={editValue}
+          placeholder={placeholder}
+          disabled={isSaving}
+          aria-label="Edit text"
+          onChange={(event) => setEditValue(event.currentTarget.value)}
+          onBlur={() => void handleSave()}
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={handleKeyDown as any}
+          style={{
+            width: `${Math.max(editValue.length, displayValue.length, placeholder.length, 2) + 1}ch`,
+          }}
+        />
+      </Tag>
+    );
+  }
 
   const editor = (
     <Tag
-      ref={editorRef as any}
       className={sharedClassName}
-      contentEditable={editing}
-      suppressContentEditableWarning
       role={isEditable ? 'textbox' : undefined}
       tabIndex={isEditable ? 0 : undefined}
       onClick={startEditing}
       onDoubleClick={startEditing}
-      onInput={handleInput}
-      onBlur={(event) => {
-        if (!editing) return;
-        const nextFocus = event.relatedTarget as Node | null;
-        if (nextFocus && wrapperRef.current?.contains(nextFocus)) return;
-        void handleSave();
-      }}
       onKeyDown={handleKeyDown}
-      onPaste={handlePaste}
       style={passedStyle}
     >
       {displayValue || placeholder}
     </Tag>
   );
 
-  if (!editing) return editor;
-
-  return (
-    <span ref={wrapperRef} className="editable-control-wrap" onClick={(event) => event.stopPropagation()}>
-      {editor}
-      <span className="editable-controls">
-        <button
-          type="button"
-          className="editable-control-button editable-control-save"
-          disabled={isSaving}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => void handleSave()}
-        >
-          <Check size={14} />
-          {isSaving ? 'Saving' : 'Save'}
-        </button>
-        <button
-          type="button"
-          className="editable-control-button editable-control-cancel"
-          disabled={isSaving}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={cancelEditing}
-        >
-          <X size={14} />
-          Cancel
-        </button>
-      </span>
-    </span>
-  );
+  return editor;
 }

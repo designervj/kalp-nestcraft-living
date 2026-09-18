@@ -39,6 +39,10 @@ const pagesSlice = createSlice({
     },
     setCurrentPages: (state, action: PayloadAction<Page | null>) => {
       state.currentPages = action.payload;
+      if (action.payload?._id) {
+        const index = state.allPages.findIndex((page) => page._id === action.payload?._id);
+        if (index !== -1) state.allPages[index] = action.payload;
+      }
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;

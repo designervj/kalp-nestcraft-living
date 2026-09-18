@@ -502,11 +502,16 @@ const Header = ({
               className="fixed left-0 top-0 z-[50001] h-full w-[min(85vw,400px)] overflow-y-auto bg-background px-8 py-8 shadow-2xl"
             >
               <div className="mb-6 flex items-center justify-between border-b pb-4">
-                <img
-                  src={normalizeLogoUrl(logoUrl) || defaultLogo}
-                  alt={companyName || "NestCraft"}
-                  className="h-10 w-auto"
-                />
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">
+                  <img
+                    src={currentLogoSrc}
+                    alt={companyName || "NestCraft"}
+                    className="h-10 w-auto object-contain"
+                    onError={(event) => {
+                      event.currentTarget.src = defaultLogo;
+                    }}
+                  />
+                </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="p-2 text-muted"
@@ -624,6 +629,15 @@ const Header = ({
                     </div>
                   );
                 })}
+                <div className="border-b border-border pb-3">
+                  <Link
+                    href="/contact"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-[16px] font-sans font-medium text-foreground transition-colors hover:text-secondary"
+                  >
+                    Contact
+                  </Link>
+                </div>
               </div>
             </motion.div>
 

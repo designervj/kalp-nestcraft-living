@@ -19,6 +19,7 @@ import Link from "next/link";
 // Client-only initializers
 import GetAllPages from "./GetAllPages";
 import GetAllMenus from "../cms/menus/GetAllMenus";
+import PageDataInitializer from "./PageDataInitializer";
 
 interface HomePageServerProps {
   data: {
@@ -49,6 +50,7 @@ const HomePageServer = ({ data, lang }: HomePageServerProps) => {
   return (
     <>
       {/* Client-side logic components */}
+      <PageDataInitializer initialData={data as never} />
       <GetAllPages />
       <GetAllMenus />
 

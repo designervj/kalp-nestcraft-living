@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
+import { getContentItems } from "@/lib/cmsUtils";
 
 interface CollectionsProps {
   section?: any;
@@ -35,10 +36,10 @@ const Collections = ({ section: propSection }: CollectionsProps) => {
   const section = getCurrentSection || propSection;
 
   const rawProps = (section as any)?.props;
-  const rawItems = (section as any)?.content;
+  const rawItems = getContentItems((section as any)?.content);
   
   const p = rawProps || defaultCollectionProps;
-  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultCollections;
+  const items = rawItems.length > 0 ? rawItems : defaultCollections;
 
   const getV = (field: any) => {
     if (!field) return "";
@@ -63,6 +64,9 @@ const Collections = ({ section: propSection }: CollectionsProps) => {
         <EditableText value={heading} isEditable={isEditable} onSave={handle('props.heading.en')}  tag="h2" className="md:text-[38px] text-[28px] font-bold leading-tight tracking-tight" />
         <Link
           href={viewAllLink}
+          onClick={(event) => {
+            if (isEditable) event.preventDefault();
+          }}
           className="px-[26px] py-[10px] rounded-full border border-border text-[12px] font-black tracking-[2px] uppercase hover:border-secondary hover:text-secondary transition-colors"
         >
           <EditableText value={viewAllLabel} isEditable={isEditable} onSave={handle('props.viewAllLabel.en')} tag="span" />
@@ -94,6 +98,9 @@ const Collections = ({ section: propSection }: CollectionsProps) => {
             <Link
               key={idx}
               href={link}
+              onClick={(event) => {
+                if (isEditable) event.preventDefault();
+              }}
               className="relative h-[450px] overflow-hidden rounded-md border border-border group cursor-pointer block"
             >
               <motion.div
