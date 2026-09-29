@@ -23,10 +23,30 @@ export const loginThunk = createAsyncThunk(
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.detail || data.message || "Authentication failed");
+        // Attempt tenant admin / enterprise login
+        try {
+          const adminResponse = await fetch(`/api/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-tenant-db": tenantHeader || "kp_nestcraft",
+              "x-tenant-slug": tenantSlug,
+            },
+            credentials: "include",
+            body: JSON.stringify(payload),
+          });
+          if (adminResponse.ok) {
+            response = adminResponse;
+            data = await adminResponse.json();
+          } else {
+            return rejectWithValue(data.detail || data.message || "Authentication failed");
+          }
+        } catch {
+          return rejectWithValue(data.detail || data.message || "Authentication failed");
+        }
       }
 
       const dbName =

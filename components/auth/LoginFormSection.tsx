@@ -6,6 +6,7 @@ import { loginThunk } from '@/lib/store/auth/authThunks';
 import { setError } from '@/lib/store/auth/authSlice';
 import { Eye, EyeOff, LogIn, AlertCircle, Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { generateCodeChallenge, generateCodeVerifier } from '@/lib/pkce';
 import { toast } from 'sonner';
 
 export default function LoginFormSection() {
@@ -14,7 +15,7 @@ export default function LoginFormSection() {
   const { isAuthenticated, isLoading, error } = useAppSelector((s) => s.auth);
 
   const [email, setEmail] = useState('admin@nestcraft.com');
-  const [password, setPassword] = useState('1234567899');
+  const [password, setPassword] = useState('nestcraftliving@!');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -25,11 +26,6 @@ export default function LoginFormSection() {
     return () => { dispatch(setError(null)); };
   }, [dispatch]);
 
-  // const handleSubmit = (e: FormEvent) => {
-  //   e.preventDefault();
-  //   if (!email.trim() || !password.trim()) return;
-  //   dispatch(loginThunk({ email: email.trim(), password }));
-  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -38,6 +34,40 @@ export default function LoginFormSection() {
     try {
       const response = await dispatch(loginThunk({ email, password })).unwrap();
       if (response.user) {
+        const role = response.user.role || '';
+        if (role === 'tenant_admin' || role === 'tenant_owner' || role === 'super_admin' || role === 'platform_admin') {
+          try {
+            const codeVerifier = generateCodeVerifier();
+            const codeChallenge = await generateCodeChallenge(codeVerifier);
+            const adminBaseUrl = process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:5177';
+            const redirectUri = `${adminBaseUrl}/auth/callback`;
+
+            const res = await fetch('/api/auth/sso/create', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-tenant-db': process.env.NEXT_PUBLIC_TENANT_ID || 'kp_nestcraft',
+                'x-tenant-slug': process.env.NEXT_PUBLIC_TENANT_SLUG || 'nestcraft',
+              },
+              body: JSON.stringify({
+                codeChallenge,
+                codeVerifier,
+                redirectUri,
+              }),
+              credentials: 'include',
+            });
+
+            const ssoRes = await res.json();
+            if (ssoRes.success && ssoRes.code) {
+              toast.success('Welcome back! Redirecting to Kalp Admin...');
+              window.location.href = `${redirectUri}?code=${encodeURIComponent(ssoRes.code)}`;
+              return;
+            }
+          } catch (ssoErr) {
+            console.error('SSO handshake error:', ssoErr);
+          }
+        }
+
         toast.success("Welcome back!");
         router.push("/");
       }

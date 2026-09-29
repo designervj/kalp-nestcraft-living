@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 
+import { generateCodeChallenge, generateCodeVerifier } from "@/lib/pkce";
+
 export default function LoginPageClient() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +30,40 @@ export default function LoginPageClient() {
     try {
       const response = await dispatch(loginThunk({ email, password })).unwrap();
       if (response.user) {
+        const role = response.user.role || '';
+        if (role === 'tenant_admin' || role === 'tenant_owner' || role === 'super_admin' || role === 'platform_admin') {
+          try {
+            const codeVerifier = generateCodeVerifier();
+            const codeChallenge = await generateCodeChallenge(codeVerifier);
+            const adminBaseUrl = process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:5177';
+            const redirectUri = `${adminBaseUrl}/auth/callback`;
+
+            const res = await fetch('/api/auth/sso/create', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-tenant-db': process.env.NEXT_PUBLIC_TENANT_ID || 'kp_nestcraft',
+                'x-tenant-slug': process.env.NEXT_PUBLIC_TENANT_SLUG || 'nestcraft',
+              },
+              body: JSON.stringify({
+                codeChallenge,
+                codeVerifier,
+                redirectUri,
+              }),
+              credentials: 'include',
+            });
+
+            const ssoRes = await res.json();
+            if (ssoRes.success && ssoRes.code) {
+              toast.success('Welcome back! Redirecting to Kalp Admin...');
+              window.location.href = `${redirectUri}?code=${encodeURIComponent(ssoRes.code)}`;
+              return;
+            }
+          } catch (ssoErr) {
+            console.error('SSO handshake error:', ssoErr);
+          }
+        }
+
         toast.success("Welcome back!");
         router.push(redirectUrl);
       }

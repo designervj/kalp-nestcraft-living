@@ -12,11 +12,20 @@ export default function LayoutWrapper({
 }) {
   const pathname = usePathname();
 
-  // If we are in the admin panel or on auth pages, do not render the storefront header and footer
+  // If we are in the admin panel, auth pages, or kalp-admin/kalp-admi SSO routes, do not render the storefront header and footer
   const segments = pathname?.split("/") || [];
-  const isExcluded = segments.some(
-    (s) => s === "admin" || s === "login" || s === "signup" || s === "kalpauth",
-  );
+  const isExcluded =
+    segments.some(
+      (s) =>
+        s === "admin" ||
+        s === "login" ||
+        s === "signup" ||
+        s === "kalpauth" ||
+        s === "kalp-admin" ||
+        s === "kalp-admi",
+    ) ||
+    Boolean(pathname?.includes("kalp-admin")) ||
+    Boolean(pathname?.includes("kalp-admi"));
 
   if (isExcluded) {
     return <>{children}</>;
