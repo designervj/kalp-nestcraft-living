@@ -38,11 +38,18 @@ export default function TenantAdminLoginSection() {
     setLoading(true);
 
     try {
-      // Step 1: Authenticate with Kalp Business API via Next.js proxy
-      const loginRes = await fetch('/api/auth/login', {
+      // Step 1: Authenticate with Kalp Business API directly
+      const rawApiBase = (
+        process.env.NEXT_PUBLIC_API_BASE_URL || 'https://bizlive.kalptree.xyz'
+      ).replace(/\/+$/, '');
+      const authApiUrl = rawApiBase.endsWith('/api')
+        ? `${rawApiBase}/auth`
+        : `${rawApiBase}/api/auth`;
+      const loginRes = await fetch(`${authApiUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          accept: 'application/json',
           'x-tenant-db': tenantId,
           'x-tenant-slug': tenantSlug,
         },
@@ -50,6 +57,8 @@ export default function TenantAdminLoginSection() {
           email: email.trim(),
           password,
           tenant_slug: tenantSlug,
+          keepSignedIn: false,
+          keep_signed_in: false,
         }),
       });
 
@@ -65,11 +74,15 @@ export default function TenantAdminLoginSection() {
 
       const token = loginData.access_token;
 
-      // Set local cookies so session is available
+      // Set local cookies and tokens so session is available
       const maxAge = 60 * 60 * 24 * 30;
       document.cookie = `auth_token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
       document.cookie = `${tenantId}_auth_token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
       document.cookie = `auth_token_${tenantId}=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
+      document.cookie = `admin_token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
+      try {
+        localStorage.setItem('auth_token', token);
+      } catch {}
 
       // Step 2: Generate PKCE Verifier and Challenge for admin console handoff
       const codeVerifier = generateCodeVerifier();

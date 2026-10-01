@@ -103,7 +103,7 @@ const CategoryPage = () => {
   const { allCategories, categoryLoading } = useSelector(
     (state: RootState) => state.adminCategories,
   );
-
+  console.log("allcategories lenght", allCategories?.length);
   const {
     allProducts,
     loading,
@@ -183,7 +183,7 @@ const CategoryPage = () => {
     });
 
     if (levelCats.length === 0) return null;
-
+      // console.log("levelCats--",levelCats)
     // Outer level categories
     if (depth === 0) {
       return (

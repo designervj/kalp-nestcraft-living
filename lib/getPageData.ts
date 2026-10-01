@@ -62,17 +62,60 @@ function serialize(obj: any): any {
 
 export const getPageData = async (slug: string) => {
   try {
+    const tenantDb = process.env.NEXT_PUBLIC_TENANT_ID || process.env.DB_NAME || "kp_nestcraft";
+    const tenantSlug = process.env.NEXT_PUBLIC_TENANT_SLUG || "nestcraft";
+    const apiBase = (
+      process.env.FASTAPI_URL ||
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      "https://bizlive.kalptree.xyz"
+    ).replace(/\/$/, "");
+
+    // 1. First attempt: CMS Pages API (with no-store cache)
+    try {
+      const response = await fetch(`${apiBase}/api/cms/pages?slug=${encodeURIComponent(slug)}`, {
+        method: "GET",
+        headers: {
+          accept: "*/*",
+          "x-tenant-db": tenantDb,
+          "x-tenant-slug": tenantSlug,
+        },
+        cache: "no-store",
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const pageData = result?.data || result;
+        if (pageData && (pageData.content || pageData.id || pageData._id)) {
+          return serialize({
+            ...pageData,
+            _id: pageData._id || pageData.id,
+            id: pageData.id || pageData._id,
+          });
+        }
+      } else {
+        console.warn(`CMS API fetch returned status ${response.status} for slug: ${slug}`);
+      }
+    } catch (apiErr) {
+      console.warn(`CMS API fetch failed for slug: ${slug}`, apiErr);
+    }
+
+    // 2. Fallback: MongoDB direct lookup
     try {
       const { getPageModel } = await import("@/models");
       const PageModel = await getPageModel();
       const data = await PageModel.findOne({ slug });
       if (data?.content) {
-        return serialize(data);
+        return serialize({
+          ...data,
+          _id: data._id ? String(data._id) : data.id,
+          id: data.id || (data._id ? String(data._id) : undefined),
+        });
       }
     } catch (e) {
       console.warn("Tenant site_pages fetch failed, falling back to public site fetch", e);
     }
-    
+
+    // 3. Fallback: Public site contract
     return serialize(normalizePublicPage(await fetchPublicSitePage(slug)));
   } catch (error) {
     console.error(`Error in getPageData for slug: ${slug}`, error);

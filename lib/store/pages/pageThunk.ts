@@ -6,13 +6,13 @@ export const fetchPagesThunk = createAsyncThunk(
   "pages/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/pages`, { credentials: "include" });
+      const response = await fetch(`/api/cms/pages`, { credentials: "include" });
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to fetch pages");
       }
       const data = await response.json();
-      return Array.isArray(data) ? data : data.pages;
+      return Array.isArray(data) ? data : (data?.data || data?.pages || []);
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -47,14 +47,27 @@ export const fetchPageBySlugThunk = createAsyncThunk(
   "pages/fetchBySlug",
   async (slug: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/pages?slug=${encodeURIComponent(slug)}`, {
+      const cacheBuster = `_t=${Date.now()}`;
+      const response = await fetch(`/api/cms/pages?slug=${encodeURIComponent(slug)}&${cacheBuster}`, {
         credentials: "include",
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          accept: "*/*",
+        },
       });
       if (!response.ok) {
-        const errorData = await response.json();
+        const fallback = await fetch(`/api/pages?slug=${encodeURIComponent(slug)}&${cacheBuster}`, {
+          credentials: "include",
+          cache: "no-store",
+        });
+        if (fallback.ok) return await fallback.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || "Failed to fetch page");
       }
-      return await response.json();
+      const result = await response.json();
+      return result?.data || result;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -86,7 +99,6 @@ export const createPageThunk = createAsyncThunk(
 );
 
 // Update an existing page
-// Update an existing page
 export const updatePageThunk = createAsyncThunk(
   "pages/update",
   async (
@@ -94,22 +106,30 @@ export const updatePageThunk = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      const response = await fetch(`/api/pages/${id}`, {
+      const { _id, id: pageId, createdAt, updatedAt, studioRevision, updatedBy, ...cleanData } = pageData as any;
+      const response = await fetch(`/api/cms/pages/${encodeURIComponent(id)}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          accept: "*/*",
         },
         credentials: "include",
-
-        body: JSON.stringify(pageData),
+        body: JSON.stringify(cleanData),
       });
       if (!response.ok) {
-        const errorData = await response.json();
+        const fallback = await fetch(`/api/pages/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(pageData),
+        });
+        if (fallback.ok) return await fallback.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || "Failed to update page");
       }
-      const data = await response.json();
-      console.log("page updated ", data);
-      return { _id: id, ...pageData } as Page;
+      const result = await response.json();
+      const updated = result?.data || result;
+      return updated?._id || updated?.id ? updated : ({ _id: id, ...pageData } as Page);
     } catch (error: any) {
       return rejectWithValue(error.message);
     }

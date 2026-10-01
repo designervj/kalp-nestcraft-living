@@ -18,6 +18,8 @@ const Hero = ({ section: propSection }: { section?: any }) => {
     ) || propSection;
   }, [propSection, currentPages]);
 
+  // console.log("section--",section)
+
   return (
     <section data-annotate-id="home-hero-section">
       <MainHeroSlider initialSlides={Array.isArray(section?.content) ? section.content : section?.content?.items} />

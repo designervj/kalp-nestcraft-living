@@ -9,6 +9,7 @@ import EditableText from "@/components/shared/EditableText";
 import { saveField } from "@/lib/editorUtils";
 
 const USP = ({ section: propSection }: { section?: any }) => {
+
   const dispatch = useAppDispatch();
   const currentPages = useAppSelector((state) => state.pages.currentPages);
   const isEditable = useAppSelector((state) => state.pages.isEditable);
@@ -21,13 +22,26 @@ const USP = ({ section: propSection }: { section?: any }) => {
   }, [pathname]);
 
   const getCurrentSection = useMemo(() => {
-    if (!currentPages) return;
-    return currentPages.content?.find((page: any) => page?.id === propSection?.id || page?.adminTitle === "USP Section");
+    if (!currentPages) return undefined;
+    const found = currentPages.content?.find(
+      (page: any) => page?.id === propSection?.id || page?.id === "sec-usp"
+    );
+    console.log("found---", found)
+    console.log("currentPages---", currentPages)
+    if (!found) return undefined;
+    // Redux store keeps the raw DB shape: content: { items: [...] }
+    // Normalize it the same way getSection() does for propSection
+    if (found.content && typeof found.content === "object" && !Array.isArray(found.content)) {
+      return { ...found, content: Array.isArray(found.content.items) ? found.content.items : [] };
+    }
+    return found;
   }, [currentPages, propSection?.id]);
 
   const section = getCurrentSection || propSection;
+  // propSection.content is already a flat array (normalized by getSection in cmsUtils)
+  // getCurrentSection.content is also normalized above
   const rawItems = section?.content;
-  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : defaultUSPItems;
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : null
 
   const iconMap: Record<string, any> = {
     "truck": Truck,

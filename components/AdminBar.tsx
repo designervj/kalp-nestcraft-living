@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   MessageSquare,
@@ -9,6 +9,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { setEditMode } from "@/lib/store/pages/pagesSlice";
 import { RootState } from "@/lib/store/store";
@@ -26,6 +27,8 @@ const OPERATOR_ROLES = new Set([
 
 export default function AdminBar() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
   // ✅ Real edit mode state from Redux (same as EditModeToggle uses)
@@ -41,16 +44,39 @@ export default function AdminBar() {
   const [isVisible, setIsVisible] = useState(true);
   const commentCount = annotations.length;
 
+  // Sync Redux state with URL on mount
+  useEffect(() => {
+    const editFromUrl = searchParams.get('edit') === 'true';
+    if (editFromUrl !== isEditable) {
+      dispatch(setEditMode(editFromUrl));
+    }
+  }, [searchParams, dispatch, isEditable]);
+
   const handleCommentToggle = () => {
     const nextCommentMode = !isCommentModeActive;
     setCommentMode(nextCommentMode);
-    if (nextCommentMode) dispatch(setEditMode(false));
+    if (nextCommentMode) {
+      dispatch(setEditMode(false));
+      // Remove edit param from URL
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('edit');
+      router.replace(`?${params.toString()}`);
+    }
   };
 
   const handleEditToggle = () => {
     const nextEditMode = !isEditable;
     dispatch(setEditMode(nextEditMode));
     if (nextEditMode) setCommentMode(false);
+
+    // Update URL
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextEditMode) {
+      params.set('edit', 'true');
+    } else {
+      params.delete('edit');
+    }
+    router.replace(`?${params.toString()}`);
   };
 
   if (!isAdmin) return null;
