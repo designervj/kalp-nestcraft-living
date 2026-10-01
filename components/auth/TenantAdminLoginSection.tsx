@@ -25,10 +25,14 @@ export default function TenantAdminLoginSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const tenantSlug = process.env.NEXT_PUBLIC_TENANT_SLUG || 'nestcraft';
-  const tenantId = process.env.NEXT_PUBLIC_TENANT_ID || 'kp_nestcraft';
-  const adminBaseUrl =
-    process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:5177';
+  const tenantSlug = (process.env.NEXT_PUBLIC_TENANT_SLUG || 'nestcraft').trim();
+  const tenantId = (process.env.NEXT_PUBLIC_TENANT_ID || 'kp_nestcraft').trim();
+  const rawAdminUrl =
+    process.env.NEXT_PUBLIC_ADMIN_URL || 'https://zerolive.kalptree.xyz';
+  const adminBaseUrl = rawAdminUrl
+    .trim()
+    .replace(/^['"]+|['"]+$/g, '')
+    .replace(/\/+$/, '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,6 +93,7 @@ export default function TenantAdminLoginSection() {
       const codeChallenge = await generateCodeChallenge(codeVerifier);
 
       // Step 3: Call SSO Create endpoint
+      const targetDashboard = `/${tenantSlug}/dashboard`;
       const redirectUri = `${adminBaseUrl}/auth/callback`;
 
       const ssoRes = await fetch('/api/auth/sso/create', {
@@ -103,6 +108,8 @@ export default function TenantAdminLoginSection() {
           redirectUri,
           codeChallenge,
           codeVerifier,
+          returnTo: targetDashboard,
+          redirect: targetDashboard,
         }),
       });
 
@@ -117,7 +124,7 @@ export default function TenantAdminLoginSection() {
       }
 
       toast.success('Signed in successfully! Redirecting...');
-      const callbackUrl = `${redirectUri}?code=${encodeURIComponent(ssoData.code)}`;
+      const callbackUrl = `${redirectUri}?code=${encodeURIComponent(ssoData.code)}&returnTo=${encodeURIComponent(targetDashboard)}&redirect=${encodeURIComponent(targetDashboard)}&next=${encodeURIComponent(targetDashboard)}`;
       window.location.href = callbackUrl;
     } catch (err: any) {
       console.error('[AdminLogin] Error:', err);

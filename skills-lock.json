@@ -18,6 +18,12 @@
       "sourceType": "github",
       "skillPath": "nextjs-react-typescript/SKILL.md",
       "computedHash": "eb995cc826bf48498e0e90969fc7dadfa2ec634002c26cfcfde565134cefa738"
+    },
+    "nextjs-seo": {
+      "source": "laguagu/claude-code-nextjs-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nextjs-seo/SKILL.md",
+      "computedHash": "89d26745ceb855bff60659afd64a71fa621e6eb6d31878cd973c34cff565e1b3"
     }
   }
 }

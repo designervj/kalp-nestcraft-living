@@ -39,7 +39,13 @@ export default function LoginFormSection() {
           try {
             const codeVerifier = generateCodeVerifier();
             const codeChallenge = await generateCodeChallenge(codeVerifier);
-            const adminBaseUrl = process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:5177';
+            const tenantSlug = (process.env.NEXT_PUBLIC_TENANT_SLUG || 'nestcraft').trim();
+            const rawAdminUrl = process.env.NEXT_PUBLIC_ADMIN_URL || 'https://zerolive.kalptree.xyz';
+            const adminBaseUrl = rawAdminUrl
+              .trim()
+              .replace(/^['"]+|['"]+$/g, '')
+              .replace(/\/+$/, '');
+            const targetDashboard = `/${tenantSlug}/dashboard`;
             const redirectUri = `${adminBaseUrl}/auth/callback`;
 
             const res = await fetch('/api/auth/sso/create', {
@@ -47,12 +53,14 @@ export default function LoginFormSection() {
               headers: {
                 'Content-Type': 'application/json',
                 'x-tenant-db': process.env.NEXT_PUBLIC_TENANT_ID || 'kp_nestcraft',
-                'x-tenant-slug': process.env.NEXT_PUBLIC_TENANT_SLUG || 'nestcraft',
+                'x-tenant-slug': tenantSlug,
               },
               body: JSON.stringify({
                 codeChallenge,
                 codeVerifier,
                 redirectUri,
+                returnTo: targetDashboard,
+                redirect: targetDashboard,
               }),
               credentials: 'include',
             });
@@ -60,7 +68,7 @@ export default function LoginFormSection() {
             const ssoRes = await res.json();
             if (ssoRes.success && ssoRes.code) {
               toast.success('Welcome back! Redirecting to Kalp Admin...');
-              window.location.href = `${redirectUri}?code=${encodeURIComponent(ssoRes.code)}`;
+              window.location.href = `${redirectUri}?code=${encodeURIComponent(ssoRes.code)}&returnTo=${encodeURIComponent(targetDashboard)}&redirect=${encodeURIComponent(targetDashboard)}&next=${encodeURIComponent(targetDashboard)}`;
               return;
             }
           } catch (ssoErr) {
