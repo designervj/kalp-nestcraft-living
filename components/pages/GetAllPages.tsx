@@ -2,7 +2,6 @@
 
 import { useAppDispatch } from "@/lib/store/hooks";
 import {
-  fetchFastApiPagesThunk,
   fetchPagesThunk,
 } from "@/lib/store/pages/pageThunk";
 import { RootState } from "@/lib/store/store";

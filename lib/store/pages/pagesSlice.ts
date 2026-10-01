@@ -63,13 +63,16 @@ const pagesSlice = createSlice({
       })
       .addCase(fetchPagesThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.allPages = action.payload;
+        const rawPages: Page[] = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload?.data || action.payload?.pages || [];
+        const publishedPages = rawPages.filter((page: Page) => page.isPublished === true);
+        state.allPages = publishedPages;
         state.isAllPageFetched = true;
-        const data=action.payload.find((page:Page)=>page.slug==="home")
-        if(data){
-          state.currentPages=data
+        const data = publishedPages.find((page: Page) => page.slug === "home");
+        if (data) {
+          state.currentPages = data;
         }
-
       })
       .addCase(fetchPagesThunk.rejected, (state) => {
         state.isLoading = false;
@@ -83,11 +86,15 @@ const pagesSlice = createSlice({
        })
        .addCase(fetchFastApiPagesThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.allPages = action.payload;
+        const rawPages: Page[] = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload?.data || action.payload?.pages || [];
+        const publishedPages = rawPages.filter((page: Page) => page.isPublished === true);
+        state.allPages = publishedPages;
         state.isAllPageFetched = true;
-        const data=action.payload.find((page:Page)=>page.slug==="home")
-        if(data){
-          state.currentPages=data
+        const data = publishedPages.find((page: Page) => page.slug === "home");
+        if (data) {
+          state.currentPages = data;
         }
        })
        .addCase(fetchFastApiPagesThunk.rejected, (state) => {

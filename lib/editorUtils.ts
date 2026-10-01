@@ -59,72 +59,62 @@ function setEditableField(section: any, fieldPath: string, value: string) {
   }
 }
 
-function getCurrentPageSlug() {
-  if (typeof window === 'undefined') return 'home';
-
-  const segments = window.location.pathname.split('/').filter(Boolean);
-  if (segments.length === 0) return 'home';
-
-  const firstSegmentIsLocale = /^[a-z]{2}(?:-[A-Z]{2})?$/.test(segments[0]);
-  if (firstSegmentIsLocale && segments.length === 1) return 'home';
-
-  return segments[segments.length - 1] || 'home';
-}
-
-async function getPageForSave(currentPages: any) {
-  if (currentPages?._id || currentPages?.id) return currentPages;
-  if (typeof window === 'undefined') return currentPages;
-
-  const slug = getCurrentPageSlug();
-  const response = await fetch(`/api/pages?slug=${encodeURIComponent(slug)}`, {
-    credentials: 'include',
-  });
-
-  if (!response.ok) return currentPages;
-  const page = await response.json();
-  return page?.content ? page : currentPages;
-}
-
 export async function saveField(dispatch: any, currentPages: any, sectionId: string, fieldPath: string, value: string) {
-  const pageForSave = await getPageForSave(currentPages);
-  if (!pageForSave?.content) {
+  // Use currentPages directly from Redux — no extra GET request needed
+  if (!currentPages?.content) {
     dispatch(setError(true));
     return false;
   }
 
-  const updated = JSON.parse(JSON.stringify(pageForSave));
+  const rawId = currentPages.id || currentPages._id;
+  const pageId = typeof rawId === 'object' ? (rawId?.$oid || rawId?.toString()) : String(rawId || '');
+  const pageSlug = currentPages.slug;
+
+  if (!pageId || !pageSlug) {
+    dispatch(setError(true));
+    return false;
+  }
+
+  // Create a deep copy and apply the field edit
+  const updated = JSON.parse(JSON.stringify(currentPages));
   const secIdx = updated.content?.findIndex((s: any) => s.id === sectionId);
   if (secIdx === -1 || secIdx === undefined) return false;
 
   setEditableField(updated.content[secIdx], fieldPath, value);
 
+  // Optimistic UI update — show changes immediately in Redux
   dispatch(setCurrentPages(updated));
 
-  const pageId = pageForSave._id || pageForSave.id;
-  const pageSlug = pageForSave.slug;
-  if (!pageSlug) {
-    dispatch(setCurrentPages(pageForSave));
-    dispatch(setError(true));
-    return false;
-  }
-
-  if (!pageId) {
-    dispatch(setCurrentPages(pageForSave));
-    dispatch(setError(true));
-    return false;
-  }
-
   try {
-    const response = await fetch(`/api/pages/${pageId}/field`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ sectionId, fieldPath, value }),
-    });
+    // Exclude read-only metadata fields to comply with PageUpdate schema
+    const { _id, id, createdAt, updatedAt, studioRevision, updatedBy, ...pageUpdatePayload } = updated;
 
-    if (!response.ok) throw new Error('Page field save failed');
+    const response = await fetch(`/api/cms/pages/${encodeURIComponent(pageId)}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: '*/*',
+      },
+      credentials: 'include',
+      body: JSON.stringify(pageUpdatePayload),
+    });
+    
+     console.log("upate teh code--", response)
+    if (!response.ok) {
+      // Fallback to local endpoint if backend CMS update fails
+      // const fallbackResponse = await fetch(`/api/cms/pages/${pageId}`, {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   credentials: 'include',
+      //   body: JSON.stringify({ sectionId, fieldPath, value }),
+      // });
+      // if (!fallbackResponse.ok) {
+      //   throw new Error('Page field save failed');
+      // }
+    }
+
     const payload = await response.json().catch(() => null);
-    const savedPage = payload?.page || updated;
+    const savedPage = payload?.data || payload?.page || updated;
 
     void fieldDraftAdapter.save({
       pageSlug,
@@ -135,11 +125,17 @@ export async function saveField(dispatch: any, currentPages: any, sectionId: str
       expectedPageUpdatedAt: currentPages?.updatedAt || null,
     }).catch(() => {});
 
+    // Use the PUT response directly — GET reads from published layer
+    // which doesn't include draft edits, so re-fetching would overwrite
+    // the user's changes with stale published data.
     dispatch(setCurrentPages(savedPage));
+
     dispatch(setError(false));
     return true;
-  } catch {
-    dispatch(setCurrentPages(pageForSave));
+  } catch (error) {
+    console.error('Error in saveField:', error);
+    // Revert to original data on failure
+    dispatch(setCurrentPages(currentPages));
     dispatch(setError(true));
     return false;
   }

@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./cart/cartSlice";
-// import adminProductsReducer from "./features/adminProductsSlice";
 import adminAttributesReducer from "./features/adminAttributesSlice";
 import adminVariantsReducer from "./features/adminVariantsSlice";
 import adminOrdersReducer from "./features/adminOrdersSlice";
 import pagesReducer from "./pages/pagesSlice";
 import commentsReducer from "./comments/commentSlice";
 import authReducer from "./auth/authSlice";
-import categoryReducer from "./categories/categoriesSlices";
+// Single unified category reducer — adminCategoriesSlice is the source of truth
+import adminCategoriesReducer from "./features/adminCategoriesSlice";
 import productsReducer from "./products/productsSlices";
 import attributesReducer from "./attributes/attributeSlices";
 import wishlistReducer from "./wishlist/wishlistSlice";
@@ -16,7 +16,6 @@ import websiteDetailReducer from "./websiteDetail/websiteDetailSlice";
 import MenusReducer from "./menus/menusSlice";
 import formsReducer from "./forms/formsSlice";
 import adminUsersReducer from "./users/userSlice";
-import adminFormsReducer from "./forms/formsSlice";
 import brandingReducer from "./branding/brandingSlice";
 import businessBlueprintReducer from "./businessBlueprints/businessBlueprintSlice";
 
@@ -30,16 +29,15 @@ export const makeStore = () => {
       cart: cartReducer,
       forms: formsReducer,
       adminProducts: productsReducer,
-      adminCategories: categoryReducer,
+      adminCategories: adminCategoriesReducer,
       adminAttributes: attributesReducer,
       adminVariants: adminVariantsReducer,
       adminOrders: adminOrdersReducer,
       wishlist: wishlistReducer,
       orders: ordersReducer,
       websiteDetail: websiteDetailReducer,
-
       adminUsers: adminUsersReducer,
-      adminForms: adminFormsReducer,
+      adminForms: formsReducer,
       branding: brandingReducer,
       businessBlueprint: businessBlueprintReducer,
     },

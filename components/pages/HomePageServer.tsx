@@ -30,7 +30,7 @@ interface HomePageServerProps {
 }
 
 const HomePageServer = ({ data, lang }: HomePageServerProps) => {
-  console.log("data", data)
+  console.log("data--->", data)
   const content = Array.isArray(data?.content) ? data.content : [];
 
   const ctaSection = getSection(content, "CTA");
@@ -50,7 +50,7 @@ const HomePageServer = ({ data, lang }: HomePageServerProps) => {
   return (
     <>
       {/* Client-side logic components */}
-      <PageDataInitializer initialData={data as never} />
+      <PageDataInitializer initialData={data as never} slug="home" />
       <GetAllPages />
       <GetAllMenus />
 

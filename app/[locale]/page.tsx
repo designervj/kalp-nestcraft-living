@@ -2,6 +2,9 @@ import HomePageServer from "@/components/pages/HomePageServer";
 import { Metadata } from "next";
 import { getPageData } from "@/lib/getPageData";
 
+export const dynamic = "force-dynamic";
+
+
 type PreviewEnvelope = {
   data?: {
     changeSetId: string;
@@ -41,12 +44,13 @@ export default async function Page({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ studioPreviewGrant?: string }>;
+  searchParams: Promise<{ studioPreviewGrant?: string; edit?: string }>;
 }) {
   const { locale } = await params;
   const query = await searchParams;
   const preview = await getStudioPreview(query.studioPreviewGrant);
   const liveData = preview ? null : await getPageData("home");
+  console.log("livedata--",liveData)
   const data = preview ? { ...preview.page, content: preview.page.sections || [] } : liveData;
 
   return (

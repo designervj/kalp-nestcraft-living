@@ -66,7 +66,7 @@ const ContactPage = ({ initialData }: { initialData?: Page | null }) => {
       {/* commentsS Plugin */}
       {nestCraftUser?.role === "admin" && <AnnotatorPlugin />}
 
-      <PageDataInitializer initialData={initialData || null} />
+      <PageDataInitializer initialData={initialData || null} slug="contact" />
       <div className="bg-background">
         {/* Editorial Hero Section */}
         <ContactHero />
