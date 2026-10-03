@@ -132,6 +132,12 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
         titleEnd = parsed.titleEnd;
       }
 
+      let rawImg = getLocalizedHeroValue(p.image, lang) || p.image?.value || p.image;
+      if (!rawImg || typeof rawImg !== "string") {
+        rawImg = "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800";
+      }
+      const cleanImg = rawImg.replace(/&amp;/g, "&").trim();
+
       return {
         id: slide.id || slide._id || title,
         label: getV(p.label),
@@ -139,7 +145,7 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
         highlight: highlight,
         titleEnd: titleEnd,
         description: getV(p.description),
-        image: getLocalizedHeroValue(p.image, lang) || p.image?.value || p.image || "",
+        image: cleanImg,
         product: getV(p.product),
         price: getV(p.price),
       };
@@ -322,19 +328,15 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
   if (!activeSlide) return null;
 
   return (
-    <section className="relative min-h-[calc(100vh-106px)] bg-neutral-950">
-      {/* Static sticky/parallax image layer — always visible */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800")`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-          backgroundRepeat: "no-repeat",
-        }}
-        aria-hidden="true"
-      />
+    <section className="relative min-h-[calc(100vh-106px)] bg-neutral-950 overflow-hidden">
+      {/* Static background image layer — always visible */}
+      <div className="absolute inset-0">
+        <img
+          src={activeSlide.image}
+          alt={activeSlide.product || "Hero Image"}
+          className="h-full w-full object-cover object-center"
+        />
+      </div>
 
       {/* Animated crossfade layer — fades in new slide on top */}
       <AnimatePresence>
@@ -345,17 +347,13 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
-          style={{
-            // backgroundImage: `url(${activeSlide.image})`,
-          backgroundImage: `url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800")`,
-
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundAttachment: "fixed",
-            backgroundRepeat: "no-repeat",
-          }}
-          aria-hidden="true"
-        />
+        >
+          <img
+            src={activeSlide.image}
+            alt={activeSlide.product || "Hero Image"}
+            className="h-full w-full object-cover object-center"
+          />
+        </motion.div>
       </AnimatePresence>
 
       {/* Luxury opacity overlays — placed above image layers so opacity is always maintained */}

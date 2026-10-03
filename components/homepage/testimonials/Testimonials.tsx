@@ -56,8 +56,27 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
 
   const handleScroll = () => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      setActivePage(Math.round(scrollLeft / clientWidth));
+      const child = scrollRef.current.firstElementChild as HTMLElement;
+      if (child) {
+        const itemWidth = child.offsetWidth + 24;
+        const { scrollLeft } = scrollRef.current;
+        const page = Math.round(scrollLeft / itemWidth);
+        setActivePage(page);
+      }
+    }
+  };
+
+  const scrollToPage = (pageIndex: number) => {
+    if (scrollRef.current) {
+      const child = scrollRef.current.firstElementChild as HTMLElement;
+      if (child) {
+        const itemWidth = child.offsetWidth + 24;
+        scrollRef.current.scrollTo({
+          left: pageIndex * itemWidth,
+          behavior: "smooth",
+        });
+        setActivePage(pageIndex);
+      }
     }
   };
 
@@ -65,15 +84,16 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
     if (scrollRef.current) {
       const child = scrollRef.current.firstElementChild as HTMLElement;
       if (child) {
-        const itemWidth = child.offsetWidth;
-        const gap = 24;
-        scrollRef.current.scrollBy({
-          left: dir * (itemWidth + gap),
-          behavior: "smooth",
-        });
+        const itemWidth = child.offsetWidth + 24;
+        const targetPage = activePage + dir;
+        const maxPage = items.length - 1;
+        const nextTarget = Math.max(0, Math.min(targetPage, maxPage));
+        scrollToPage(nextTarget);
       }
     }
   };
+
+  const hasSlider = items.length > 3;
 
   return (
     <section
@@ -93,7 +113,11 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1"
+          className={
+            hasSlider
+              ? "flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1"
+              : "grid grid-cols-1 md:grid-cols-3 gap-6"
+          }
         >
           {items.map((item: any, idx: number) => {
             const sp = item.props || {};
@@ -104,7 +128,11 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
             return (
               <div
                 key={idx}
-                className="min-w-[calc(100%-24px)] md:min-w-[calc((100%-48px)/3)] snap-start h-full"
+                className={
+                  hasSlider
+                    ? "min-w-[calc(100%-24px)] md:min-w-[calc((100%-48px)/3)] snap-start h-full"
+                    : "w-full h-full"
+                }
               >
                 <div className="p-9 text-center bg-surface/75 border border-border rounded-lg h-full">
                   <p className="font-heading text-[22px] italic mb-[22px] leading-[1.4] font-semibold text-foreground/90">
@@ -121,30 +149,24 @@ const Testimonials = ({ section: propSection }: TestimonialsProps) => {
           })}
         </div>
 
-        <div className="flex items-center justify-between gap-3.5 mt-[22px]">
-          <div className="flex gap-2.5">
+        {hasSlider && (
+          <div className="flex items-center gap-2.5 mt-[22px]">
             <button
               onClick={() => scroll(-1)}
-              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground"
+              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground cursor-pointer"
+              aria-label="Previous slide"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={() => scroll(1)}
-              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground"
+              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground cursor-pointer"
+              aria-label="Next slide"
             >
               <ChevronRight size={18} />
             </button>
           </div>
-          <div className="flex gap-2.5 justify-center flex-1">
-            {Array.from({ length: items.length }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-2 h-2 rounded-full transition-all duration-160 ${activePage === i ? "bg-secondary scale-125" : "bg-foreground/20"}`}
-              />
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );

@@ -77,10 +77,36 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
   const handle = (fieldPath: string) => (value: string) =>
     saveField(dispatch, currentPages, section?.id, fieldPath, value);
 
+  const displayItems =
+    authoredProducts.length > 0
+      ? authoredProducts
+      : featuredProducts.length > 0
+        ? featuredProducts
+        : defaultProductSliderData.content;
+
   const handleScroll = () => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      setActivePage(Math.round(scrollLeft / clientWidth));
+      const child = scrollRef.current.firstElementChild as HTMLElement;
+      if (child) {
+        const itemWidth = child.offsetWidth + 24;
+        const { scrollLeft } = scrollRef.current;
+        const page = Math.round(scrollLeft / itemWidth);
+        setActivePage(page);
+      }
+    }
+  };
+
+  const scrollToPage = (pageIndex: number) => {
+    if (scrollRef.current) {
+      const child = scrollRef.current.firstElementChild as HTMLElement;
+      if (child) {
+        const itemWidth = child.offsetWidth + 24;
+        scrollRef.current.scrollTo({
+          left: pageIndex * itemWidth,
+          behavior: "smooth",
+        });
+        setActivePage(pageIndex);
+      }
     }
   };
 
@@ -88,15 +114,16 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
     if (scrollRef.current) {
       const child = scrollRef.current.firstElementChild as HTMLElement;
       if (child) {
-        const itemWidth = child.offsetWidth;
-        const gap = 24;
-        scrollRef.current.scrollBy({
-          left: dir * (itemWidth + gap),
-          behavior: "smooth",
-        });
+        const itemWidth = child.offsetWidth + 24;
+        const targetPage = activePage + dir;
+        const maxPage = displayItems.length - 1;
+        const nextTarget = Math.max(0, Math.min(targetPage, maxPage));
+        scrollToPage(nextTarget);
       }
     }
   };
+
+  const hasSlider = displayItems.length > 3;
 
   return (
     <section
@@ -125,21 +152,29 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1"
+          className={
+            hasSlider
+              ? "flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1"
+              : "grid grid-cols-1 md:grid-cols-3 gap-6"
+          }
         >
-          {(authoredProducts.length > 0 ? authoredProducts : featuredProducts.length > 0 ? featuredProducts : defaultProductSliderData.content).map((prod: any, idx: number) => {
-          const isFallback = !!prod.props;
-          const sp = prod.props || {};
-          const title = isFallback ? (getV(sp.title) || "") : (prod.name || prod.title || "");
-          const price = isFallback ? (getV(sp.price) || "") : formatCommercePrice(prod.price, prod.currency || "INR");
-          const prodBadge = getV(p.itemBadge) || (isFallback ? getV(sp.badge) : "");
-          const id = prod.slug || prod.id || prod._id;
-          const img = isFallback ? (getV(sp.image) || sp.image?.value || sp.image || prod.image || "") : resolveProductImage(prod);
+          {displayItems.map((prod: any, idx: number) => {
+            const isFallback = !!prod.props;
+            const sp = prod.props || {};
+            const title = isFallback ? (getV(sp.title) || "") : (prod.name || prod.title || "");
+            const price = isFallback ? (getV(sp.price) || "") : formatCommercePrice(prod.price, prod.currency || "INR");
+            const prodBadge = getV(p.itemBadge) || (isFallback ? getV(sp.badge) : "");
+            const id = prod.slug || prod.id || prod._id;
+            const img = isFallback ? (getV(sp.image) || sp.image?.value || sp.image || prod.image || "") : resolveProductImage(prod);
 
             return (
               <div
                 key={id || idx}
-                className="min-w-[calc(100%-24px)] md:min-w-[calc((100%-48px)/3)] snap-start group"
+                className={
+                  hasSlider
+                    ? "min-w-[calc(100%-24px)] md:min-w-[calc((100%-48px)/3)] snap-start group"
+                    : "w-full group"
+                }
               >
                 <Link
                   href={isFallback ? "/shop" : `/product/${id}`}
@@ -177,32 +212,24 @@ const ProductSlider = ({ section: propSection }: ProductSliderProps) => {
           })}
         </div>
 
-        <div className="flex items-center justify-between gap-3.5 mt-[22px]">
-          <div className="flex gap-2.5">
+        {hasSlider && (
+          <div className="flex items-center gap-2.5 mt-[22px]">
             <button
               onClick={() => scroll(-1)}
-              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground"
+              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground cursor-pointer"
+              aria-label="Previous slide"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={() => scroll(1)}
-              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground"
+              className="w-11 h-11 rounded-full border border-border bg-surface flex items-center justify-center hover:-translate-y-0.5 hover:border-secondary/55 transition-all text-foreground cursor-pointer"
+              aria-label="Next slide"
             >
               <ChevronRight size={18} />
             </button>
           </div>
-          <div className="flex gap-2.5 justify-center flex-1">
-            {Array.from({ length: Math.ceil(featuredProducts.length / 1) }).map(
-              (_, i) => (
-                <div
-                  key={i}
-                  className={`w-2 h-2 rounded-full transition-all duration-160 ${activePage === i ? "bg-secondary scale-125" : "bg-foreground/20"}`}
-                />
-              ),
-            )}
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );
