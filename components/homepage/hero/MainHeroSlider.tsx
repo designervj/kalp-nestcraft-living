@@ -346,7 +346,9 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
           style={{
-            backgroundImage: `url(${activeSlide.image})`,
+            // backgroundImage: `url(${activeSlide.image})`,
+          backgroundImage: `url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1800")`,
+
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundAttachment: "fixed",
