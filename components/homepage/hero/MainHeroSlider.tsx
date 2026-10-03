@@ -322,41 +322,44 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
   if (!activeSlide) return null;
 
   return (
-    <section className="relative min-h-[calc(100vh-106px)] overflow-hidden bg-neutral-950">
-      {/* Static image layer — always visible, not affected by JS/animation */}
-      <div className="absolute inset-0">
-        <img
-          src={activeSlide.image}
-          alt={activeSlide.product}
-          className="h-full w-full object-cover"
-        />
-        {/* luxury overlays */}
-        <div className="absolute inset-0 bg-black/35" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20" />
-      </div>
+    <section className="relative min-h-[calc(100vh-106px)] bg-neutral-950">
+      {/* Static sticky/parallax image layer — always visible */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${activeSlide.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+          backgroundRepeat: "no-repeat",
+        }}
+        aria-hidden="true"
+      />
 
-      {/* Animated crossfade layer — fades in the new slide on top */}
+      {/* Animated crossfade layer — fades in new slide on top */}
       <AnimatePresence>
         <motion.div
           key={activeSlide.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
-        >
-          <img
-            src={activeSlide.image}
-            alt={activeSlide.product}
-            className="h-full w-full object-cover"
-          />
-          {/* luxury overlays */}
-          <div className="absolute inset-0 bg-black/35" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20" />
-        </motion.div>
+          style={{
+            backgroundImage: `url(${activeSlide.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            backgroundRepeat: "no-repeat",
+          }}
+          aria-hidden="true"
+        />
       </AnimatePresence>
+
+      {/* Luxury opacity overlays — placed above image layers so opacity is always maintained */}
+      <div className="absolute inset-0 pointer-events-none bg-black/35" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-black/70 via-black/45 to-black/20" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/55 via-transparent to-black/20" />
 
       {/* decorative blur */}
       <div className="pointer-events-none absolute left-[-120px] top-[10%] h-[260px] w-[260px] rounded-full bg-secondary/20 blur-3xl" />
