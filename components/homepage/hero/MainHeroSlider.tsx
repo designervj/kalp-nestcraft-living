@@ -323,6 +323,20 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
 
   return (
     <section className="relative min-h-[calc(100vh-106px)] overflow-hidden bg-neutral-950">
+      {/* Static image layer — always visible, not affected by JS/animation */}
+      <div className="absolute inset-0">
+        <img
+          src={activeSlide.image}
+          alt={activeSlide.product}
+          className="h-full w-full object-cover"
+        />
+        {/* luxury overlays */}
+        <div className="absolute inset-0 bg-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20" />
+      </div>
+
+      {/* Animated crossfade layer — fades in the new slide on top */}
       <AnimatePresence>
         <motion.div
           key={activeSlide.id}
@@ -337,7 +351,6 @@ const MainHeroSlider = ({ initialSlides }: { initialSlides?: any[] }) => {
             alt={activeSlide.product}
             className="h-full w-full object-cover"
           />
-
           {/* luxury overlays */}
           <div className="absolute inset-0 bg-black/35" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-black/20" />
